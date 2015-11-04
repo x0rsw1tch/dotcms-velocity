@@ -10,14 +10,14 @@ Dynamically generate Bradcrumbs regardless of whether the page is within the sta
 
 ### How to use:
 
-####Step 1: Place crumbtrails.vtl in your /application/vtl or /application/themes/*themeName* folder.
+#####Step 1: Place crumbtrails.vtl in your /application/vtl or /application/themes/*themeName* folder.
 
-####Step 2: Edit your template to include the script in the desired location of your advanced template. Script includes a nav tag.
+#####Step 2: Edit your template to include the script in the desired location of your advanced template. Script includes a nav tag.
 ```
 #dotParse("${dotTheme.path}crumbtrails.vtl")
 ```
 
-####Step 3: Customize script/markup to your needs.
+#####Step 3: Customize script/markup to your needs.
 
 
 ## URL Page Asset File Browser for custom fields
@@ -29,9 +29,9 @@ For adding a Page Asset file-browser in content. Useful for clients to browse an
 
 ### How to use: 
 
-####Step 1: Place *urlFileBrowser.vtl* script in your /application/vtl directory
+#####Step 1: Place *urlFileBrowser.vtl* script in your /application/vtl directory
 
-####Step 2: Create a Custom Field in your Structure and add this code.
+#####Step 2: Create a Custom Field in your Structure and add this code.
 ```
 <script>
 var _dotCMSPageAssetBrowserTargetField = String ('myField'); // <-- Update This String with custom field variable name!
@@ -39,10 +39,10 @@ var _dotCMSPageAssetBrowserTargetField = String ('myField'); // <-- Update This 
 #dotParse('/application/vtl/urlFileBrowser.vtl')
 ```
 
-####Step 3: Edit value of *_dotCMSPageAssetBrowserTargetField* to the Variable/ID of your custom field.
+#####Step 3: Edit value of *_dotCMSPageAssetBrowserTargetField* to the Variable/ID of your custom field.
 Example:
 ```
 var _dotCMSPageAssetBrowserTargetField = String ('linkPage');
 ```
 
-####Step 4: You should have now have a custom field with a button to browse for a Page Asset.
+#####Step 4: You should have now have a custom field with a button to browse for a Page Asset.
