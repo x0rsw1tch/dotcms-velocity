@@ -46,3 +46,19 @@ var _dotCMSPageAssetBrowserTargetField = String ('linkPage');
 ```
 
 #####Step 4: You should have now have a custom field with a button to browse for a Page Asset.
+
+
+## console.vtl
+
+### Purpose
+Easily Test your velocity
+
+### How to use:
+
+#####Step 1: Place vtl file in your /application/vtl or somewhere.
+
+#####Step 2: Create a page somewhere on your site and add a ~Content (Generic)~ content.
+
+#####Step 3: Place a #dotParse('/path/to/console.vtl')
+
+#####Step 4: Navigate to page and test whatever velocity you want to test.
