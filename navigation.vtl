@@ -1,0 +1,21 @@
+<ul class="right">
+    #set( $list = $navtool.getNav("/") ) 
+    #foreach($n in $list)
+    #set($children = $n.children) 
+    #if($children && $children.size() > 0)
+    <li class="has-dropdown">
+        <a href="#">${n.title} <b class="caret"></b></a>
+        <ul class="dropdown">
+            #foreach($ch in $children)
+            <li #if ($ch.active) class="active" #end><a href='${ch.href}'>${ch.title}</a></li>
+            #end
+        </ul>
+    </li>
+    #else
+    <li #if ($n.active) class="active" #end><a href='${n.href}'>${n.title}</a></li>
+    #end 
+    #end
+    <li class="has-form">
+        <a href="/get-quote/" class="button text-white">Get a Quote</a>
+    </li>
+</ul>
