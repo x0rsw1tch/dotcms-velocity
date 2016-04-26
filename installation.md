@@ -1,7 +1,5 @@
-
-
 ## Installation Pre-Reqs and misc utilities
-### DotCMS 3.x With JDK 8
+### DotCMS 3.x With OpenJDK 8
 `sudo yum -y update
 sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql.x86_64 postgresql-server.x86_64 mc`
 
@@ -9,7 +7,20 @@ sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-
 
 ### Disable SELinux
 `sudo setenforce 0`
-NOTE: If you know how to get dotCMS to play nicely with SELinux, then go for it
+#### OR
+`sudo nano /etc/sysconfig/selinux`
+~~SELINUX=permissive~~
+`SELINUX=disabled`
+#### THEN
+`sudo nano /boot/grub/grub.conf`
+#### ADD to end of kernel line
+`selinux=0`
+#### THEN
+`grub-update`
+#### Reboot
+
+
+##### NOTE: If you know how to get dotCMS to play nicely with SELinux, then go for it
 
 ### Disable RedHat Firewall Daemon
 `sudo systemctl stop firewalld
@@ -80,7 +91,8 @@ Note: You may need to change tomcat-8.0.18 if the version is different
 
 ---
 
-## Fire it up (Startup can take up to 10 minutes
+## Fire it up (Startup can take up to 10 minutes)
+#### No need to run as root since dotCMS will still run on 8080, IPTables will handle the rest
 `/usr/local/dotcms/bin/startup.sh`
 
 ### View Logs
