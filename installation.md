@@ -73,12 +73,17 @@ psql`
 `\q`
 
 ### Config PostgreSQL for user authentication instead of ident
-`sudo nano /var/lib/pgsql/data/pg_hba.conf`
-~~`host    all             all             127.0.0.1/32            ident`~~<br>
+`sudo nano /var/lib/pgsql/data/pg_hba.conf` <br>
+~~
+`host    all             all             127.0.0.1/32            ident`
+~~ 
+<br>
 `host    all             all             127.0.0.1/32            password`
 
 ### Restart PostreSQL
+
 `sudo systemctl restart postgresql`
+
 ---
 
 ## Install/Configure dotCMS
