@@ -1,7 +1,7 @@
 ## Installation Pre-Reqs and misc utilities
 ### DotCMS 3.x With OpenJDK 8
-`sudo yum -y update
-sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql.x86_64 postgresql-server.x86_64 mc`
+`sudo yum -y update`
+`sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql.x86_64 postgresql-server.x86_64 mc`
 
 ---
 
@@ -9,7 +9,7 @@ sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-
 `sudo setenforce 0`
 #### OR
 `sudo nano /etc/sysconfig/selinux`
-~~SELINUX=permissive~~
+~~`SELINUX=permissive`~~
 `SELINUX=disabled`
 #### THEN
 `sudo nano /boot/grub/grub.conf`
@@ -23,8 +23,8 @@ sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-
 ##### NOTE: If you know how to get dotCMS to play nicely with SELinux, then go for it
 
 ### Disable RedHat Firewall Daemon
-`sudo systemctl stop firewalld
-sudo systemctl disable firewalld`
+`sudo systemctl stop firewalld`
+`sudo systemctl disable firewalld`
 
 ### Setup IPTables to reroute port 8080 to 80 (Is not persistent across reboots, need to find perm solution)
 `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080`
@@ -33,18 +33,18 @@ sudo systemctl disable firewalld`
 `sudo ethtool -K eth0 tso off gro off`
 
 #### Or make above fix permanent
-`sudo su -
-echo "/sbin/ethtool -K eth0 tso off gro off" > /etc/NetworkManager/dispatcher.d/30-offload
-systemctl restart network`
+`sudo su -`
+`echo "/sbin/ethtool -K eth0 tso off gro off" > /etc/NetworkManager/dispatcher.d/30-offload`
+`systemctl restart network`
 
 
 ---
 
 ### Download dotCMS (Choose one)
-`cd ~
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.2.4.tar.gz
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.3.2.tar.gz
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.5.tar.gz`
+`cd ~`
+`wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.2.4.tar.gz`
+`wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.3.2.tar.gz`
+`wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.5.tar.gz`
 ### or dotCMS v2
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_2.5.7.tar.gz`
 
@@ -66,24 +66,26 @@ psql`
 `CREATE DATABASE "dotcms" WITH OWNER = dotcms ENCODING = 'UTF8' TABLESPACE = pg_default LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8' CONNECTION LIMIT = -1;`
 
 ### Grant Full Access to New User
-`GRANT ALL ON DATABASE "dotcms" TO dotcms;
-ALTER ROLE dotcms WITH SUPERUSER;`
+`GRANT ALL ON DATABASE "dotcms" TO dotcms;`
+`ALTER ROLE dotcms WITH SUPERUSER;`
 
 ### Exit Psql
 `\q`
 
 ### Config PostgreSQL for user authentication instead of 
 `sudo nano /var/lib/pgsql/data/pg_hba.conf`
-~~host    all             all             127.0.0.1/32            ident ~~#<-- From
-`host    all             all             127.0.0.1/32            password #<-- To`
+~~`host    all             all             127.0.0.1/32            ident`~~
+`host    all             all             127.0.0.1/32            password`
 
+### Restart PostreSQL
+`sudo systemctl restart postgresql`
 ---
 
 ## Install/Configure dotCMS
 
 ### Extract dotCMS archive
-`mkdir -d /usr/local/dotcms
-tar -zxvf ~/dotcms_3.5.tar.gz -C /usr/local/dotcms/`
+`mkdir -d /usr/local/dotcms`
+`tar -zxvf ~/dotcms_3.5.tar.gz -C /usr/local/dotcms/`
 
 ### Edit Database Config (Comment out default connector, enable PostgreSQL, and edit user params)
 `nano /usr/local/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml`
