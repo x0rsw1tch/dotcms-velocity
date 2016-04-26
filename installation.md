@@ -1,6 +1,6 @@
 ## Installation Pre-Reqs and misc utilities
 ### DotCMS 3.x With OpenJDK 8
-`sudo yum -y update`
+`sudo yum -y update` <br>
 `sudo yum -y install ethtool wget curl nano java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql.x86_64 postgresql-server.x86_64 mc`
 
 ---
