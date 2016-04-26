@@ -33,7 +33,7 @@
 `sudo ethtool -K eth0 tso off gro off`
 
 #### Or make above fix permanent
-`sudo su -`
+`sudo su -`<br>
 `echo "/sbin/ethtool -K eth0 tso off gro off" > /etc/NetworkManager/dispatcher.d/30-offload`<br>
 `systemctl restart network`
 
@@ -41,7 +41,7 @@
 ---
 
 ### Download dotCMS (Choose one)
-`cd ~`
+`cd ~`<br>
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.2.4.tar.gz`<br>
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.3.2.tar.gz`<br>
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.5.tar.gz`<br>
@@ -56,8 +56,8 @@
 `/bin/postgresql-setup initdb`
 
 ### Access psql
-`sudo su - postgres
-psql`
+`sudo su - postgres` <br>
+`psql`
 
 ### Create dotCMS Database User
 `CREATE USER dotcms WITH PASSWORD 'dotcms';`
@@ -91,7 +91,7 @@ psql`
 `tar -zxvf ~/dotcms_3.5.tar.gz -C /usr/local/dotcms/`
 
 ### Edit Database Config (Comment out default connector, enable PostgreSQL, and edit user params)
-`nano /usr/local/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml`<br>
+`nano /usr/local/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml` <br>
 Note: You may need to change tomcat-8.0.18 if the version is different
 
 ---
