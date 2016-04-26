@@ -5,7 +5,7 @@
 
 ---
 
-### Disable SELinux
+### Disable SELinux (Optional)
 `sudo setenforce 0`
 #### OR
 `sudo nano /etc/sysconfig/selinux`<br>
@@ -22,14 +22,14 @@
 
 ##### NOTE: If you know how to get dotCMS to play nicely with SELinux, then go for it
 
-### Disable RedHat Firewall Daemon
+### Disable RedHat Firewall Daemon (Optional)
 `sudo systemctl stop firewalld`<br>
 `sudo systemctl disable firewalld`
 
-### Setup IPTables to reroute port 8080 to 80 (Is not persistent across reboots, need to find perm solution)
+### Setup IPTables to reroute port 8080 to 80 (Optional. Is not persistent across reboots, need to find perm solution)
 `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080`
 
-### Fix OpenStack/CentOS speed problems
+### Fix OpenStack speed problems (Optional)
 `sudo ethtool -K eth0 tso off gro off`
 
 #### Or make above fix permanent
@@ -72,7 +72,7 @@ psql`
 ### Exit Psql
 `\q`
 
-### Config PostgreSQL for user authentication instead of 
+### Config PostgreSQL for user authentication instead of ident
 `sudo nano /var/lib/pgsql/data/pg_hba.conf`
 ~~`host    all             all             127.0.0.1/32            ident`~~<br>
 `host    all             all             127.0.0.1/32            password`
@@ -93,11 +93,11 @@ Note: You may need to change tomcat-8.0.18 if the version is different
 
 ---
 
-## Fire it up (Startup can take up to 10 minutes)
+## Fire it up (Startup can take 10+ minutes)
 #### No need to run as root since dotCMS will still run on 8080, IPTables will handle the rest
 `/usr/local/dotcms/bin/startup.sh`
 
 ### View Logs
-`tail -n 100 -f /usr/local/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotcms.log`
+`tail -f -n100 /usr/local/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotcms.log`
 
 ---
