@@ -42,7 +42,7 @@
 
 ### Download dotCMS (Choose one)
 `cd ~`
-`wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.2.4.tar.gz`
+`wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.2.4.tar.gz`<br>
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.3.2.tar.gz`
 `wget http://dotcms.com/physical_downloads/release_builds/dotcms_3.5.tar.gz`
 ### or dotCMS v2
