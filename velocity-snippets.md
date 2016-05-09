@@ -272,3 +272,10 @@ $response.sendRedirect('/?dotcache=refresh')
     });
 </script>
 ```
+
+---
+
+###UNIX Timestamp
+```
+$date.calendar.getTimeInMillis()
+```
