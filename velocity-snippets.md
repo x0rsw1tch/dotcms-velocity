@@ -279,3 +279,21 @@ $response.sendRedirect('/?dotcache=refresh')
 ```
 $date.calendar.getTimeInMillis()
 ```
+
+### Time in Milliseconds
+```
+Day:       86400000
+5 Days:    432000000
+1 Week:    604800000
+2 Weeks:   1209600000
+30 Days:   2592000000
+31 Days:   2678400000
+90 Days:   7776000000
+6 Months:  15552000000
+9 Months:  23328000000
+1 Year:    31536000000
+2 Years:   63072000000
+```
+
+
+---
