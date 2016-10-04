@@ -297,3 +297,45 @@ Day:       86400000
 
 
 ---
+
+### Date Formatting
+```
+#set ($dateFormat = 'MMMM d, yyyy') ## October 4, 2016
+#set ($dateFormat = 'MMMM dd, yyyy') ## October 04, 2016
+#set ($dateFormat = 'MMM d, yyyy') ## Oct 04, 2016
+#set ($dateFormat = 'MM-dd-yyyy') ## 10-04-2016
+#set ($dateFormat = 'MM/dd/yyyy') ## 10/04/2016
+
+$date.format($dateFormat, $date.calendar.getTimeInMillis())
+```
+
+
+---
+
+### Convert Timestamp into Date Object
+```
+#set ($myDate = $date.toDate(1475594610991))
+```
+
+### Convert Date Object Into Calendar
+```
+#set ($myDate = $date.toDate(1475594610991))
+#set ($myCalendar = $date.toCalendar($myDate))
+```
+
+---
+
+### Manipulate Calendar Date
+[dotCMS Article](https://dotcms.com/docs/latest/adding-days-and-comparing-dates)
+```
+#set ($myCalendar = $date.toCalendar($date.toDate(1475594610991)))
+Now: $date.format("MMMM, d YYYY", $myCalendar)
+
+#set ($dummy = $myCalendar.add(1,3)) ## Add 3 years
+3 Years from Now: $date.format("MMMM, d YYYY", $myCalendar)
+
+#set ($dummy = $myCalendar.add(5,-90)) ## Subtract 90 days
+90 Days Less than 3 Years From Now: $date.format("MMMM, d YYYY", $myCalendar)
+````
+
+
