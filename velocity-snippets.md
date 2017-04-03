@@ -336,6 +336,44 @@ Now: $date.format("MMMM, d YYYY", $myCalendar)
 
 #set ($dummy = $myCalendar.add(5,-90)) ## Subtract 90 days
 90 Days Less than 3 Years From Now: $date.format("MMMM, d YYYY", $myCalendar)
-````
+```
 
+---
 
+### Get key/pair field names and values
+```
+#foreach($key in $content.fieldName.map.keySet())
+	Name: $key
+	Value: $content.fieldName.map["$key"]
+#end
+```
+
+---
+
+### Get Content Type's Field information
+Reference(s):
+https://dotcms.com/docs/com/dotmarketing/portlets/structure/model/Structure.html
+https://dotcms.com/docs/com/dotmarketing/viewtools/ContentsWebAPI.html
+https://dotcms.com/docs/4.0.0/javadocs/com/dotmarketing/viewtools/content/ContentMap.html
+```
+## From Content Type directly 
+## $contents is reserved object from: com.dotmarketing.viewtools.ContentsWebAPI
+#foreach ($field in $contents.getStructureByInode("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").fields)
+    $field.fieldName
+#end
+
+## From a content pull
+#set($content = $dotcontent.pull("+contentType:ContentTypeName",10,"modDate desc"))
+#foreach ($field in $content.get(0).getStructure().fields)
+	$field.fieldName
+#end
+```
+
+---
+
+### Get all page context information
+```
+#foreach($key in $context.getKeys())
+        Key: $key | Value: $context.get($key)
+#end
+```
