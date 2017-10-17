@@ -377,3 +377,24 @@ https://dotcms.com/docs/4.0.0/javadocs/com/dotmarketing/viewtools/content/Conten
         Key: $key | Value: $context.get($key)
 #end
 ```
+
+---
+
+### Pull in a file
+```
+#include($webapi.getAssetPath('/virtual/path/to/file'))
+```
+
+---
+
+### Pull in a file and eval velocity (does work with non VTL files)
+```
+$render.eval("#include($webapi.getAssetPath('/virtual/path/to/file'))")
+```
+
+---
+
+### Pull in a file via contentlet attachment and eval
+```
+#dotParse("$filetool.getFile(${contentlet.fileAssetFieldName.identifier},true).getURI()")
+```
