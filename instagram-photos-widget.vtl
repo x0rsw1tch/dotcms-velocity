@@ -1,0 +1,142 @@
+#set ($instaPhotosWidget = $dotcontent.find("$ContentIdentifier"))
+
+#set ($instAPIRaw = $importEnhanced.read("$!{instagramRecentURL}$!{instagramAccessToken}", $wawRestGetTimeout))
+#set ($instaData = $json.generate("$instAPIRaw.replaceAll(':null',':false')"))
+
+#set ($instaPhotos = $contents.getEmptyList()) ## The list of images to display (map)
+#set ($instaPhotoLimit = $math.toInteger($instaPhotosWidget.maxImages))
+#set ($instaApiRateLimit = $math.toInteger($math.sub($instaPhotosWidget.apiIterationLimit, 1)))
+
+#set ($instaApiHitCount = 1)
+
+#if ($instaPhotosWidget.photoInput.selectValue == 'recent')
+	#foreach ($entry in $instaData.data)
+		#if ($instaPhotos.size() < $instaPhotoLimit && $instaApiHitCount < $instaApiRateLimit)
+			#if ($entry.images.low_resolution.has('url') && $entry.caption.has('text') && $entry.has('link'))
+				#if ($entry.images.low_resolution.url && $entry.caption.text && $entry.link)
+					#set ($dummy = $instaPhotos.add({'thumb':"${entry.images.thumbnail.url}",'small':"${entry.images.low_resolution.url}",'standard':"${entry.images.standard_resolution.url}",'caption':"${entry.caption.text}",'link':"$!{entry.link}",'taken':"$!{entry.created_time}"}))
+				#end
+			#end
+		#end
+	#end
+#elseif ($instaPhotosWidget.photoInput.selectValue == 'hashtag')
+	#if ($instaPhotosWidget.filterValue && $instaPhotosWidget.filterValue.length() > 0)
+		#foreach ($apiIteration in [0..${instaApiRateLimit}])
+			#if ($instaApiHitCount < $instaApiRateLimit)
+				#foreach ($entry in $instaData.data)
+					#if ($instaPhotos.size() < $instaPhotoLimit)
+						#if ($entry.images.low_resolution.has('url') && $entry.caption.has('text') && $entry.has('link'))
+							#if ($entry.images.low_resolution.url && $entry.caption.text && $entry.link)
+								
+								#set ($tagMatched = false)
+								#foreach ($tag in $entry.tags)
+									#if ($tagMatched == false)
+										#if ($tag == $instaPhotosWidget.filterValue.toLowerCase())
+											#set ($dummy = $instaPhotos.add({'thumb':"${entry.images.thumbnail.url}",'small':"${entry.images.low_resolution.url}",'standard':"${entry.images.standard_resolution.url}",'caption':"${entry.caption.text}",'link':"$!{entry.link}",'taken':"$!{entry.created_time}"}))
+											#set ($tagMatched = true)
+										#end
+									#end
+								#end
+
+							#end
+						#end
+					#end
+				#end
+			#end
+			#if ($instaPhotos.size() < $instaPhotoLimit)
+				## Get next "page" id not full yet
+				#set ($instAPIRaw = $importEnhanced.read("$instaData.pagination.next_url", $wawRestGetTimeout))
+				#set ($instaData = $json.generate("$instAPIRaw.replaceAll(':null',':false')"))
+				#set ($instaApiHitCount = $math.add($instaApiHitCount, 1))
+			#end
+		#end
+	#end
+#elseif ($instaPhotosWidget.photoInput.selectValue == 'date')
+	#if ($instaPhotosWidget.filterValue && $instaPhotosWidget.filterValue.length() > 0)
+		#set ($instaStartDate = $math.toInteger($instaPhotosWidget.filterValue.split(',').get(0)))
+		#set ($instaEndDate = $math.toInteger($instaPhotosWidget.filterValue.split(',').get(1)))
+		#foreach ($apiIteration in [0..${instaApiRateLimit}])
+			#if ($instaApiHitCount < $instaApiRateLimit)
+				#foreach ($entry in $instaData.data)
+					#if ($instaPhotos.size() < $instaPhotoLimit)
+						#if ($entry.has('created_time') && $entry.created_time)
+							#if ($math.toInteger($entry.created_time) > $instaStartDate && $math.toInteger($entry.created_time) < $instaEndDate)
+								#if ($entry.images.low_resolution.has('url') && $entry.caption.has('text') && $entry.has('link'))
+									#if ($entry.images.low_resolution.url && $entry.caption.text && $entry.link)
+										#set ($dummy = $instaPhotos.add({'thumb':"${entry.images.thumbnail.url}",'small':"${entry.images.low_resolution.url}",'standard':"${entry.images.standard_resolution.url}",'caption':"${entry.caption.text}",'link':"$!{entry.link}",'taken':"$!{entry.created_time}"}))
+									#end
+								#end
+							#end
+						#end
+					#end
+				#end
+			#end
+			#if ($instaPhotos.size() < $instaPhotoLimit)
+				## Get next "page" id not full yet
+				#set ($instAPIRaw = $importEnhanced.read("$instaData.pagination.next_url", $wawRestGetTimeout))
+				#set ($instaData = $json.generate("$instAPIRaw.replaceAll(':null',':false')"))
+				#set ($instaApiHitCount = $math.add($instaApiHitCount, 1))
+			#end
+		#end
+	#end
+#elseif ($instaPhotosWidget.photoInput.selectValue == 'location')
+	#if ($instaPhotosWidget.filterValue && $instaPhotosWidget.filterValue.length() > 0)
+		#foreach ($apiIteration in [0..${instaApiRateLimit}])
+			#if ($instaApiHitCount < $instaApiRateLimit)
+				#foreach ($entry in $instaData.data)
+					#if ($instaPhotos.size() < $instaPhotoLimit)
+						#if ($entry.has('location') && $entry.location && $entry.location.has('name') && $entry.location.name)
+							#if ($entry.location.name == $instaPhotosWidget.filterValue)
+								#if ($entry.images.low_resolution.has('url') && $entry.caption.has('text') && $entry.has('link'))
+									#if ($entry.images.low_resolution.url && $entry.caption.text && $entry.link)
+										#set ($dummy = $instaPhotos.add({'thumb':"${entry.images.thumbnail.url}",'small':"${entry.images.low_resolution.url}",'standard':"${entry.images.standard_resolution.url}",'caption':"${entry.caption.text}",'link':"$!{entry.link}",'taken':"$!{entry.created_time}"}))
+									#end
+								#end
+							#end
+						#end
+					#end
+				#end
+			#end
+			#if ($instaPhotos.size() < $instaPhotoLimit)
+				## Get next "page" id not full yet
+				#set ($instAPIRaw = $importEnhanced.read("$instaData.pagination.next_url", $wawRestGetTimeout))
+				#set ($instaData = $json.generate("$instAPIRaw.replaceAll(':null',':false')"))
+				#set ($instaApiHitCount = $math.add($instaApiHitCount, 1))
+			#end
+		#end
+	#end
+#end
+
+<!-- Instagram API hit count: $math.sub($instaApiHitCount, 1) -->
+<!-- Images Found: $instaPhotos.size() -->
+#if ($instaPhotos.size() > 0)
+	<section class="m-t-xl">
+		<section class="slide-photo-gallery row">
+			<div class="container p-b-lg">
+				<article>
+					$!{instaPhotosWidget.heading}
+					<div class="clearfix"></div>			
+					<div class="slider-container">
+						<div class="slider center">
+							#foreach ($photo in $instaPhotos)
+								<div>
+									<div class="holder">
+										<img src="$!{photo.small}" alt="Instagram Photo" style="max-height:400px;">
+										<div class="overlay">
+											<h3>WorldatWork</h3>
+											<h4>$!{photo.caption}</h4>
+											##<p style="color:white;">TEST: $date.toDate($math.mul($math.toInteger($photo.taken), 1000))</p><br>
+											<a href="$!{photo.link}" target="_blank" class="view-more">View More</a>
+										</div>
+									</div>
+								</div>
+							#end
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					$!{instaPhotosWidget.footer}
+				</article>
+			</div>
+		</section>
+	</section>
+#end
