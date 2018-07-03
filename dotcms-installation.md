@@ -1,5 +1,16 @@
 # dotCMS Installation
 
+This guide will walk through installing dotCMS from scratch using current best practices. (CentOS)
+
+* Installing dotCMS
+* PostgreSQL Configuration
+* dotCMS Configuration
+* Apache Reverse-Proxy Configuration
+* SSL Using Certbot
+* Monit Monitoring
+
+There is also a terminal [command reference](#sysreference) at the bottom of this document.
+
 ## Pre-Reqs
 
 ### DotCMS With JDK 8 and Utilities (reboot since there will be kernel updates)
@@ -128,26 +139,38 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 ```
 
-### (Optional) Custom starter move file to ROOT
+### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.0.18/webapps/ROOT/starter.zip dotserver/tomcat-8.0.18/webapps/ROOT/starter-vanilla.zip
 mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/
 ```
+
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
+
 ```
 STARTER_DATA_LOAD=/plugins/com.dotcms.config/starter-plus-tools_0.31.zip
 ```
+[Custom Starter: More Information](https://dotcms.com/docs/latest/deploying-a-custom-starter-site)
 
 ### Give dotCMS more RAM and set PID File
 `nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
 ```
 -Xmx4G -XX:PermSize=256m -XX:MaxPermSize=512m
 ```
+[Memory Config: More Information](https://dotcms.com/docs/latest/memory-configuration)
+
 ```
 export CATALINA_PID="/var/run/dotcms/$DOTSERVER.pid"
 ```
-### 
-`
+
+### (Optional/Recommended) Change location of assets directory
+`mkdir /opt/dotcms-assets`
+
+`nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
+```
+ASSET_REAL_PATH=/opt/dotcms-assets
+```
+[More Information](https://dotcms.com/docs/latest/asset-storage)
 
 ### Cache tuning
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -162,6 +185,9 @@ cache.tagsbyinodecache.size=4000
 cache.velocitycache.size=5000
 cache.virtuallinkscache.size=3500
 ```
+[More Information: Caching](https://dotcms.com/docs/latest/cache-configuration)
+
+[More Information: Guava Cache](https://dotcms.com/docs/latest/guava-cache-provider)
 
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
@@ -174,6 +200,14 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 
 ### Commit Changes, deploy plugin
 `/opt/dotcms/bin/deploy-plugins.sh`
+
+### To Make further changes
+1. `cd /opt/dotcms`
+1. `bin/undeploy-plugins.sh`
+1. Make changes.
+1. `bin/deploy-plugins.sh`
+
+[More Information](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
 
 ----
 
@@ -214,6 +248,8 @@ WantedBy=multi-user.target
 systemctl enable dotcms
 systemctl start dotcms
 ```
+
+[More Information](https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files)
 
 ----
 
@@ -260,6 +296,8 @@ tail -fn200 /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotc
 </IfModule>
 ```
 
+SSL 
+
 ```
 #########################
 ## Proxy to dotCMS SSL ##
@@ -299,6 +337,16 @@ tail -fn200 /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotc
 
 ### Certbot webroot authentication
 `certbot certonly --webroot -w /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT -d domain.com`
+or
+`certbot --apache`
+
+[More information](https://certbot.eff.org/docs/using.html)
+
+### Automate Certificate Renewal (Every 5 Days, log to file)
+`crontab -e`
+```
+* * */5 * * /root/certbot-auto renew > /var/log/letsencrypt-autorenew.log
+```
 
 ----
 
@@ -323,7 +371,7 @@ wget https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
 
 ----
 
-# References
+# <a name="sysreference"></a> References
 
 ## Useful Commands: System
 ```
