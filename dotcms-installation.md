@@ -273,8 +273,8 @@ tail -fn200 /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotc
     ServerName example.com
     ServerAdmin support@ethode.com
 
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog /var/log/httpd/error.log
+    CustomLog /var/log/httpd/access.log combined
 
     ProxyRequests Off
     ProxyPreserveHost On
@@ -310,8 +310,8 @@ SSL
     ServerName example.com
     ServerAdmin support@ethode.com
     
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog /var/log/httpd/error.log
+    CustomLog /var/log/httpd/access.log combined
     
     ProxyRequests Off
     ProxyPreserveHost On
