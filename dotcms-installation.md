@@ -9,14 +9,15 @@ This guide will walk through installing dotCMS from scratch using current best p
 * SSL Using Certbot
 * Monit Monitoring
 
-There is also a terminal [command reference](#sysreference) at the bottom of this document.
+There is also a terminal [command reference](#sysreference) at the bottom of this document. [Workarounds &amp; Fixes](#dotworkarounds).
 
 ## Pre-Reqs
 
 ### DotCMS With JDK 8 and Utilities (reboot since there will be kernel updates)
 ```
+yum -y install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 yum -y install epel-release
-yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptables-services setroubleshoot setools ant java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql.x86_64 postgresql-server.x86_64 monit
+yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptables-services setroubleshoot setools ant java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql96 postgresql96-server monit
 yum -y update
 reboot
 ```
@@ -42,11 +43,10 @@ passwd dotcms
 
 ### PostgreSQL Config
 ```
-/bin/postgresql-setup initdb
-systemctl enable postgresql
-systemctl start postgresql
+/usr/pgsql-9.6/bin/postgresql96-setup initdb
+systemctl enable postgresql-9.6
+systemctl start postgresql-9.6
 su postgres
-createlang plpgsql template1
 psql
 ```
 
@@ -68,7 +68,7 @@ GRANT ALL PRIVILEGES ON `dotcms`.`*` TO 'dotcms'@'localhost';
 
 ### Edit PostgreSQL Connection Properties
 
-`nano /var/lib/pgsql/data/pg_hba.conf`
+`nano /var/lib/pgsql/9.6/data/pg_hba.conf`
 ```
 host    all             all              127.0.0.1/32            password
 ```
@@ -142,20 +142,20 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.0.18/webapps/ROOT/starter.zip dotserver/tomcat-8.0.18/webapps/ROOT/starter-vanilla.zip
-mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/
+mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT
 ```
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
 ```
-STARTER_DATA_LOAD=/plugins/com.dotcms.config/starter-plus-tools_0.31.zip
+STARTER_DATA_LOAD=/starter-plus-tools_0.31.zip
 ```
 [Custom Starter: More Information](https://dotcms.com/docs/latest/deploying-a-custom-starter-site)
 
 ### Give dotCMS more RAM and set PID File
 `nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
 ```
--Xmx4G -XX:PermSize=256m -XX:MaxPermSize=512m
+-Xmx4G
 ```
 [Memory Config: More Information](https://dotcms.com/docs/latest/memory-configuration)
 
@@ -166,7 +166,7 @@ export CATALINA_PID="/var/run/dotcms/$DOTSERVER.pid"
 ### (Optional/Recommended) Change location of assets directory
 `mkdir /opt/dotcms-assets`
 
-`nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
+`nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 ```
 ASSET_REAL_PATH=/opt/dotcms-assets
 ```
@@ -192,11 +192,14 @@ cache.virtuallinkscache.size=3500
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
 
-### Become dotcms user and set envvars
+### Set JAVA_HOME (applies globally)
+
+`nano /etc/profile.d/java_home.sh`
 ```
-su dotcms
 export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 ```
+
+(Logout and back in)
 
 ### Commit Changes, deploy plugin
 `/opt/dotcms/bin/deploy-plugins.sh`
@@ -217,8 +220,8 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 `nano /etc/sysconfig/dotcms`
 ```
 JAVA_HOME=/usr/lib/jvm/jre-openjdk
-PIDFile=/var/run/dotcms/dotcms.pid
-CATALINA_PID=/var/run/dotcms/dotcms.pid
+PIDFile=/var/run/dotcms/dotserver.pid
+CATALINA_PID=/var/run/dotcms/dotserver.pid
 DOTCMS_HOME=/opt/dotcms
 ```
 
@@ -398,4 +401,21 @@ ps -eZ                                         ## Show processes with contexts
 tail -f -n100 /var/log/audit/audit.log         ## SELinux Log
 aureport -a                                    ## Show SELinux audit summary
 seinfo -r                                      ## Show SELinux roles
+```
+
+# <a name="dotworkarounds"></a> Workarounds
+
+## Fix for missing default workflow (until dotCMS fixes this)
+
+> Only do this after dotCMS is deployed and running. No need to restart dotCMS
+
+As Root: `su postgres`
+
+`psql`
+
+```
+INSERT INTO workflow_scheme (id, name, description, archived, mandatory, default_scheme, entry_action_id, mod_date) VALUES ('85c1515c-c4f3-463c-bac2-860b8fcacc34','Default Scheme','This is the default workflow scheme that will be applied to all content',null,null,'t',null,null);
+INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('f7dc56cd-aa81-4ca8-8174-1bb30756df82','Initial State','85c1515c-c4f3-463c-bac2-860b8fcacc34','0','t','f',null,'0');
+INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('43e16aac-5799-46d0-945c-83753af39426','Content Entry','85c1515c-c4f3-463c-bac2-860b8fcacc34','1','f','f',null,'0');
+INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('b1246a0f-6d15-47aa-81bb-67919a6946e0','Closed','85c1515c-c4f3-463c-bac2-860b8fcacc34','2','t','f',null,'0');
 ```
