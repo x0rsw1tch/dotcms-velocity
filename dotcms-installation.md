@@ -220,7 +220,6 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 `nano /etc/sysconfig/dotcms`
 ```
 JAVA_HOME=/usr/lib/jvm/jre-openjdk
-PIDFile=/var/run/dotcms/dotserver.pid
 CATALINA_PID=/var/run/dotcms/dotserver.pid
 DOTCMS_HOME=/opt/dotcms
 ```
@@ -236,6 +235,7 @@ After=network.target
 Type=forking
 EnvironmentFile=/etc/sysconfig/dotcms
 WorkingDirectory=/opt/dotcms
+PIDFile=/var/run/dotcms/dotserver.pid
 User=dotcms
 Group=dotcms
 KillMode=none
