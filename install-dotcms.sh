@@ -49,7 +49,7 @@ echo "#                                                                         
 echo "################################################################################"
 echo ""
 
-read -p "Is the OS up to date? " -r OS_UP_TO_DATE
+read -p "Is the OS up to date [y/n]? " -r OS_UP_TO_DATE
 echo ""
 if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
 	echo ""
