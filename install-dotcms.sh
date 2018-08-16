@@ -417,18 +417,18 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo 'Editing context.xml: Disabling H2 and adding database connection information...'
 	echo ""
 
-	sed -i '/<!-- H2-->/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- H2'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '0,/abandonWhenPercentageFull="50"\/>/s/abandonWhenPercentageFull="50"\/>/abandonWhenPercentageFull="50"\/>\n\ \ \ \ -->/'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '/<!-- POSTGRESQL/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- POSTGRESQL -->'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '/url=\"jdbc\:postgresql\:\/\/localhost\/dotcms\"/c \ \ \ \ \ \ \ \ \ \ url=\"jdbc\:postgresql\:\/\/localhost\/${DOTCMS_DATABASE_NAME}\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '/username="{your db user}" password="{your db password}"/c \ \ \ \ \ \ \ \ \ \ username=\"${DOTCMS_DATABASE_USER}\" password=\"${DOTCMS_DATABASE_PASSWORD}\" maxActive=\"60\" maxIdle=\"10\" maxWait=\"60000\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '0,/^-->$/s/^-->$//'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
+	sed -i '/<!-- H2-->/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- H2'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+	sed -i '0,/abandonWhenPercentageFull="50"\/>/s/abandonWhenPercentageFull="50"\/>/abandonWhenPercentageFull="50"\/>\n\ \ \ \ -->/'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+	sed -i '/<!-- POSTGRESQL/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- POSTGRESQL -->'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+	sed -i '/url=\"jdbc\:postgresql\:\/\/localhost\/dotcms\"/c \ \ \ \ \ \ \ \ \ \ url=\"jdbc\:postgresql\:\/\/localhost\/${DOTCMS_DATABASE_NAME}\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+	sed -i '/username="{your db user}" password="{your db password}"/c \ \ \ \ \ \ \ \ \ \ username=\"${DOTCMS_DATABASE_USER}\" password=\"${DOTCMS_DATABASE_PASSWORD}\" maxActive=\"60\" maxIdle=\"10\" maxWait=\"60000\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+	sed -i '0,/^-->$/s/^-->$//'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
 
 	echo ""
 	echo "Let's verify context.xml...."
 	echo ""
 	echo '************************************************************'
-	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
+	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
 	echo '************************************************************'
 	echo ""
 	read -p "Does this look correct [y/n]?" -r CONTEXT_LOOKS_GOOD
@@ -436,7 +436,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	if [[ $CONTEXT_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
 		echo "Let's edit context.xml manually then..."
 		read -p "Press enter to continue"
-		nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
+		nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
 	fi
 	
 	if [[ $DOTCMS_USE_SSL =~ ^[Yy]$ ]] ; then
