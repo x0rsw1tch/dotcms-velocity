@@ -488,7 +488,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 		if [[ $DOTCMS_STARTER_CHOICE = 3 ]] || [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
 			
 			mv dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter.zip dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter-vanilla.zip
-			mv dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT
+			mv ${DOTCMS_STARTER_FILE} plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT
 
 			echo 'STARTER_DATA_LOAD=\/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz' >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
 
@@ -615,6 +615,12 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo "    #</IfModule>" >> /etc/httpd/conf.d/dotcms.conf
 	echo "</VirtualHost>" >> /etc/httpd/conf.d/dotcms.conf
 	echo "</IfModule>" >> /etc/httpd/conf.d/dotcms.conf
+
+	echo ""
+	echo "Enabling and Starting Apache"
+	echo ""
+	systemctl enable httpd
+	systemctl start httpd
 
 fi
 
