@@ -103,10 +103,10 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	echo '#############################################'
 	echo
 	echo
-    read -p "Domain name: " -n 1 -r HTTP_DOMAIN_NAME
+    read -p "Domain name: "-r HTTP_DOMAIN_NAME
     read -p "Are we going to use SSL [y/n]? " -n 1 -r DOTCMS_USE_SSL
     read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -n 1 -r MONIT_CONFIGURE
-	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]?" -n 1 -r DOTCMS_JAVA_XMX
+	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]?" -r DOTCMS_JAVA_XMX
 	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
 	read -p "Use fat caches [y/n]?" -n 1 -r DOTCMS_USE_FAT_CACHES
 	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]?" -n 1 -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
