@@ -85,7 +85,7 @@ if yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_ONE}; then
     fi
 fi
 
-if [ $PREREQUISITE_PACKAGES_INSTALLED = true ] ; then
+if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 
 else
     echo "Prerequisite packages failed to install... Aborting"
@@ -93,7 +93,7 @@ else
 fi
 
 
-if [ $PREREQUISITE_PACKAGES_INSTALLED = true ] ; then
+if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 
 	DOTCMS_DATABASE_NAME_DEFAULT="dotcms"
 	DOTCMS_DATABASE_USER_DEFUALT="dotcms"
@@ -131,7 +131,7 @@ if [ $PREREQUISITE_PACKAGES_INSTALLED = true ] ; then
 
 fi
 
-if [ $DOTCMS_USER_CONFIGURED = true ] ; then
+if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
 	echo
 	echo '###################################'
@@ -162,7 +162,7 @@ if [ $DOTCMS_USER_CONFIGURED = true ] ; then
 
 fi
 
-if [ $POSTGRESQL_RUNNING = true ] ; then
+if [[ $POSTGRESQL_RUNNING = true ]] ; then
 	echo
 	echo "Creating Database..."
 	echo
@@ -180,7 +180,7 @@ if [ $POSTGRESQL_RUNNING = true ] ; then
 fi
 
 
-if [ $POSTGRESQL_RUNNING = true ] ; then
+if [[ $POSTGRESQL_RUNNING = true ]] ; then
 	echo
 	echo "Configuring hba.conf..."
 	echo
@@ -286,15 +286,15 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
 	DOTCMS_STARTER_CHOICE_VALID=false
 	
-	if [[ $DOTCMS_STARTER_CHOICE = 1 ]]
+	if [[ $DOTCMS_STARTER_CHOICE = 1 ]] ; then
 		DOTCMS_STARTER_CHOICE_VALID=true
 	fi
 
-	if [[ $DOTCMS_STARTER_CHOICE = 2 ]] && [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]]
+	if [[ $DOTCMS_STARTER_CHOICE = 2 ]] && [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]] ; then
 		DOTCMS_STARTER_CHOICE_VALID=true
 	fi
 
-	if [[ $DOTCMS_STARTER_CHOICE = 3 ]] && [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]]
+	if [[ $DOTCMS_STARTER_CHOICE = 3 ]] && [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
 		DOTCMS_STARTER_CHOICE_VALID=true
 	fi
 
@@ -311,7 +311,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 		fi
 	fi
 
-	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]]
+	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
 
 		echo 
 		echo "Making PID Directory"
