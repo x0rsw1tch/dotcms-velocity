@@ -177,7 +177,7 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 	echo ""
 	
 	
-	sudo -u postgres psql -c "CREATE USER dotcms WITH PASSWORD \"${DOTCMS_DATABASE_PASSWORD}\";"
+	sudo -u postgres psql -c "CREATE USER dotcms WITH PASSWORD '${DOTCMS_DATABASE_PASSWORD}';"
 	sudo -u postgres psql -c "CREATE DATABASE \"dotcms\" WITH OWNER = dotcms ENCODING = 'UTF8' TABLESPACE = pg_default LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8' CONNECTION LIMIT = -1;"
 	sudo -u postgres psql -c "GRANT ALL ON DATABASE \"dotcms\" TO dotcms;"
 	if sudo -u postgres psql -c "ALTER ROLE dotcms WITH SUPERUSER;"; then
