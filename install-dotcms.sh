@@ -34,13 +34,13 @@ fi
 
 
 read -p "Is the OS up to date?" -n 1 -r OS_UP_TO_DATE
-echo
+echo ""
 if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
-	echo
+	echo ""
 	echo 'Which version of PostgreSQL do you want to use?'
     echo '1. Version 9 (default/recommended)'
     echo '2. Version 10 (experimental)'
-    echo
+    echo ""
     read -p "Version: " -r POSTGRESQL_VERSION_CHOICE
 
     if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
@@ -48,17 +48,17 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
         yum -y install ${POSTGRESQL_VERISON_9_PACKAGES}
     fi
     if [[ $POSTGRESQL_VERSION_CHOICE = 2 ]] ; then
-        echo
+        echo ""
         echo 'Bear in mind, at the time of writing this, dotCMS support of PostgresSQL 10 is experimental'
-        echo 
+        echo ""
         read -p "Continue [y/n]?" -n 1 -r POSTGRES10_WARNING_ACK
         if [[ $POSTGRES10_WARNING_ACK =~ ^[Yy]$ ]] ; then
             yum -y install ${POSTGRESQL_VERISON_10_RPM}
             yum -y install ${POSTGRESQL_VERISON_10_PACKAGES}
         else
-            echo
+            echo ""
             read -p "Install Version 9 [y/n]?" -n 1 -r POSTGRES_INSTALL_NINE
-            echo
+            echo ""
             if [[ $POSTGRES_INSTALL_NINE =~ ^[Yy]$ ]] ; then
                 yum -y install ${POSTGRESQL_VERISON_9_RPM}
                 yum -y install ${POSTGRESQL_VERISON_9_PACKAGES}
@@ -75,9 +75,11 @@ else
     fi
 fi
 
+echo ""
 echo '######################################'
 echo '## Installing Prerequisite Packages ##'
 echo '######################################'
+echo ""
 
 if yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_ONE}; then
     if yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_TWO}; then
@@ -87,6 +89,7 @@ fi
 
 if [[ $PREREQUISITE_PACKAGES_INSTALLED = false ]] ; then
     echo "Prerequisite packages failed to install... Aborting"
+	echo ""
     exit 1
 fi
 
@@ -97,26 +100,34 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	DOTCMS_DATABASE_USER_DEFUALT="dotcms"
 	DOTCMS_JAVA_XMX_DEFAULT="4G"
 
-	echo
+	echo ""
 	echo '#############################################'
 	echo '## STEP 2: Configuration, users, and such  ##'
 	echo '#############################################'
-	echo
-	echo
-    read -p "Domain name: "-r HTTP_DOMAIN_NAME
+	echo ""
+	echo ""
+    read -p "Domain name: " -r HTTP_DOMAIN_NAME
+	echo ""
     read -p "Are we going to use SSL [y/n]? " -n 1 -r DOTCMS_USE_SSL
+	echo ""
     read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -n 1 -r MONIT_CONFIGURE
+	echo ""
 	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]?" -r DOTCMS_JAVA_XMX
 	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
 	read -p "Use fat caches [y/n]?" -n 1 -r DOTCMS_USE_FAT_CACHES
+	echo ""
 	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]?" -n 1 -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
-    echo
+    echo ""
 	read -p "Enter dotCMS Linux User's Password: " -r DOTCMS_LINUX_USER_PASSWORD
+	echo ""
 	read -p "Enter dotCMS Database Name [dotcms]: " -r DOTCMS_DATABASE_NAME
+	echo ""
 	DOTCMS_DATABASE_NAME="${DOTCMS_DATABASE_NAME:-$DOTCMS_DATABASE_NAME_DEFAULT}"
 	read -p "Enter dotCMS Database User [dotcms]: " -r DOTCMS_DATABASE_USER
+	echo ""
 	DOTCMS_DATABASE_USER="${DOTCMS_DATABASE_USER:-$DOTCMS_DATABASE_USER_DEFUALT}"
 	read -p "Enter dotCMS Database User's Password: " -r DOTCMS_DATABASE_PASSWORD
+	echo ""
 
 	groupadd dotcms
 	useradd -M dotcms -g dotcms
@@ -131,11 +142,11 @@ fi
 
 if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
-	echo
+	echo ""
 	echo '###################################'
 	echo '## STEP 3: Configure PostgresSQL ##'
 	echo '###################################'
-	echo
+	echo ""
 
 	if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
 		/usr/pgsql-9.6/bin/postgresql96-setup initdb
@@ -161,9 +172,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 fi
 
 if [[ $POSTGRESQL_RUNNING = true ]] ; then
-	echo
+	echo ""
 	echo "Creating Database..."
-	echo
+	echo ""
 	
 	
 	sudo -u postgres psql -c "CREATE USER dotcms WITH PASSWORD \"${DOTCMS_DATABASE_PASSWORD}\";"
@@ -179,9 +190,9 @@ fi
 
 
 if [[ $POSTGRESQL_RUNNING = true ]] ; then
-	echo
+	echo ""
 	echo "Configuring hba.conf..."
-	echo
+	echo ""
 
 	POSTGRESQL_EDIT_CONF_SUCCESS=false
 
@@ -209,9 +220,9 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 
 	if [[ $POSTGRESQL_EDIT_CONF_SUCCESS = true ]] ; then
 
-		echo
+		echo ""
 		echo "Please verify pg_hba.conf..."
-		echo
+		echo ""
 		if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
 			sed -n '/host    all             all             127.0.0.1\/32            password/p' ${POSTGRESQL_VERSION_9_HBACONF_PATH}
 		fi
@@ -220,13 +231,13 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 		fi
 		echo "Should Match:"
 		echo "host    all             all             127.0.0.1/32            password"
-		echo
+		echo ""
 
 		read -p "Does it Match [y/n]?" -n 1 -r POSTGRES_EDIT_MATCH
 		if [[ $POSTGRES_EDIT_MATCH =~ ^[Yy]$ ]] ; then
 			POSTGRESQL_CONFIGURED=true
 		else
-				echo
+				echo ""
 				echo "Please edit file manually... Refer to installation guide for guidance"
 				read -p "Press enter to continue"
 			if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
@@ -240,9 +251,9 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 		fi
 
 		if [[ $POSTGRESQL_CONFIGURED = true ]] ; then
-			echo
+			echo ""
 			echo "Restarting PostgresSQL..."
-			echo
+			echo ""
 			systemctl restart postgresql
 		fi
 	fi
@@ -255,25 +266,25 @@ fi
 
 if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
-	echo
+	echo ""
 	echo '##########################'
 	echo '## STEP 4: Setup dotCMS ##'
 	echo '##########################'
-	echo
+	echo ""
 
     echo 'Which version of dotCMS do you want to install ie: 3.7.2, 4.3.3, 5.0.0?'
 	echo 'dotCMS 2.x versions not supported'
-	echo
+	echo ""
     read -p "Version: " -r DOTCMS_VERSION_CHOICE
 	
 	if [[ $DOTCMS_VERSION_CHOICE == 5.0.0 ]] || [[ $DOTCMS_VERSION_CHOICE == 4.3.3 ]] ; then
-	echo
+	echo ""
 	echo 'Choose Starter Package:'
-	echo
+	echo ""
 	echo '1. Vanilla                   All Versions'
 	echo '2. Minimal with Utilities    4.3.3 only'
 	echo '3. Minimal                   4.3.3/5.0.0'
-	echo
+	echo ""
 	read -p "Starter Choice: " -r DOTCMS_STARTER_CHOICE
 
 	if [[ $DOTCMS_VERSION_CHOICE == 5.* ]] ; then
@@ -297,9 +308,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 	fi
 
 	if [[ $DOTCMS_STARTER_CHOICE_VALID = false ]]
-		echo
+		echo ""
 		echo 'Invalid dotCMS version & Starter package selected, switching to vanilla'
-		echo 
+		echo ""
 		read -p "Is this okay?" -n 1 -r DOTCMS_SWITCH_TO_VANILLA
 		if [[ $DOTCMS_SWITCH_TO_VANILLA =~ ^[Yy]$ ]] ; then
 			DOTCMS_STARTER_CHOICE=1
@@ -311,23 +322,23 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
 	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
 
-		echo 
+		echo ""
 		echo "Making PID Directory"
-		echo
+		echo ""
 		mkdir -p /var/run/dotcms
 		chown dotcms:dotcms /var/run/dotcms
 
-		echo 
+		echo ""
 		echo "Making /opt/dotcms"
-		echo
+		echo ""
 		mkdir -p /opt/dotcms
 		cd /opt/dotcms
 
 		
 		DOTCMS_VALID_DOWNLOAD=false
-		echo 
+		echo ""
 		echo "Downloading dotCMS"
-		echo
+		echo ""
 		if wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 			DOTCMS_VALID_DOWNLOAD=true
 		else
@@ -337,9 +348,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
 		if [[ $DOTCMS_VALID_DOWNLOAD = true ]] ; then
 
-			echo 
+			echo ""
 			echo "Unpacking dotCMS"
-			echo
+			echo ""
 			if tar -zxvf dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 				DOTCMS_EXTRACTED=true
 			fi
@@ -367,31 +378,31 @@ fi
 
 if [[ $DOTCMS_EXTRACTED = true]] ; then
 
-	echo
+	echo ""
 	echo '##############################'
 	echo '## STEP 5: Configure dotCMS ##'
 	echo '##############################'
-	echo
+	echo ""
 
-	echo
+	echo ""
 	echo 'Making plugin folders...'
-	echo
+	echo ""
 	mkdir -p plugins/com.dotcms.config/ROOT/bin
 	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF
 	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/conf/
 	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/WEB-INF/classes
 
-	echo
+	echo ""
 	echo 'Copying config files...'
-	echo
+	echo ""
 	cp dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF
 	cp dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf
 	cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 
 	
-	echo
+	echo ""
 	echo 'Editing context.xml: Disabling H2 and adding database connection information...'
-	echo
+	echo ""
 
 	sed -i '/<!-- H2-->/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- H2'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	sed -i '0,/abandonWhenPercentageFull="50"\/>/s/abandonWhenPercentageFull="50"\/>/abandonWhenPercentageFull="50"\/>\n\ \ \ \ -->/'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
@@ -400,13 +411,13 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	sed -i '/username="{your db user}" password="{your db password}"/c \ \ \ \ \ \ \ \ \ \ username=\"${DOTCMS_DATABASE_USER}\" password=\"${DOTCMS_DATABASE_PASSWORD}\" maxActive=\"60\" maxIdle=\"10\" maxWait=\"60000\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	sed -i '0,/^-->$/s/^-->$//'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 
-	echo
+	echo ""
 	echo "Let's verify context.xml...."
-	echo
+	echo ""
 	echo '************************************************************'
 	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	echo '************************************************************'
-	echo
+	echo ""
 	read -p "Does this look correct [y/n]?" -n 1 -r CONTEXT_LOOKS_GOOD
 
 	if [[ $CONTEXT_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
@@ -416,19 +427,19 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	fi
 	
 	if [[ $DOTCMS_USE_SSL =~ ^[Yy]$ ]] ; then
-		echo
+		echo ""
 		echo 'Editing server.xml: SSL config...'
-		echo
+		echo ""
 
 		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\" \/>"/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\" \/>'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 
-		echo
+		echo ""
 		echo "Let's verify server.xml...."
-		echo
+		echo ""
 		echo '************************************************************'
 		cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 		echo '************************************************************'
-		echo
+		echo ""
 		read -p "Does this look correct [y/n]?" -n 1 -r SERVERXML_LOOKS_GOOD
 
 		if [[ $SERVERXML_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
@@ -438,9 +449,9 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 		fi
 	fi
 
-	echo
+	echo ""
 	echo "Adding Custom Starter..."
-	echo 
+	echo ""
 
 	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
 		if [[ $DOTCMS_STARTER_CHOICE = 3 ]] || [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
@@ -453,18 +464,18 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 		fi
 	fi
 
-	echo
+	echo ""
 	echo "Editing Startup script..."
-	echo
+	echo ""
 
 	sed -i '/JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1G\"/c JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1536M\"'  startup.sh
 	sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"\/var\/run\/dotcms\/dotserver\.pid\"'  startup.sh
 
 	
 	if [[ $DOTCMS_USE_FAT_CACHES =~ ^[Yy]$ ]] ; then
-		echo
+		echo ""
 		echo "Adding fat caches..."
-		echo
+		echo ""
 
 		echo "cache.blockdirectivecache.size=3600" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
 		echo "cache.categoryparentscache.size=90000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
@@ -479,9 +490,9 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	fi
 
 	if [[ $DOTCMS_DISABLE_CLUSTER_AUTO_WIRE =~ ^[Yy]$ ]] ; then
-		echo
+		echo ""
 		echo "Disabling cluster auto-wire..."
-		echo
+		echo ""
 
 		echo "AUTOWIRE_CLUSTER_TRANSPORT=false" >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
 		echo "AUTOWIRE_CLUSTER_ES=false" >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
@@ -489,20 +500,20 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 
 	fi
 
-	echo
+	echo ""
 	echo "Setting JAVA_HOME..."
-	echo
+	echo ""
 	touch /etc/profile.d/java_home.sh
 	echo "export JAVA_HOME=/usr/lib/jvm/jre-openjdk" > /etc/profile.d/java_home.sh
 
-	echo
+	echo ""
 	echo "Making dotcms owner..."
-	echo
+	echo ""
 	chown -R dotcms:dotcms /opt/dotcms
 
-	echo
+	echo ""
 	echo "Setting up dotCMS as a system service..."
-	echo 
+	echo ""
 
 	touch /etc/sysconfig/dotcms
 	echo "JAVA_HOME=/usr/lib/jvm/jre-openjdk" >> /etc/sysconfig/dotcms
@@ -535,10 +546,10 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	systemctl enable dotcms
 	setsebool -P httpd_can_network_connect 1
 
-	echo
+	echo ""
 	echo "Adding basic HTTP reverse Apache Config (no HTTPS)"
 	echo "***** Be sure to add SSL configs! *****"
-	echo 
+	echo ""
 
 	touch /etc/httpd/conf.d/dotcms.conf
 	echo "##########################" >> /etc/httpd/conf.d/dotcms.conf
@@ -579,9 +590,9 @@ fi
 
 if [[ $MONIT_CONFIGURE = true ]] ; then
 
-	echo
+	echo ""
 	echo "Configuring monit..."
-	echo 
+	echo ""
 
 	systemctl enable monit
 	systemctl stop monit
@@ -593,11 +604,11 @@ if [[ $MONIT_CONFIGURE = true ]] ; then
 
 fi
 
-echo
+echo ""
 echo '#####################'
 echo '## Finishing Up... ##'
 echo '#####################'
-echo
+echo ""
 
 read -p "Deploy com.dotcms.config [y/n]? " -n 1 -r DEPLOY_DOTCMS_STATIC_PLUGIN
 
@@ -606,10 +617,10 @@ if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN =~ ^[Yy]$ ]] ; then
 	sudo -u dotcms bin/deploy_plugins.sh
 fi
 
-echo
+echo ""
 echo '###############'
 echo '## All done! ##'
 echo '###############'
-echo
+echo ""
 echo 'Run: "systemctl start dotcms" to start dotcms'
-echo
+echo ""
