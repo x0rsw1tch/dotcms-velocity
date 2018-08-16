@@ -442,7 +442,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 		echo 'Editing server.xml: SSL config...'
 		echo ""
 
-		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>"/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 
 		echo ""
 		echo "Let's verify server.xml...."
