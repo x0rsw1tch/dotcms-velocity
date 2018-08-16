@@ -1,6 +1,14 @@
 #!/bin/sh
-
+## cd to / to avoid access denied to /root when sudo'ing
 cd /
+
+if [ "$(whoami)" != "root" ]; then
+	echo ""
+	echo "Must be root"
+	echo ""
+	exit 1
+fi
+
 
 POSTGRESQL_VERISON_9_RPM="https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm"
 POSTGRESQL_VERISON_10_RPM="https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm"
@@ -22,18 +30,24 @@ POSTGRESQL_DATABASE_CREATED=false
 DATABASE_CONFIGURED=false
 POSTGRESQL_CONFIGURED=false
 
-
-
-
-##
-## STEP 1: Prerequisites
-##
-
-if [ "$(whoami)" != "root" ]; then
-	echo "Must be root"
-	exit 1
-fi
-
+echo ""
+echo "################################################################################"
+echo "#                          dotCMS Installer v0.1                               #"
+echo "#                                                                              #"
+echo "#                        A mostly automated script                             #"
+echo "#                                                                              #"
+echo "################################################################################"
+echo "#                                                                              #"
+echo "#                               Procedure                                      #"
+echo "#                                                                              #"
+echo "# 1. Install PostgresSQL           1m                                          #"
+echo "# 2. Install Prerequisites         2m                                          #"
+echo "# 3. Setup Options                 1m                                          #"
+echo "# 4. Configuration                 1m                                          #"
+echo "# 5. Installation / Verification   1m                                          #"
+echo "#                                                                              #"
+echo "################################################################################"
+echo ""
 
 read -p "Is the OS up to date? " -r OS_UP_TO_DATE
 echo ""
