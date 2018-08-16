@@ -442,7 +442,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 		echo 'Editing server.xml: SSL config...'
 		echo ""
 
-		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 
 		echo ""
 		echo "Let's verify server.xml...."
@@ -625,7 +625,7 @@ read -p "Deploy com.dotcms.config [y/n]? " -r DEPLOY_DOTCMS_STATIC_PLUGIN
 
 if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN =~ ^[Yy]$ ]] ; then
 	export JAVA_HOME=/usr/lib/jvm/jre-openjdk
-	sudo -u dotcms bin/deploy_plugins.sh
+	sudo -u dotcms bin/deploy-plugins.sh
 fi
 
 echo ""
