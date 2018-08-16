@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd /
+
 POSTGRESQL_VERISON_9_RPM="https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm"
 POSTGRESQL_VERISON_10_RPM="https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm"
 
@@ -33,15 +35,15 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 
-read -p "Is the OS up to date?" -n 1 -r OS_UP_TO_DATE
+read -p "Is the OS up to date? " -r OS_UP_TO_DATE
 echo ""
 if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
 	echo ""
-	echo 'Which version of PostgreSQL do you want to use?'
-    echo '1. Version 9 (default/recommended)'
-    echo '2. Version 10 (experimental)'
+	echo "PostgreSQL"
+    echo '1. Version 9.6 (default/recommended)'
+    echo '2. Version 10.2 (experimental)'
     echo ""
-    read -p "Version: " -r POSTGRESQL_VERSION_CHOICE
+    read -p "Which Version do you want to use? " -r POSTGRESQL_VERSION_CHOICE
 
     if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
         yum -y install ${POSTGRESQL_VERISON_9_RPM}
@@ -51,13 +53,13 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
         echo ""
         echo 'Bear in mind, at the time of writing this, dotCMS support of PostgresSQL 10 is experimental'
         echo ""
-        read -p "Continue [y/n]?" -n 1 -r POSTGRES10_WARNING_ACK
+        read -p "Continue [y/n]?" -r POSTGRES10_WARNING_ACK
         if [[ $POSTGRES10_WARNING_ACK =~ ^[Yy]$ ]] ; then
             yum -y install ${POSTGRESQL_VERISON_10_RPM}
             yum -y install ${POSTGRESQL_VERISON_10_PACKAGES}
         else
             echo ""
-            read -p "Install Version 9 [y/n]?" -n 1 -r POSTGRES_INSTALL_NINE
+            read -p "Install Version 9 [y/n]?" -r POSTGRES_INSTALL_NINE
             echo ""
             if [[ $POSTGRES_INSTALL_NINE =~ ^[Yy]$ ]] ; then
                 yum -y install ${POSTGRESQL_VERISON_9_RPM}
@@ -66,7 +68,7 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
         fi
     fi
 else
-    read -p "Do you want to update the OS?" -n 1 -r UPDATE_OS_CHOICE
+    read -p "Do you want to update the OS? " -r UPDATE_OS_CHOICE
     if [[ $UPDATE_OS_CHOICE =~ ^[Yy]$ ]] ; then
         yum -y update
     else
@@ -108,27 +110,27 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	echo ""
     read -p "Domain name: " -r HTTP_DOMAIN_NAME
 	echo ""
-    read -p "Are we going to use SSL [y/n]? " -n 1 -r DOTCMS_USE_SSL
+    read -p "Are we going to use SSL [y/n]? " -r DOTCMS_USE_SSL
 	echo ""
-    read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -n 1 -r MONIT_CONFIGURE
+    read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -r MONIT_CONFIGURE
 	echo ""
-	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]?" -r DOTCMS_JAVA_XMX
+	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]? " -r DOTCMS_JAVA_XMX
 	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
-	read -p "Use fat caches [y/n]?" -n 1 -r DOTCMS_USE_FAT_CACHES
-	echo ""
-	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]?" -n 1 -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
+	read -p "Use fat caches [y/n]?" -r DOTCMS_USE_FAT_CACHES
+	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]? " -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
     echo ""
 	read -p "Enter dotCMS Linux User's Password: " -r DOTCMS_LINUX_USER_PASSWORD
 	echo ""
 	read -p "Enter dotCMS Database Name [dotcms]: " -r DOTCMS_DATABASE_NAME
-	echo ""
 	DOTCMS_DATABASE_NAME="${DOTCMS_DATABASE_NAME:-$DOTCMS_DATABASE_NAME_DEFAULT}"
 	read -p "Enter dotCMS Database User [dotcms]: " -r DOTCMS_DATABASE_USER
-	echo ""
 	DOTCMS_DATABASE_USER="${DOTCMS_DATABASE_USER:-$DOTCMS_DATABASE_USER_DEFUALT}"
 	read -p "Enter dotCMS Database User's Password: " -r DOTCMS_DATABASE_PASSWORD
 	echo ""
 
+	echo ""
+	echo 'Creating User and Group...'
+	echo ""
 	groupadd dotcms
 	useradd -M dotcms -g dotcms
 	if echo "dotcms:${DOTCMS_LINUX_USER_PASSWORD}" | chpasswd; then
@@ -150,6 +152,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 
 	if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
 		/usr/pgsql-9.6/bin/postgresql96-setup initdb
+		echo ""
+		echo 'Init DB, enable and start PostgresSQL...'
+		echo ""
 		systemctl enable postgresql-9.6
 		if systemctl start postgresql-9.6; then
 			POSTGRESQL_RUNNING=true
@@ -159,6 +164,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 		fi
 	fi
 	if [[ $POSTGRESQL_VERSION_CHOICE = 2 ]] ; then
+		echo ""
+		echo 'Init DB, enable and start PostgresSQL...'
+		echo ""
 		/usr/pgsql-10/bin/postgresql-10-setup initdb
 		systemctl enable postgresql-10
 		if systemctl start postgresql-10; then
@@ -172,11 +180,10 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 fi
 
 if [[ $POSTGRESQL_RUNNING = true ]] ; then
+	
 	echo ""
 	echo "Creating Database..."
 	echo ""
-	
-	
 	sudo -u postgres psql -c "CREATE USER dotcms WITH PASSWORD '${DOTCMS_DATABASE_PASSWORD}';"
 	sudo -u postgres psql -c "CREATE DATABASE \"dotcms\" WITH OWNER = dotcms ENCODING = 'UTF8' TABLESPACE = pg_default LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8' CONNECTION LIMIT = -1;"
 	sudo -u postgres psql -c "GRANT ALL ON DATABASE \"dotcms\" TO dotcms;"
@@ -190,12 +197,11 @@ fi
 
 
 if [[ $POSTGRESQL_RUNNING = true ]] ; then
+	
 	echo ""
 	echo "Configuring hba.conf..."
 	echo ""
-
 	POSTGRESQL_EDIT_CONF_SUCCESS=false
-
 	if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
 		
 		if sed -i '/host    all             all             127.0.0.1\/32            md5/c host    all             all             127.0.0.1\/32            password' ${POSTGRESQL_VERSION_9_HBACONF_PATH}; then
@@ -233,7 +239,7 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 		echo "host    all             all             127.0.0.1/32            password"
 		echo ""
 
-		read -p "Does it Match [y/n]?" -n 1 -r POSTGRES_EDIT_MATCH
+		read -p "Does it Match [y/n]?" -r POSTGRES_EDIT_MATCH
 		if [[ $POSTGRES_EDIT_MATCH =~ ^[Yy]$ ]] ; then
 			POSTGRESQL_CONFIGURED=true
 		else
@@ -317,7 +323,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 			echo ""
 			echo 'Invalid dotCMS version & Starter package selected, switching to vanilla'
 			echo ""
-			read -p "Is this okay?" -n 1 -r DOTCMS_SWITCH_TO_VANILLA
+			read -p "Is this okay? " -r DOTCMS_SWITCH_TO_VANILLA
 			if [[ $DOTCMS_SWITCH_TO_VANILLA =~ ^[Yy]$ ]] ; then
 				DOTCMS_STARTER_CHOICE=1
 			else
@@ -343,7 +349,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 			
 			DOTCMS_VALID_DOWNLOAD=false
 			echo ""
-			echo "Downloading dotCMS"
+			echo "Downloading dotCMS..."
 			echo ""
 			if wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 				DOTCMS_VALID_DOWNLOAD=true
@@ -355,7 +361,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 			if [[ $DOTCMS_VALID_DOWNLOAD = true ]] ; then
 
 				echo ""
-				echo "Unpacking dotCMS"
+				echo "Unpacking dotCMS..."
 				echo ""
 				if tar -zxvf dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 					DOTCMS_EXTRACTED=true
@@ -383,7 +389,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 	fi
 fi
 
-if [[ $DOTCMS_EXTRACTED = true]] ; then
+if [[ $DOTCMS_EXTRACTED = true ]] ; then
 
 	echo ""
 	echo '##############################'
@@ -425,7 +431,7 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	echo '************************************************************'
 	echo ""
-	read -p "Does this look correct [y/n]?" -n 1 -r CONTEXT_LOOKS_GOOD
+	read -p "Does this look correct [y/n]?" -r CONTEXT_LOOKS_GOOD
 
 	if [[ $CONTEXT_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
 		echo "Let's edit context.xml manually then..."
@@ -447,7 +453,7 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 		cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 		echo '************************************************************'
 		echo ""
-		read -p "Does this look correct [y/n]?" -n 1 -r SERVERXML_LOOKS_GOOD
+		read -p "Does this look correct [y/n]?" -r SERVERXML_LOOKS_GOOD
 
 		if [[ $SERVERXML_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
 			echo "Let's edit server.xml manually then..."
@@ -617,7 +623,7 @@ echo '## Finishing Up... ##'
 echo '#####################'
 echo ""
 
-read -p "Deploy com.dotcms.config [y/n]? " -n 1 -r DEPLOY_DOTCMS_STATIC_PLUGIN
+read -p "Deploy com.dotcms.config [y/n]? " -r DEPLOY_DOTCMS_STATIC_PLUGIN
 
 if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN =~ ^[Yy]$ ]] ; then
 	export JAVA_HOME=/usr/lib/jvm/jre-openjdk
