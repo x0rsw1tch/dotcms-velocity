@@ -2,7 +2,7 @@
 ## cd to / to avoid access denied to /root when sudo'ing
 cd /
 
-if [ "$(whoami)" != "root" ]; then
+if [[ "$(whoami)" != "root" ]] ; then
 	echo ""
 	echo "Must be root"
 	echo ""
