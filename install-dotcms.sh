@@ -70,13 +70,13 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
         echo ""
         echo 'Bear in mind, at the time of writing this, dotCMS support of PostgresSQL 10 is experimental'
         echo ""
-        read -p "Continue [y/n]?" -r POSTGRES10_WARNING_ACK
+        read -p "Continue [y/n]? " -r POSTGRES10_WARNING_ACK
         if [[ $POSTGRES10_WARNING_ACK =~ ^[Yy]$ ]] ; then
             yum -y install ${POSTGRESQL_VERISON_10_RPM}
             yum -y install ${POSTGRESQL_VERISON_10_PACKAGES}
         else
             echo ""
-            read -p "Install Version 9 [y/n]?" -r POSTGRES_INSTALL_NINE
+            read -p "Install Version 9 [y/n]? " -r POSTGRES_INSTALL_NINE
             echo ""
             if [[ $POSTGRES_INSTALL_NINE =~ ^[Yy]$ ]] ; then
                 yum -y install ${POSTGRESQL_VERISON_9_RPM}
@@ -211,7 +211,7 @@ fi
 if [[ $POSTGRESQL_RUNNING = true ]] ; then
 	
 	echo ""
-	echo "Configuring hba.conf..."
+	echo "Configuring hba.conf. You will be asked to verify the changes..."
 	echo ""
 	POSTGRESQL_EDIT_CONF_SUCCESS=false
 	if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
@@ -237,10 +237,10 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 	fi
 
 	if [[ $POSTGRESQL_EDIT_CONF_SUCCESS = true ]] ; then
-
 		echo ""
 		echo "Please verify pg_hba.conf..."
 		echo ""
+		sleep 1
 		if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
 			sed -n '/host    all             all             127.0.0.1\/32            password/p' ${POSTGRESQL_VERSION_9_HBACONF_PATH}
 		fi
@@ -251,7 +251,7 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 		echo "host    all             all             127.0.0.1/32            password"
 		echo ""
 
-		read -p "Does it Match [y/n]?" -r POSTGRES_EDIT_MATCH
+		read -p "Does it Match? You will get the opportunity to edit manually. [y/n] " -r POSTGRES_EDIT_MATCH
 		if [[ $POSTGRES_EDIT_MATCH =~ ^[Yy]$ ]] ; then
 			POSTGRESQL_CONFIGURED=true
 		else
@@ -375,6 +375,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 				echo ""
 				echo "Unpacking dotCMS..."
 				echo ""
+				sleep 1
 				if tar -zxvf dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 					DOTCMS_EXTRACTED=true
 				fi
@@ -426,7 +427,8 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 
 	
 	echo ""
-	echo 'Editing context.xml: Disabling H2 and adding database connection information...'
+	echo 'Editing context.xml: Disabling H2 and adding database connection information.'
+	echo 'You will be asked to verify changes...'
 	echo ""
 
 	sed -i "/<!-- H2-->/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- H2" plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
@@ -439,13 +441,15 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo ""
 	echo "Let's verify context.xml...."
 	echo ""
+	sleep 1
 	echo '************************************************************'
 	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
 	echo '************************************************************'
 	echo ""
-	read -p "Does this look correct [y/n]?" -r CONTEXT_LOOKS_GOOD
+	read -p "Does this look correct [y/n]? " -r CONTEXT_LOOKS_GOOD
 
 	if [[ $CONTEXT_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
+		echo ""
 		echo "Let's edit context.xml manually then..."
 		read -p "Press enter to continue"
 		nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
@@ -453,21 +457,23 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	
 	if [[ $DOTCMS_USE_SSL =~ ^[Yy]$ ]] ; then
 		echo ""
-		echo 'Editing server.xml: SSL config...'
+		echo 'Editing server.xml: SSL config. You will be asked to verify changes...'
 		echo ""
-
+		sleep 1
 		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 
 		echo ""
 		echo "Let's verify server.xml...."
 		echo ""
+		sleep 1
 		echo '************************************************************'
 		cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 		echo '************************************************************'
 		echo ""
-		read -p "Does this look correct [y/n]?" -r SERVERXML_LOOKS_GOOD
+		read -p "Does this look correct [y/n]? " -r SERVERXML_LOOKS_GOOD
 
 		if [[ $SERVERXML_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
+			echo ""
 			echo "Let's edit server.xml manually then..."
 			read -p "Press enter to continue"
 			nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
@@ -477,7 +483,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo ""
 	echo "Adding Custom Starter..."
 	echo ""
-
+	sleep 1
 	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
 		if [[ $DOTCMS_STARTER_CHOICE = 3 ]] || [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
 			
