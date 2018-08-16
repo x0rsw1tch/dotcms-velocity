@@ -283,101 +283,103 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
     read -p "Version: " -r DOTCMS_VERSION_CHOICE
 	
 	if [[ $DOTCMS_VERSION_CHOICE == 5.0.0 ]] || [[ $DOTCMS_VERSION_CHOICE == 4.3.3 ]] ; then
-	echo ""
-	echo 'Choose Starter Package:'
-	echo ""
-	echo '1. Vanilla                   All Versions'
-	echo '2. Minimal with Utilities    4.3.3 only'
-	echo '3. Minimal                   4.3.3/5.0.0'
-	echo ""
-	read -p "Starter Choice: " -r DOTCMS_STARTER_CHOICE
 
-	if [[ $DOTCMS_VERSION_CHOICE == 5.* ]] ; then
-		DOTCMS_TOMCAT_VERSION=8.5.32
-	else
-		DOTCMS_TOMCAT_VERSION=8.0.18
-	fi
+		echo ""
+		echo 'Choose Starter Package:'
+		echo ""
+		echo '1. Vanilla                   All Versions'
+		echo '2. Minimal with Utilities    4.3.3 only'
+		echo '3. Minimal                   4.3.3/5.0.0'
+		echo ""
+		read -p "Starter Choice: " -r DOTCMS_STARTER_CHOICE
 
-	DOTCMS_STARTER_CHOICE_VALID=false
+		if [[ $DOTCMS_VERSION_CHOICE == 5.* ]] ; then
+			DOTCMS_TOMCAT_VERSION=8.5.32
+		else
+			DOTCMS_TOMCAT_VERSION=8.0.18
+		fi
+
+		DOTCMS_STARTER_CHOICE_VALID=false
 	
-	if [[ $DOTCMS_STARTER_CHOICE = 1 ]] ; then
-		DOTCMS_STARTER_CHOICE_VALID=true
-	fi
-
-	if [[ $DOTCMS_STARTER_CHOICE = 2 ]] && [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]] ; then
-		DOTCMS_STARTER_CHOICE_VALID=true
-	fi
-
-	if [[ $DOTCMS_STARTER_CHOICE = 3 ]] && [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
-		DOTCMS_STARTER_CHOICE_VALID=true
-	fi
-
-	if [[ $DOTCMS_STARTER_CHOICE_VALID = false ]] ; then
-		echo ""
-		echo 'Invalid dotCMS version & Starter package selected, switching to vanilla'
-		echo ""
-		read -p "Is this okay?" -n 1 -r DOTCMS_SWITCH_TO_VANILLA
-		if [[ $DOTCMS_SWITCH_TO_VANILLA =~ ^[Yy]$ ]] ; then
-			DOTCMS_STARTER_CHOICE=1
-		else
-			echo "Unable to continue."
-			exit 1
-		fi
-	fi
-
-	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
-
-		echo ""
-		echo "Making PID Directory"
-		echo ""
-		mkdir -p /var/run/dotcms
-		chown dotcms:dotcms /var/run/dotcms
-
-		echo ""
-		echo "Making /opt/dotcms"
-		echo ""
-		mkdir -p /opt/dotcms
-		cd /opt/dotcms
-
-		
-		DOTCMS_VALID_DOWNLOAD=false
-		echo ""
-		echo "Downloading dotCMS"
-		echo ""
-		if wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
-			DOTCMS_VALID_DOWNLOAD=true
-		else
-			echo "Unable to download dotCMS, aborting..."
-			exit 1
+		if [[ $DOTCMS_STARTER_CHOICE = 1 ]] ; then
+			DOTCMS_STARTER_CHOICE_VALID=true
 		fi
 
-		if [[ $DOTCMS_VALID_DOWNLOAD = true ]] ; then
+		if [[ $DOTCMS_STARTER_CHOICE = 2 ]] && [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]] ; then
+			DOTCMS_STARTER_CHOICE_VALID=true
+		fi
+
+		if [[ $DOTCMS_STARTER_CHOICE = 3 ]] && [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
+			DOTCMS_STARTER_CHOICE_VALID=true
+		fi
+
+		if [[ $DOTCMS_STARTER_CHOICE_VALID = false ]] ; then
+			echo ""
+			echo 'Invalid dotCMS version & Starter package selected, switching to vanilla'
+			echo ""
+			read -p "Is this okay?" -n 1 -r DOTCMS_SWITCH_TO_VANILLA
+			if [[ $DOTCMS_SWITCH_TO_VANILLA =~ ^[Yy]$ ]] ; then
+				DOTCMS_STARTER_CHOICE=1
+			else
+				echo "Unable to continue."
+				exit 1
+			fi
+		fi
+
+		if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
 
 			echo ""
-			echo "Unpacking dotCMS"
+			echo "Making PID Directory"
 			echo ""
-			if tar -zxvf dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
-				DOTCMS_EXTRACTED=true
+			mkdir -p /var/run/dotcms
+			chown dotcms:dotcms /var/run/dotcms
+
+			echo ""
+			echo "Making /opt/dotcms"
+			echo ""
+			mkdir -p /opt/dotcms
+			cd /opt/dotcms
+
+			
+			DOTCMS_VALID_DOWNLOAD=false
+			echo ""
+			echo "Downloading dotCMS"
+			echo ""
+			if wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
+				DOTCMS_VALID_DOWNLOAD=true
+			else
+				echo "Unable to download dotCMS, aborting..."
+				exit 1
 			fi
 
-			if [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
-				if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
-					DOTCMS_STARTER_FILE="dotcms-5.0.0_minimal.zip"
-					wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.0_minimal.zip
+			if [[ $DOTCMS_VALID_DOWNLOAD = true ]] ; then
+
+				echo ""
+				echo "Unpacking dotCMS"
+				echo ""
+				if tar -zxvf dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
+					DOTCMS_EXTRACTED=true
+				fi
+
+				if [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
+					if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
+						DOTCMS_STARTER_FILE="dotcms-5.0.0_minimal.zip"
+						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.0_minimal.zip
+					fi
+				fi
+
+				if [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]] ; then
+					if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
+						DOTCMS_STARTER_FILE="dotcms-4.3.3_minimal.zip"
+						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-4.3.3_minimal.zip
+					fi
+					if [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
+						DOTCMS_STARTER_FILE="dotcms-4.3.3_minimal.zip"
+						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-4.3.3_with-tools_0.31.zip
+					fi
 				fi
 			fi
-
-			if [[ $DOTCMS_VERSION_CHOICE = 4.3.3 ]] ; then
-				if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
-					DOTCMS_STARTER_FILE="dotcms-4.3.3_minimal.zip"
-					wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-4.3.3_minimal.zip
-				fi
-				if [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
-					DOTCMS_STARTER_FILE="dotcms-4.3.3_minimal.zip"
-					wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-4.3.3_with-tools_0.31.zip
-				fi
-			fi
-
+		fi
 	fi
 fi
 
