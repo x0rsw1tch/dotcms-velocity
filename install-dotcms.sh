@@ -17,7 +17,8 @@ POSTGRESQL_VERISON_9_PACKAGES="postgresql96 postgresql96-server"
 POSTGRESQL_VERISON_10_PACKAGES="postgresql10 postgresql10-server"
 
 PREREQUISITE_PACKAGE_LIST_STEP_ONE="epel-release"
-PREREQUISITE_PACKAGE_LIST_STEP_TWO="httpd wget curl nano htop mc iptables-services java-1.8.0-openjdk java-1.8.0-openjdk-headless nmap lsof certbot mod_proxy_html mod_ssl setroubleshoot setools ant monit"
+PREREQUISITE_PACKAGE_LIST_STEP_TWO="httpd wget curl nano htop mc iptables-services java-1.8.0-openjdk java-1.8.0-openjdk-headless nmap lsof certbot mod_proxy_html mod_ssl ant monit"
+PREREQUISITE_PACKAGE_LIST_STEP_THREE="setroubleshoot setools"
 
 POSTGRESQL_VERSION_9_HBACONF_PATH="/var/lib/pgsql/9.6/data/pg_hba.conf"
 POSTGRESQL_VERSION_10_HBACONF_PATH="/var/lib/pgsql/10.2/data/pg_hba.conf"
@@ -84,8 +85,9 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
             fi
         fi
     fi
+
 else
-    read -p "Do you want to update the OS? " -r UPDATE_OS_CHOICE
+    read -p "Do you want to update the OS? " -i "y" -r UPDATE_OS_CHOICE
     if [[ $UPDATE_OS_CHOICE =~ ^[Yy]$ ]] ; then
         yum -y update
     else
@@ -115,6 +117,11 @@ fi
 
 if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 
+	read -p "Install SELinux audit tools? They aren't needed to change settings. [y/N] " -i "n" -r INSTALL_SETOOLS
+	if [[ $INSTALL_SETOOLS =~ ^[Yy]$ ]] ; then
+		yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_THREE}
+	fi
+
 	DOTCMS_DATABASE_NAME_DEFAULT="dotcms"
 	DOTCMS_DATABASE_USER_DEFUALT="dotcms"
 	DOTCMS_JAVA_XMX_DEFAULT="4G"
@@ -126,12 +133,12 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	echo ""
 	echo ""
     read -p "Domain name: " -r HTTP_DOMAIN_NAME
-    read -p "Are we going to use SSL [y/n]? " -r DOTCMS_USE_SSL
-    read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -r MONIT_CONFIGURE
+    read -p "Are we going to use SSL [Y/n]? " -i "y"  -r DOTCMS_USE_SSL
+    read -p "Enable and configure monit with dotCMS and Apache [Y/n]? " -i "y" -r MONIT_CONFIGURE
 	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]? " -r DOTCMS_JAVA_XMX
 	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
-	read -p "Use fat caches [y/n]? " -r DOTCMS_USE_FAT_CACHES
-	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]? " -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
+	read -p "Use fat caches [Y/n]? " -i "y" -r DOTCMS_USE_FAT_CACHES
+	read -p "Disable Cluster Auto-wiring (fixes too many open files in non-clusters) [Y/n]? " -i "y" -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
 	read -p "Enter dotCMS Linux User's Password: " -r DOTCMS_LINUX_USER_PASSWORD
 	read -p "Enter dotCMS Database Name [dotcms]: " -r DOTCMS_DATABASE_NAME
 	DOTCMS_DATABASE_NAME="${DOTCMS_DATABASE_NAME:-$DOTCMS_DATABASE_NAME_DEFAULT}"
@@ -490,7 +497,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 			mv dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter.zip dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter-vanilla.zip
 			mv ${DOTCMS_STARTER_FILE} plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT
 
-			echo 'STARTER_DATA_LOAD=\/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz' >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+			echo "STARTER_DATA_LOAD=\/dotcms_${DOTCMS_STARTER_FILE}.tar.gz" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
 
 		fi
 	fi
