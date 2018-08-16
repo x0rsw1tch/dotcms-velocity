@@ -85,9 +85,7 @@ if yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_ONE}; then
     fi
 fi
 
-if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
-
-else
+if [[ $PREREQUISITE_PACKAGES_INSTALLED = false ]] ; then
     echo "Prerequisite packages failed to install... Aborting"
     exit 1
 fi
