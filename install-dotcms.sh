@@ -254,7 +254,12 @@ if [[ $POSTGRESQL_RUNNING = true ]] ; then
 			echo ""
 			echo "Restarting PostgresSQL..."
 			echo ""
-			systemctl restart postgresql
+			if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
+				systemctl restart postgresql-9.6
+			fi
+			if [[ $POSTGRESQL_VERSION_CHOICE = 2 ]] ; then
+				systemctl restart postgresql-10.2
+			fi
 		fi
 	fi
 fi
@@ -307,7 +312,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 		DOTCMS_STARTER_CHOICE_VALID=true
 	fi
 
-	if [[ $DOTCMS_STARTER_CHOICE_VALID = false ]]
+	if [[ $DOTCMS_STARTER_CHOICE_VALID = false ]] ; then
 		echo ""
 		echo 'Invalid dotCMS version & Starter package selected, switching to vanilla'
 		echo ""
