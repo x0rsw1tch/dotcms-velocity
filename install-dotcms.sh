@@ -401,9 +401,9 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo 'Making plugin folders...'
 	echo ""
 	mkdir -p plugins/com.dotcms.config/ROOT/bin
-	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF
-	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/conf/
-	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/WEB-INF/classes
+	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF
+	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/
+	mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/WEB-INF/classes
 
 	echo ""
 	echo 'Copying config files...'
