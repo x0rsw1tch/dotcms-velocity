@@ -34,7 +34,7 @@ fi
 
 
 read -p "Is the OS up to date?" -n 1 -r OS_UP_TO_DATE
-echo    # (optional) move to a new line
+echo
 if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
 	echo
 	echo 'Which version of PostgreSQL do you want to use?'
@@ -51,13 +51,13 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
         echo
         echo 'Bear in mind, at the time of writing this, dotCMS support of PostgresSQL 10 is experimental'
         echo 
-        read -p "Continue (y/n)?" -n 1 -r POSTGRES10_WARNING_ACK
+        read -p "Continue [y/n]?" -n 1 -r POSTGRES10_WARNING_ACK
         if [[ $POSTGRES10_WARNING_ACK =~ ^[Yy]$ ]] ; then
             yum -y install ${POSTGRESQL_VERISON_10_RPM}
             yum -y install ${POSTGRESQL_VERISON_10_PACKAGES}
         else
             echo
-            read -p "Install Version 9 (y/n)?" -n 1 -r POSTGRES_INSTALL_NINE
+            read -p "Install Version 9 [y/n]?" -n 1 -r POSTGRES_INSTALL_NINE
             echo
             if [[ $POSTGRES_INSTALL_NINE =~ ^[Yy]$ ]] ; then
                 yum -y install ${POSTGRESQL_VERISON_9_RPM}
@@ -65,9 +65,6 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
             fi
         fi
     fi
-	echo
-    read -p "Are we going to use SSL (y/n)?" -n 1 -r DOTCMS_USE_SSL
-    echo
 else
     read -p "Do you want to update the OS?" -n 1 -r UPDATE_OS_CHOICE
     if [[ $UPDATE_OS_CHOICE =~ ^[Yy]$ ]] ; then
@@ -100,12 +97,22 @@ if [ $PREREQUISITE_PACKAGES_INSTALLED = true ] ; then
 
 	DOTCMS_DATABASE_NAME_DEFAULT="dotcms"
 	DOTCMS_DATABASE_USER_DEFUALT="dotcms"
+	DOTCMS_JAVA_XMX_DEFAULT="4G"
 
 	echo
-	echo '##################################'
-	echo '## STEP 2: Users and passwords  ##'
-	echo '##################################'
+	echo '#############################################'
+	echo '## STEP 2: Configuration, users, and such  ##'
+	echo '#############################################'
 	echo
+	echo
+    read -p "Domain name: " -n 1 -r HTTP_DOMAIN_NAME
+    read -p "Are we going to use SSL [y/n]? " -n 1 -r DOTCMS_USE_SSL
+    read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -n 1 -r MONIT_CONFIGURE
+	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]?" -n 1 -r DOTCMS_JAVA_XMX
+	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
+	read -p "Use fat caches [y/n]?" -n 1 -r DOTCMS_USE_FAT_CACHES
+	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]?" -n 1 -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
+    echo
 	read -p "Enter dotCMS Linux User's Password: " -r DOTCMS_LINUX_USER_PASSWORD
 	read -p "Enter dotCMS Database Name [dotcms]: " -r DOTCMS_DATABASE_NAME
 	DOTCMS_DATABASE_NAME="${DOTCMS_DATABASE_NAME:-$DOTCMS_DATABASE_NAME_DEFAULT}"
@@ -217,7 +224,7 @@ if [ $POSTGRESQL_RUNNING = true ] ; then
 		echo "host    all             all             127.0.0.1/32            password"
 		echo
 
-		read -p "Does it Match (y/n)?" -n 1 -r POSTGRES_EDIT_MATCH
+		read -p "Does it Match [y/n]?" -n 1 -r POSTGRES_EDIT_MATCH
 		if [[ $POSTGRES_EDIT_MATCH =~ ^[Yy]$ ]] ; then
 			POSTGRESQL_CONFIGURED=true
 		else
@@ -392,7 +399,7 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	sed -i '0,/abandonWhenPercentageFull="50"\/>/s/abandonWhenPercentageFull="50"\/>/abandonWhenPercentageFull="50"\/>\n\ \ \ \ -->/'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	sed -i '/<!-- POSTGRESQL/c \ \ \ \ <\!-- SECTION EDITED WITH DOTCMS INSTALLER -->\n\ \ \ \ <!-- POSTGRESQL -->'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	sed -i '/url=\"jdbc\:postgresql\:\/\/localhost\/dotcms\"/c \ \ \ \ \ \ \ \ \ \ url=\"jdbc\:postgresql\:\/\/localhost\/${DOTCMS_DATABASE_NAME}\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
-	sed -i '/username="{your db user}" password="{your db password}"/c \ \ \ \ \ \ \ \ \ \ username="${DOTCMS_DATABASE_USER}" password="${DOTCMS_DATABASE_PASSWORD}" maxActive="60" maxIdle="10" maxWait="60000"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
+	sed -i '/username="{your db user}" password="{your db password}"/c \ \ \ \ \ \ \ \ \ \ username=\"${DOTCMS_DATABASE_USER}\" password=\"${DOTCMS_DATABASE_PASSWORD}\" maxActive=\"60\" maxIdle=\"10\" maxWait=\"60000\"'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	sed -i '0,/^-->$/s/^-->$//'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 
 	echo
@@ -402,7 +409,7 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/context.xml
 	echo '************************************************************'
 	echo
-	read -p "Does this look correct (y/n)?" -n 1 -r CONTEXT_LOOKS_GOOD
+	read -p "Does this look correct [y/n]?" -n 1 -r CONTEXT_LOOKS_GOOD
 
 	if [[ $CONTEXT_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
 		echo "Let's edit context.xml manually then..."
@@ -412,9 +419,199 @@ if [[ $DOTCMS_EXTRACTED = true]] ; then
 	
 	if [[ $DOTCMS_USE_SSL =~ ^[Yy]$ ]] ; then
 		echo
-		echo 'Editing server.xml: Adding SSL configs...'
+		echo 'Editing server.xml: SSL config...'
 		echo
+
+		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\" \/>"/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\" \/>'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+
+		echo
+		echo "Let's verify server.xml...."
+		echo
+		echo '************************************************************'
+		cat plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+		echo '************************************************************'
+		echo
+		read -p "Does this look correct [y/n]?" -n 1 -r SERVERXML_LOOKS_GOOD
+
+		if [[ $SERVERXML_LOOKS_GOOD =~ ^[Nn]$ ]] ; then
+			echo "Let's edit server.xml manually then..."
+			read -p "Press enter to continue"
+			nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+		fi
 	fi
+
+	echo
+	echo "Adding Custom Starter..."
+	echo 
+
+	if [[ $DOTCMS_STARTER_CHOICE_VALID = true ]] ; then
+		if [[ $DOTCMS_STARTER_CHOICE = 3 ]] || [[ $DOTCMS_STARTER_CHOICE = 2 ]] ; then
+			
+			mv dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter.zip dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter-vanilla.zip
+			mv dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT
+
+			echo 'STARTER_DATA_LOAD=\/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz' >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+
+		fi
+	fi
+
+	echo
+	echo "Editing Startup script..."
+	echo
+
+	sed -i '/JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1G\"/c JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1536M\"'  startup.sh
+	sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"\/var\/run\/dotcms\/dotserver\.pid\"'  startup.sh
+
+	
+	if [[ $DOTCMS_USE_FAT_CACHES =~ ^[Yy]$ ]] ; then
+		echo
+		echo "Adding fat caches..."
+		echo
+
+		echo "cache.blockdirectivecache.size=3600" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.categoryparentscache.size=90000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.foldercache.size=6000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.htmlpagecache.size=24000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.identifier404cache.size=3000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.rulescache.size=5000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.tagsbyinodecache.size=4000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.velocitycache.size=5000" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+		echo "cache.virtuallinkscache.size=3500" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+
+	fi
+
+	if [[ $DOTCMS_DISABLE_CLUSTER_AUTO_WIRE =~ ^[Yy]$ ]] ; then
+		echo
+		echo "Disabling cluster auto-wire..."
+		echo
+
+		echo "AUTOWIRE_CLUSTER_TRANSPORT=false" >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
+		echo "AUTOWIRE_CLUSTER_ES=false" >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
+		echo "DIST_INDEXATION_ENABLED=true" >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
+
+	fi
+
+	echo
+	echo "Setting JAVA_HOME..."
+	echo
+	touch /etc/profile.d/java_home.sh
+	echo "export JAVA_HOME=/usr/lib/jvm/jre-openjdk" > /etc/profile.d/java_home.sh
+
+	echo
+	echo "Making dotcms owner..."
+	echo
+	chown -R dotcms:dotcms /opt/dotcms
+
+	echo
+	echo "Setting up dotCMS as a system service..."
+	echo 
+
+	touch /etc/sysconfig/dotcms
+	echo "JAVA_HOME=/usr/lib/jvm/jre-openjdk" >> /etc/sysconfig/dotcms
+	echo "CATALINA_PID=/var/run/dotcms/dotserver.pid" >> /etc/sysconfig/dotcms
+	echo "DOTCMS_HOME=/opt/dotcms" >> /etc/sysconfig/dotcms
+
+	touch /etc/sysconfig/dotcms
+	echo "JAVA_HOME=/usr/lib/jvm/jre-openjdk" >> /etc/sysconfig/dotcms
+	echo "DOTCMS_HOME=/opt/dotcms" >> /etc/sysconfig/dotcms
+
+	touch /usr/lib/systemd/system/dotcms.service
+	echo "[Unit]" >> /usr/lib/systemd/system/dotcms.service
+	echo "Description=dotCMS Service" >> /usr/lib/systemd/system/dotcms.service
+	echo "After=network.target" >> /usr/lib/systemd/system/dotcms.service
+	echo "" >> /usr/lib/systemd/system/dotcms.service
+	echo "[Service]" >> /usr/lib/systemd/system/dotcms.service
+	echo "Type=forking" >> /usr/lib/systemd/system/dotcms.service
+	echo "EnvironmentFile=/etc/sysconfig/dotcms" >> /usr/lib/systemd/system/dotcms.service
+	echo "WorkingDirectory=/opt/dotcms" >> /usr/lib/systemd/system/dotcms.service
+	echo "PIDFile=/var/run/dotcms/dotserver.pid" >> /usr/lib/systemd/system/dotcms.service
+	echo "User=dotcms" >> /usr/lib/systemd/system/dotcms.service
+	echo "Group=dotcms" >> /usr/lib/systemd/system/dotcms.service
+	echo "KillMode=none" >> /usr/lib/systemd/system/dotcms.service
+	echo "ExecStart=/opt/dotcms/bin/startup.sh" >> /usr/lib/systemd/system/dotcms.service
+	echo "ExecStop=/opt/dotcms/bin/shutdown.sh" >> /usr/lib/systemd/system/dotcms.service
+	echo "" >> /usr/lib/systemd/system/dotcms.service
+	echo "[Install]" >> /usr/lib/systemd/system/dotcms.service
+	echo "WantedBy=multi-user.target" >> /usr/lib/systemd/system/dotcms.service
+
+	systemctl enable dotcms
+	setsebool -P httpd_can_network_connect 1
+
+	echo
+	echo "Adding basic HTTP reverse Apache Config (no HTTPS)"
+	echo "***** Be sure to add SSL configs! *****"
+	echo 
+
+	touch /etc/httpd/conf.d/dotcms.conf
+	echo "##########################" >> /etc/httpd/conf.d/dotcms.conf
+	echo "## Proxy to dotCMS:8080 ##" >> /etc/httpd/conf.d/dotcms.conf
+	echo "##########################" >> /etc/httpd/conf.d/dotcms.conf
+	echo "<IfModule mod_proxy_http.c>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "<VirtualHost *:80>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ServerName ${HTTP_DOMAIN_NAME}" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ServerAdmin support@ethode.com" >> /etc/httpd/conf.d/dotcms.conf
+	echo "" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ErrorLog /var/log/httpd/error.log" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    CustomLog /var/log/httpd/access.log combined" >> /etc/httpd/conf.d/dotcms.conf
+	echo "" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ProxyRequests Off" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ProxyPreserveHost On" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ProxyVia On" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ProxyPass / http://localhost:8080/ retry=0 acquire=3000 timeout=1200 Keepalive=On" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ProxyPassReverse / http://localhost:8080/ retry=0" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ### Alternate for AJP" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #ProxyPass / ajp://localhost:8009/ retry=0 acquire=3000 timeout=1200 Keepalive=On" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #ProxyPassReverse / ajp://localhost:8009/ retry=0" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    <Proxy *>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "        Order deny,allow" >> /etc/httpd/conf.d/dotcms.conf
+	echo "        Allow from all" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    </Proxy>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    ## Redirect to https" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #<IfModule mod_ssl.c>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #    RewriteEngine on" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #    RewriteCond %{SERVER_NAME} ${HTTP_DOMAIN_NAME}" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]" >> /etc/httpd/conf.d/dotcms.conf
+	echo "    #</IfModule>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "</VirtualHost>" >> /etc/httpd/conf.d/dotcms.conf
+	echo "</IfModule>" >> /etc/httpd/conf.d/dotcms.conf
 
 fi
 
+
+if [[ $MONIT_CONFIGURE = true ]] ; then
+
+	echo
+	echo "Configuring monit..."
+	echo 
+
+	systemctl enable monit
+	systemctl stop monit
+
+	wget -O /etc/monit.d/dotcms.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/dotcms.conf
+	wget -O /etc/monit.d/httpd.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
+
+	systemctl start monit
+
+fi
+
+echo
+echo '#####################'
+echo '## Finishing Up... ##'
+echo '#####################'
+echo
+
+read -p "Deploy com.dotcms.config [y/n]? " -n 1 -r DEPLOY_DOTCMS_STATIC_PLUGIN
+
+if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN =~ ^[Yy]$ ]] ; then
+	export JAVA_HOME=/usr/lib/jvm/jre-openjdk
+	sudo -u dotcms bin/deploy_plugins.sh
+fi
+
+echo
+echo '###############'
+echo '## All done! ##'
+echo '###############'
+echo
+echo 'Run: "systemctl start dotcms" to start dotcms'
+echo
