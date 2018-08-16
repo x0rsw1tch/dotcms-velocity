@@ -46,6 +46,9 @@ if [[ $OS_UP_TO_DATE =~ ^[Yy]$ ]] ; then
     read -p "Which Version do you want to use? " -r POSTGRESQL_VERSION_CHOICE
 
     if [[ $POSTGRESQL_VERSION_CHOICE = 1 ]] ; then
+		echo ""
+		echo "Installing PostgresSQL"
+		echo ""
         yum -y install ${POSTGRESQL_VERISON_9_RPM}
         yum -y install ${POSTGRESQL_VERISON_9_PACKAGES}
     fi
@@ -109,18 +112,13 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	echo ""
 	echo ""
     read -p "Domain name: " -r HTTP_DOMAIN_NAME
-	echo ""
     read -p "Are we going to use SSL [y/n]? " -r DOTCMS_USE_SSL
-	echo ""
     read -p "Enable and configure monit with dotCMS and Apache [y/n]? " -r MONIT_CONFIGURE
-	echo ""
 	read -p "How much RAM does dotCMS get(Xmx)? Common Values: 1G, 1536M, 2G, 4G, 6G, 8G, 10G [4G]? " -r DOTCMS_JAVA_XMX
 	DOTCMS_JAVA_XMX="${DOTCMS_JAVA_XMX:-$DOTCMS_JAVA_XMX_DEFAULT}"
-	read -p "Use fat caches [y/n]?" -r DOTCMS_USE_FAT_CACHES
+	read -p "Use fat caches [y/n]? " -r DOTCMS_USE_FAT_CACHES
 	read -p "Disable Cluster Auto-wiring (too many open files) [y/n]? " -r DOTCMS_DISABLE_CLUSTER_AUTO_WIRE
-    echo ""
 	read -p "Enter dotCMS Linux User's Password: " -r DOTCMS_LINUX_USER_PASSWORD
-	echo ""
 	read -p "Enter dotCMS Database Name [dotcms]: " -r DOTCMS_DATABASE_NAME
 	DOTCMS_DATABASE_NAME="${DOTCMS_DATABASE_NAME:-$DOTCMS_DATABASE_NAME_DEFAULT}"
 	read -p "Enter dotCMS Database User [dotcms]: " -r DOTCMS_DATABASE_USER
@@ -444,7 +442,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 		echo 'Editing server.xml: SSL config...'
 		echo ""
 
-		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\" \/>"/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\" \/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+		sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>"/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ /redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 
 		echo ""
 		echo "Let's verify server.xml...."
