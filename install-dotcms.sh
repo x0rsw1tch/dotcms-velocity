@@ -497,7 +497,7 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 			mv dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter.zip dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/starter-vanilla.zip
 			mv ${DOTCMS_STARTER_FILE} plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT
 
-			echo "STARTER_DATA_LOAD=\/dotcms_${DOTCMS_STARTER_FILE}.tar.gz" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+			echo "STARTER_DATA_LOAD=/${DOTCMS_STARTER_FILE}" >> plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
 
 		fi
 	fi
@@ -506,8 +506,8 @@ if [[ $DOTCMS_EXTRACTED = true ]] ; then
 	echo "Editing Startup script..."
 	echo ""
 
-	sed -i '/JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1G\"/c JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1536M\"'  startup.sh
-	sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"\/var\/run\/dotcms\/dotserver\.pid\"'  startup.sh
+	sed -i "/JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1G\"/c JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx${DOTCMS_JAVA_XMX}\""  plugins/com.dotcms.config/ROOT/bin/startup.sh
+	sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"\/var\/run\/dotcms\/dotserver\.pid\"'  plugins/com.dotcms.config/ROOT/bin/startup.sh
 
 	
 	if [[ $DOTCMS_USE_FAT_CACHES =~ ^[Yy]$ ]] ; then
