@@ -302,19 +302,19 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 	echo '##########################'
 	echo ""
 
-    echo 'Which version of dotCMS do you want to install ie: 3.7.2, 4.3.3, 5.0.0?'
+    echo 'Which version of dotCMS do you want to install ie: 3.7.2, 4.3.3, 5.0.1?'
 	echo 'dotCMS 2.x versions not supported'
 	echo ""
     read -p "Version: " -r DOTCMS_VERSION_CHOICE
 	
-	if [[ $DOTCMS_VERSION_CHOICE == 5.0.0 ]] || [[ $DOTCMS_VERSION_CHOICE == 4.3.3 ]] ; then
+	if [[ $DOTCMS_VERSION_CHOICE == 5.0.1 ]] || [[ $DOTCMS_VERSION_CHOICE == 4.3.3 ]] ; then
 
 		echo ""
 		echo 'Choose Starter Package:'
 		echo ""
 		echo '1. Vanilla                   All Versions'
 		echo '2. Minimal with Utilities    4.3.3 only'
-		echo '3. Minimal                   4.3.3/5.0.0'
+		echo '3. Minimal                   4.3.3/5.0.1'
 		echo ""
 		read -p "Starter Choice: " -r DOTCMS_STARTER_CHOICE
 
@@ -387,9 +387,9 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 					DOTCMS_EXTRACTED=true
 				fi
 
-				if [[ $DOTCMS_VERSION_CHOICE = 5.0.0 ]] ; then
+				if [[ $DOTCMS_VERSION_CHOICE = 5.0.1 ]] ; then
 					if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
-						DOTCMS_STARTER_FILE="dotcms-5.0.0_minimal.zip"
+						DOTCMS_STARTER_FILE="dotcms-5.0.1_minimal.zip"
 						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.0_minimal.zip
 					fi
 				fi

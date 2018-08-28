@@ -25,13 +25,12 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_4.3.3.tar.gz
+wget http://dotcms.com/physical_downloads/release_builds/dotcms_5.0.1.tar.gz
 ```
 
-### (Optional) dotCMS Empty Starter || Starter with Utilities
+### (Optional) dotCMS Minimal Starter 
 ```
-wget https://raw.githubusercontent.com/dotCMS/empty-starter/master/starter.zip
-wget https://ngz.io/ethode/dotcms-starter/starter-plus-tools_0.31.zip
+wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.1_minimal.zip
 ```
 
 ### Create dotCMS User and set password
@@ -84,7 +83,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_4.3.3.tar.gz
+tar -zxvf dotcms_5.0.1.tar.gz
 ```
 
 ### Create PID Directory
@@ -100,20 +99,20 @@ chown dotcms:dotcms /var/run/dotcms
 ### Create Base Directories
 ```
 mkdir -p plugins/com.dotcms.config/ROOT/bin
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf/
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB-INF/classes
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes
 ```
 
 ### Copy Vanilla Configs
 ```
-cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
-cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf
+cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
+cp dotserver/tomcat-8.5.32/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
 cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ```
 
 ### Configure Database Connector
-`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml`
+`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml`
 ```
 <Resource name="jdbc/dotCMSPool" auth="Container"
       type="javax.sql.DataSource"
@@ -126,7 +125,7 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ```
 
 ### Require SSL for everything (Skip if not using SSL)
-`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf/server.xml`
+`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/server.xml`
 ```
 <Connector port="8080" protocol="HTTP/1.1"
     connectionTimeout="20000"
@@ -141,8 +140,8 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 
 ### (Optional) Custom starter
 ```
-mv dotserver/tomcat-8.0.18/webapps/ROOT/starter.zip dotserver/tomcat-8.0.18/webapps/ROOT/starter-vanilla.zip
-mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT
+mv dotserver/tomcat-8.5.32/webapps/ROOT/starter.zip dotserver/tomcat-8.5.32/webapps/ROOT/starter-vanilla.zip
+mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
 ```
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -160,7 +159,7 @@ STARTER_DATA_LOAD=/starter-plus-tools_0.31.zip
 [Memory Config: More Information](https://dotcms.com/docs/latest/memory-configuration)
 
 ```
-export CATALINA_PID="/var/run/dotcms/$DOTSERVER.pid"
+export CATALINA_PID="/var/run/dotcms/dotcms.pid"
 ```
 
 ### (Optional/Recommended) Change location of assets directory
@@ -206,7 +205,6 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 
 ### To Make further changes
 1. `cd /opt/dotcms`
-1. `bin/undeploy-plugins.sh`
 1. Make changes.
 1. `bin/deploy-plugins.sh`
 
@@ -220,7 +218,7 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 `nano /etc/sysconfig/dotcms`
 ```
 JAVA_HOME=/usr/lib/jvm/jre-openjdk
-CATALINA_PID=/var/run/dotcms/dotserver.pid
+CATALINA_PID=/var/run/dotcms/dotcms.pid
 DOTCMS_HOME=/opt/dotcms
 ```
 
@@ -235,7 +233,7 @@ After=network.target
 Type=forking
 EnvironmentFile=/etc/sysconfig/dotcms
 WorkingDirectory=/opt/dotcms
-PIDFile=/var/run/dotcms/dotserver.pid
+PIDFile=/var/run/dotcms/dotcms.pid
 User=dotcms
 Group=dotcms
 KillMode=none
@@ -258,8 +256,8 @@ systemctl start dotcms
 
 # View Logs
 ```
-tail -fn200 /opt/dotcms/dotserver/tomcat-8.0.18/logs/catalina.out
-tail -fn200 /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/logs/dotcms.log
+tail -fn200 /opt/dotcms/dotserver/tomcat-8.5.32/logs/catalina.out
+tail -fn200 /opt/dotcms/dotserver/tomcat-8.5.32/webapps/ROOT/dotsecure/logs/dotcms.log
 ```
 
 ## Configure Apache
@@ -339,7 +337,7 @@ SSL
 `setsebool -P httpd_can_network_connect 1`
 
 ### Certbot webroot authentication
-`certbot certonly --webroot -w /opt/dotcms/dotserver/tomcat-8.0.18/webapps/ROOT -d domain.com`
+`certbot certonly --webroot -w /opt/dotcms/dotserver/tomcat-8.5.32/webapps/ROOT -d domain.com`
 or
 `certbot --apache`
 
