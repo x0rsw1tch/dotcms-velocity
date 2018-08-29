@@ -459,6 +459,24 @@ sudo -u dotcms bin/deploy-plugins.sh
 fi
 
 echo ""
+echo "Setting SELinux to allow Apache to connect to the local network..."
+setsebool -P httpd_can_network_connect 1
+setsebool -P httpd_can_network_connect_db 1
+
+echo ""
+echo "Attempting to configure IPTables. This will fail if it's not enabled..."
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+service iptables save
+
+echo ""
+echo "Attempting to configure firewall-cmd. This will fail if it's not enabled..."
+firewall-cmd --zone=public --add-port=8080/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --reload
+
+
+echo ""
 echo ""
 echo "################################################################################"
 echo "#                                 Summary                                      #"
@@ -534,13 +552,13 @@ fi
 echo ""
 echo "################################################################################"
 echo ""
-
 echo ""
 echo ""
 echo "################################################################################"
 echo "#                                  Notes                                       #"
 echo "################################################################################"
 echo ""
+echo "Install summary is logged in /opt/dotcms/dotcms-install.log"
 
 echo "*** To start dotCMS: systemctl start dotcms"
 echo "*** To stop dotCMS: systemctl stop dotcms"
