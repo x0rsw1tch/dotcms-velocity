@@ -21,9 +21,9 @@ fi
 
 HTTP_DOMAIN_NAME="$1"
 
-## Passwords
-DOTCMS_USER_LINUX_PASSWORD=$(date +%s|sha256sum|base64|head -c 32)
-DOTCMS_DATABASE_PASSWORD=$(date +%s|sha256sum|base64|head -c 32)
+## Passwords. Kudos to earthgecko/bash.generate.random.alphanumeric.string.sh
+DOTCMS_USER_LINUX_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+DOTCMS_DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 ## PostgresSQL
 PREREQUISITE_PACKAGE_LIST_STEP_ONE="epel-release"
@@ -242,6 +242,7 @@ echo ""
 echo "Download Management Tools..."
 echo ""
 wget https://raw.githubusercontent.com/x0rsw1tch/dotTools/master/dottools.tar.gz
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/dottools
 tar -zxvf dottools.tar.gz -C plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/dottools
 fi
 
@@ -327,7 +328,7 @@ if [[ $DOTCMS_DISABLE_CLUSTER_AUTO_WIRE = true ]] ; then
 echo ""
 echo "Disabling cluster auto-wire..."
 echo ""
-cat << EOF >> plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
+cat << EOF >> plugins/com.dotcms.config/conf/dotcms-config-cluster-ext.properties
 AUTOWIRE_CLUSTER_TRANSPORT=false
 AUTOWIRE_CLUSTER_ES=false
 DIST_INDEXATION_ENABLED=true
@@ -441,6 +442,14 @@ systemctl stop monit
 wget -O /etc/monit.d/dotcms.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/dotcms.conf
 wget -O /etc/monit.d/httpd.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
 systemctl start monit
+fi
+
+if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN = true ]] ; then
+echo ""
+echo "Deploying Plugin..."
+echo ""
+export JAVA_HOME=/usr/lib/jvm/jre-openjdk
+sudo -u dotcms bin/deploy-plugins.sh
 fi
 
 echo ""
