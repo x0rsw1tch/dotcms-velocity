@@ -541,9 +541,15 @@ echo "##########################################################################
 echo "#                                  Notes                                       #"
 echo "################################################################################"
 echo ""
+
+echo "*** To start dotCMS: systemctl start dotcms"
+echo "*** To stop dotCMS: systemctl stop dotcms"
+echo ""
+
 echo "*** Verify Configs:"
 echo ""
 echo "Please refer to configuration file locations and verify the replacements are accurate."
+
 echo ""
 echo "*** Check catalina.out:"
 echo ""
