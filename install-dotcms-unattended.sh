@@ -10,7 +10,7 @@ if [[ "$(whoami)" != "root" ]] ; then
 fi
 
 if [[ -z "$1" ]]; then
-echo "Specify domain name as parameter, exiting."
+echo "Usage: install-dotcms-unattended.sh domain.com"
 exit 1
 fi
 
@@ -29,10 +29,10 @@ DOTCMS_DATABASE_PASSWORD=$(date +%s|sha256sum|base64|head -c 32)
 PREREQUISITE_PACKAGE_LIST_STEP_ONE="epel-release"
 PREREQUISITE_PACKAGE_LIST_STEP_TWO="httpd wget curl nano htop mc iptables-services java-1.8.0-openjdk java-1.8.0-openjdk-headless nmap lsof certbot mod_proxy_html mod_ssl ant monit"
 
-POSTGRESQL_VERSION="9.6"
-POSTGRESQL_INIT_BIN="postgresql96-setup"
 POSTGRESQL_RPM="https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm"
 POSTGRESQL_PACKAGES="postgresql96 postgresql96-server"
+POSTGRESQL_VERSION="9.6"
+POSTGRESQL_INIT_BIN="postgresql96-setup"
 
 POSTGRESQL_HBACONF_PATH="/var/lib/pgsql/${POSTGRESQL_VERSION}/data/pg_hba.conf"
 
@@ -47,12 +47,14 @@ DOTCMS_TOMCAT_VERSION="8.5.32"
 
 ## dotCMS Config
 DOTCMS_TOMCAT_USE_SSL=true
+DOTCMS_USE_FAT_CACHES=true
+DOTCMS_JAVA_XMX="4G"
+DOTCMS_PID_DIRECTORY="/var/run/dotcms"
+DOTCMS_PID_FILE="dotcms.pid"
+DOTCMS_USE_TOOLS=true
 DOTCMS_USE_MINIMAL=true
 DOTCMS_STARTER_FILE="dotcms-${DOTCMS_INSTALL_VERSION}_minimal.zip"
-DOTCMS_USE_TOOLS=true
-DOTCMS_USE_FAT_CACHES=true
 DOTCMS_DISABLE_CLUSTER_AUTO_WIRE=true
-DOTCMS_JAVA_XMX="4G"
 DOTCMS_CONFIGURE_SYSTEMD=true
 
 ## Monit
@@ -67,7 +69,7 @@ echo ""
 echo "################################################################################"
 echo "#                     dotCMS Unattended Installer v0.1                         #"
 echo "#                                                                              #"
-echo "#                        A mostly automated script                             #"
+echo "#                        An automated script                                   #"
 echo "#                                                                              #"
 echo "################################################################################"
 echo "#                                                                              #"
@@ -96,41 +98,46 @@ echo ""
 echo "** Passwords will be provided at the end of the script"
 echo ""
 echo "dotCMS:"
-echo "    Version to Install:         ${DOTCMS_INSTALL_VERSION}"
-echo "    Configure systemd:          ${DOTCMS_CONFIGURE_SYSTEMD}"
+echo "         Version to Install: ${DOTCMS_INSTALL_VERSION}"
+echo "          Configure systemd: ${DOTCMS_CONFIGURE_SYSTEMD}"
 echo ""
 echo ""
 echo "PostgresSQL:"
-echo "    Version to Install:         ${POSTGRESQL_VERSION}"
+echo "         Version to Install: ${POSTGRESQL_VERSION}"
 echo ""
 echo "Users/DB:"
-echo "    dotCMS Linux User:          ${DOTCMS_LINUX_USER}"
-echo "    dotCMS PostgresSQL User:    ${DOTCMS_DATABASE_USER}"
-echo "    PostgresSQL Database Name:  ${DOTCMS_DATABASE_NAME}"
+echo "          dotCMS Linux User: ${DOTCMS_LINUX_USER}"
+echo "    dotCMS PostgresSQL User: ${DOTCMS_DATABASE_USER}"
+echo "  PostgresSQL Database Name: ${DOTCMS_DATABASE_NAME}"
 echo ""
 echo "dotCMS Config:"
-echo "    Tomcat SSL Schema:          ${DOTCMS_TOMCAT_USE_SSL}"
-echo "    Minimal Starter Package:    ${DOTCMS_USE_MINIMAL}"
-echo "    Install Utilities:          ${DOTCMS_USE_TOOLS}"
-echo "    Java Xmx:                   ${DOTCMS_JAVA_XMX}"
-echo "    Use fat caches:             ${DOTCMS_USE_FAT_CACHES}"
-echo "    Disable Cluster auto-wire:  ${DOTCMS_DISABLE_CLUSTER_AUTO_WIRE}"
+echo "              PID Directory: ${DOTCMS_PID_DIRECTORY}"
+echo "                   PID File: ${DOTCMS_PID_FILE}"
+echo "          Tomcat SSL Schema: ${DOTCMS_TOMCAT_USE_SSL}"
+echo "    Minimal Starter Package: ${DOTCMS_USE_MINIMAL}"
+echo "          Install Utilities: ${DOTCMS_USE_TOOLS}"
+echo "                   Java Xmx: ${DOTCMS_JAVA_XMX}"
+echo "             Use fat caches: ${DOTCMS_USE_FAT_CACHES}"
+echo "  Disable Cluster auto-wire: ${DOTCMS_DISABLE_CLUSTER_AUTO_WIRE}"
 echo ""
 echo "Apache:"
-echo "    Reverse Proxy:              ${APACHE_CONFIG}"
+echo "  VirtualHost/Reverse Proxy: ${APACHE_CONFIG}"
 echo ""
 echo "Monit:"
-echo "    Configure Monit:            ${MONIT_CONFIGURE}"
+echo "   Configure Monit Monitors: ${MONIT_CONFIGURE}"
 echo ""
 echo ""
+
 read -p "Is this ok? [y/n]: " -r INSTALL_CONTINUE
 echo ""
+
 if [[ $INSTALL_CONTINUE =~ ^[Nn]$ ]] ; then
 echo ""
 echo "Please adjust script configuration before running again."
 echo ""
 exit 1
 fi
+
 if [[ -z "$HTTP_DOMAIN_NAME" ]]; then
 read -p "Domain name: " -r HTTP_DOMAIN_NAME
 fi
@@ -140,6 +147,7 @@ echo "##########################################################################
 echo "#                         Installing PostgresSQL                               #"
 echo "################################################################################"
 echo ""
+
 echo ""
 yum -y install ${POSTGRESQL_RPM}
 yum -y install ${POSTGRESQL_PACKAGES}
@@ -149,6 +157,7 @@ echo "##########################################################################
 echo "#                    Installing Prerequisite Packages                          #"
 echo "################################################################################"
 echo ""
+
 echo ""
 yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_ONE}
 yum -y install ${PREREQUISITE_PACKAGE_LIST_STEP_TWO}
@@ -203,8 +212,8 @@ echo ""
 echo ""
 echo "Making PID Directory..."
 echo ""
-mkdir -p /var/run/dotcms
-chown dotcms:dotcms /var/run/dotcms
+mkdir -p ${DOTCMS_PID_DIRECTORY}
+chown dotcms:dotcms ${DOTCMS_PID_DIRECTORY}
 
 echo ""
 echo "Making /opt/dotcms..."
@@ -222,6 +231,14 @@ echo ""
 echo "Download Starter..."
 echo ""
 wget https://raw.githubusercontent.com/x0rsw1tch/dotcms-starters/master/dotcms-${DOTCMS_INSTALL_VERSION}_minimal.zip
+fi
+
+if [[ $DOTCMS_USE_TOOLS = true ]] ; then
+echo ""
+echo "Download Management Tools..."
+echo ""
+wget https://raw.githubusercontent.com/x0rsw1tch/dotTools/master/dottools.tar.gz
+tar -zxvf dottools.tar.gz -C plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/dottools
 fi
 
 echo ""
@@ -283,7 +300,7 @@ echo ""
 echo "Editing Startup script..."
 echo ""
 sed -i "/JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx1G\"/c JAVA_OPTS=\"\$JAVA_OPTS -XX\:MaxMetaspaceSize=512m -Xmx${DOTCMS_JAVA_XMX}\""  plugins/com.dotcms.config/ROOT/bin/startup.sh
-sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"\/var\/run\/dotcms\/dotcms\.pid\"'  plugins/com.dotcms.config/ROOT/bin/startup.sh
+sed -i '/export CATALINA_PID=\"\/tmp\/\$DOTSERVER\.pid\"/c \ \ \ \ \ \ \ \ export CATALINA_PID=\"${DOTCMS_PID_DIRECTORY}\/${DOTCMS_PID_FILE}\"'  plugins/com.dotcms.config/ROOT/bin/startup.sh
 
 if [[ $DOTCMS_USE_FAT_CACHES = true ]] ; then
 echo ""
@@ -333,7 +350,7 @@ echo ""
 touch /etc/sysconfig/dotcms
 cat << EOF > /etc/sysconfig/dotcms
 JAVA_HOME=/usr/lib/jvm/jre-openjdk
-CATALINA_PID=/var/run/dotcms/dotcms.pid
+CATALINA_PID=${DOTCMS_PID_DIRECTORY}/${DOTCMS_PID_FILE}
 DOTCMS_HOME=/opt/dotcms
 EOF
 
@@ -347,7 +364,7 @@ After=network.target
 Type=forking
 EnvironmentFile=/etc/sysconfig/dotcms
 WorkingDirectory=/opt/dotcms
-PIDFile=/var/run/dotcms/dotserver.pid
+PIDFile=${DOTCMS_PID_DIRECTORY}/${DOTCMS_PID_FILE}
 User=dotcms
 Group=dotcms
 KillMode=none
@@ -401,13 +418,14 @@ cat << EOF > /etc/httpd/conf.d/dotcms.conf
 	#</IfModule>
 </VirtualHost>
 </IfModule>
-
-	echo ""
-	echo "Enabling and Starting Apache"
-	echo ""
-	systemctl enable httpd
-	systemctl start httpd
 EOF
+
+echo ""
+echo "Enabling and Starting Apache"
+echo ""
+systemctl enable httpd
+systemctl start httpd
+
 fi
 
 if [[ $MONIT_CONFIGURE = true ]] ; then
@@ -423,7 +441,10 @@ fi
 
 echo ""
 echo ""
-echo "Summmary..."
+echo "################################################################################"
+echo "#                                 Summary                                      #"
+echo "################################################################################"
+echo ""
 echo ""
 echo ""
 echo "PostgresSQL:"
@@ -441,8 +462,35 @@ echo "        server.xml: plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTC
 echo "            Config: plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties"
 echo "    Cluster Config: plugins/com.dotcms.config/dotcms-config-cluster-ext.properties"
 echo "    Startup Script: plugins/com.dotcms.config/ROOT/bin/startup.sh"
-echo "          PID File: /var/run/dotcms/dotcms.pid"
+echo "          PID File: ${DOTCMS_PID_DIRECTORY}/${DOTCMS_PID_FILE}"
 echo "          Log File: /opt/dotcms/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/logs/catalina.out"
+
+
+echo << EOF >> dotcms-install.log
+Install Summary:
+
+
+PostgresSQL
+----------------
+Connection Config: ${POSTGRESQL_HBACONF_PATH}
+Database Name:     ${DOTCMS_DATABASE_NAME}
+DB Password:       ${DOTCMS_DATABASE_PASSWORD}
+
+Linux User
+----------------
+Username: ${DOTCMS_DATABASE_PASSWORD}
+Password: ${DOTCMS_USER_LINUX_PASSWORD}
+
+dotCMS
+----------------
+context.xml: plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT/META-INF/context.xml
+server.xml: plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
+Config: plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties
+Cluster Config: plugins/com.dotcms.config/dotcms-config-cluster-ext.properties
+Startup Script: plugins/com.dotcms.config/ROOT/bin/startup.sh
+PID File: ${DOTCMS_PID_DIRECTORY}/${DOTCMS_PID_FILE}
+Log File: /opt/dotcms/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/logs/catalina.out
+EOF
 
 if [[ $DOTCMS_CONFIGURE_SYSTEMD = true ]] ; then
 echo ""
@@ -464,10 +512,29 @@ echo "             httpd: /etc/monit.d/dotcms.conf"
 echo "            dotcms: /etc/monit.d/httpd.conf"
 fi
 
-
-echo "***** Be sure to add SSL configs! *****"
 echo ""
-echo "Use Certbot: "
+echo "################################################################################"
+echo ""
+
+echo ""
+echo ""
+echo "################################################################################"
+echo "#                                  Notes                                       #"
+echo "################################################################################"
+echo ""
+echo "*** Verify Configs:"
+echo ""
+echo "Please refer to configuration file locations and verify the replacements are accurate."
+echo ""
+echo "*** Check catalina.out:"
+echo ""
+echo "If there are any issues with the OOB configuration, the logs should tell you where the"
+echo "problems are located. This shouldn't be an issue, unless dotCMS decides to change the"
+echo "file structure, or move things around."
+echo ""
+
+echo "*** To install SSL Certs with Certbot:"
+echo ""
 echo "wget https://dl.eff.org/certbot-auto"
 echo "chmod a+x ./certbot-auto"
 echo "certbot-auto run -a webroot -i apache -w /opt/dotcms/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/webapps/ROOT -d ${HTTP_DOMAIN_NAME}"
