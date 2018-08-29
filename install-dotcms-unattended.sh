@@ -56,7 +56,7 @@ DOTCMS_USE_FAT_CACHES=true
 DOTCMS_JAVA_XMX="4G"
 DOTCMS_PID_DIRECTORY="/var/run/dotcms"
 DOTCMS_PID_FILE="dotcms.pid"
-DEPLOY_DOTCMS_STATIC_PLUGIN=true
+DOTCMS_DEPLOY_STATIC_PLUGIN=true
 DOTCMS_USE_TOOLS=true
 DOTCMS_USE_MINIMAL=true
 DOTCMS_STARTER_FILE="dotcms-${DOTCMS_INSTALL_VERSION}_minimal.zip"
@@ -126,6 +126,7 @@ echo "          Install Utilities: ${DOTCMS_USE_TOOLS}"
 echo "                   Java Xmx: ${DOTCMS_JAVA_XMX}"
 echo "             Use fat caches: ${DOTCMS_USE_FAT_CACHES}"
 echo "  Disable Cluster auto-wire: ${DOTCMS_DISABLE_CLUSTER_AUTO_WIRE}"
+echo "         Auto-Deploy Plugin: ${DOTCMS_DEPLOY_STATIC_PLUGIN}"
 echo ""
 echo "Apache:"
 echo "  VirtualHost/Reverse Proxy: ${APACHE_CONFIG}"
@@ -449,7 +450,7 @@ wget -O /etc/monit.d/httpd.conf https://raw.githubusercontent.com/x0rsw1tch/moni
 systemctl start monit
 fi
 
-if [[ $DEPLOY_DOTCMS_STATIC_PLUGIN = true ]] ; then
+if [[ $DOTCMS_DEPLOY_STATIC_PLUGIN = true ]] ; then
 echo ""
 echo "Deploying Plugin..."
 echo ""
