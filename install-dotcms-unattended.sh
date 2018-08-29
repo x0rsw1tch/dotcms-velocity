@@ -38,6 +38,7 @@ POSTGRESQL_HBACONF_PATH="/var/lib/pgsql/${POSTGRESQL_VERSION}/data/pg_hba.conf"
 
 ## Users
 DOTCMS_LINUX_USER="dotcms"
+DOTCMS_LINUX_GROUP="dotcms"
 DOTCMS_DATABASE_USER="dotcms"
 DOTCMS_DATABASE_NAME="dotcms"
 
@@ -68,8 +69,9 @@ echo ""
 echo ""
 echo "################################################################################"
 echo "#                     dotCMS Unattended Installer v0.1                         #"
+echo "#                           CentOS 7.2 Edition                                 #"
 echo "#                                                                              #"
-echo "#                        An automated script                                   #"
+echo "#                 An automated script with one confirmation                    #"
 echo "#                                                                              #"
 echo "################################################################################"
 echo "#                                                                              #"
@@ -128,6 +130,8 @@ echo "   Configure Monit Monitors: ${MONIT_CONFIGURE}"
 echo ""
 echo ""
 
+echo "*** WARNING: Operating System must be up to date!"
+
 read -p "Is this ok? [y/n]: " -r INSTALL_CONTINUE
 echo ""
 
@@ -169,8 +173,8 @@ echo "##########################################################################
 echo ""
 
 echo ""
-groupadd dotcms
-useradd -M dotcms -g dotcms
+groupadd ${DOTCMS_LINUX_GROUP}
+useradd -M ${DOTCMS_LINUX_USER} -g ${DOTCMS_LINUX_GROUP}
 echo "dotcms:${DOTCMS_USER_LINUX_PASSWORD}" | chpasswd
 echo ""
 echo ""
@@ -282,7 +286,7 @@ sed -i '0,/^-->$/s/^-->$//'  plugins/com.dotcms.config/ROOT/dotserver/tomcat-${D
 
 if [[ $DOTCMS_TOMCAT_USE_SSL = true ]] ; then
 echo ""
-echo 'Editing server.xml: SSL config.'
+echo 'Editing server.xml: SSL config...'
 echo ""
 sed -i '/redirectPort=\"8443\" URIEncoding=\"UTF-8\"\/>/c \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ redirectPort=\"8443\" URIEncoding=\"UTF-8\"\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ secure=\"true\" proxyPort=\"443\" scheme=\"https\"\/>' plugins/com.dotcms.config/ROOT/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/conf/server.xml
 fi
@@ -421,7 +425,7 @@ cat << EOF > /etc/httpd/conf.d/dotcms.conf
 EOF
 
 echo ""
-echo "Enabling and Starting Apache"
+echo "Enabling and Starting Apache..."
 echo ""
 systemctl enable httpd
 systemctl start httpd
