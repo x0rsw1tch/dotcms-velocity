@@ -10,7 +10,11 @@ if [[ "$(whoami)" != "root" ]] ; then
 fi
 
 if [[ -z "$1" ]]; then
+echo ""
+echo "Error: Please specify domain name..."
+echo ""
 echo "Usage: install-dotcms-unattended.sh domain.com"
+echo ""
 exit 1
 fi
 
