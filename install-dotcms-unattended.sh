@@ -545,6 +545,10 @@ echo ""
 echo "*** To start dotCMS: systemctl start dotcms"
 echo "*** To stop dotCMS: systemctl stop dotcms"
 echo ""
+echo "*** View Logs: tail -fn200 /opt/dotcms/dotserver/tomcat-${DOTCMS_TOMCAT_VERSION}/logs/catalina.out"
+echo ""
+
+
 
 echo "*** Verify Configs:"
 echo ""
