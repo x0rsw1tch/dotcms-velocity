@@ -123,7 +123,7 @@ if [[ $PREREQUISITE_PACKAGES_INSTALLED = true ]] ; then
 	fi
 
 	DOTCMS_DATABASE_NAME_DEFAULT="dotcms"
-	DOTCMS_DATABASE_USER_DEFUALT="dotcms"
+	DOTCMS_DATABASE_USER_DEFAULT="dotcms"
 	DOTCMS_JAVA_XMX_DEFAULT="4G"
 
 	echo ""
@@ -390,7 +390,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 				if [[ $DOTCMS_VERSION_CHOICE = 5.0.1 ]] ; then
 					if [[ $DOTCMS_STARTER_CHOICE = 3 ]] ; then
 						DOTCMS_STARTER_FILE="dotcms-5.0.1_minimal.zip"
-						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.0_minimal.zip
+						wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.1_minimal.zip
 					fi
 				fi
 
