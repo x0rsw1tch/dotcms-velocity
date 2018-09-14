@@ -234,7 +234,7 @@ cd /opt/dotcms
 echo ""
 echo "Download dotCMS..."
 echo ""
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_INSTALL_VERSION}.tar.gz
+wget http://doc.dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_INSTALL_VERSION}.tar.gz
 
 if [[ $DOTCMS_USE_MINIMAL = true ]] ; then
 echo ""
@@ -467,12 +467,14 @@ echo ""
 echo "Attempting to configure IPTables. This will fail if it's not enabled..."
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 service iptables save
 
 echo ""
 echo "Attempting to configure firewall-cmd. This will fail if it's not enabled..."
 firewall-cmd --zone=public --add-port=8080/tcp --permanent
 firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
 firewall-cmd --reload
 
 

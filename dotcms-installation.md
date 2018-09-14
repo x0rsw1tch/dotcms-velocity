@@ -9,7 +9,7 @@ This guide will walk through installing dotCMS from scratch using current best p
 * SSL Using Certbot
 * Monit Monitoring
 
-There is also a terminal [command reference](#sysreference) at the bottom of this document. [Workarounds &amp; Fixes](#dotworkarounds).
+> There is also a terminal [command reference](#sysreference) at the bottom of this document. [Workarounds &amp; Fixes](#dotworkarounds).
 
 ## Pre-Reqs
 
@@ -25,7 +25,7 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://dotcms.com/physical_downloads/release_builds/dotcms_5.0.1.tar.gz
+wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.0.1.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
@@ -36,7 +36,7 @@ wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.1_minima
 ### Create dotCMS User and set password
 ```
 groupadd dotcms
-useradd -M -s /sbin/nologin dotcms -g dotcms
+useradd dotcms -g dotcms
 passwd dotcms
 ```
 
@@ -88,7 +88,7 @@ tar -zxvf dotcms_5.0.1.tar.gz
 
 ### Create PID Directory
 ```
-mkdir /var/run/dotcms
+mkdir -p /var/run/dotcms
 chown dotcms:dotcms /var/run/dotcms
 ```
 
@@ -104,12 +104,28 @@ mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes
 ```
 
+#### Older Verions Base Directories: v3, v4
+<pre style="font-size:11px;">
+mkdir -p plugins/com.dotcms.config/ROOT/bin
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf/
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB-INF/classes
+</pre>
+
+
 ### Copy Vanilla Configs
 ```
 cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
 cp dotserver/tomcat-8.5.32/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
 cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ```
+##### Older Versions Config Files: v3, v4
+<pre style="font-size:11px;">
+cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
+cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
+cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
+</pre>
+
 
 ### Configure Database Connector
 `nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml`
@@ -133,7 +149,10 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
     secure="true" proxyPort="443" scheme="https" />
 ```
 
-#### Alternate: Use AJP
+#### If using HTTP behind proxy:
+`proxyPort="80"`
+
+#### If using AJP
 ```
 <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 ```
@@ -141,22 +160,28 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.5.32/webapps/ROOT/starter.zip dotserver/tomcat-8.5.32/webapps/ROOT/starter-vanilla.zip
-mv starter-plus-tools_0.31.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
+mv dotcms-5.0.1_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
 ```
+
+##### Older Versions: v3, v4
+<pre style="font-size:11px;">
+mv dotserver/tomcat-8.0.18/webapps/ROOT/starter.zip dotserver/tomcat-8.0.18/webapps/ROOT/starter-vanilla.zip
+mv dotcms-5.0.1_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT
+</pre>
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
 ```
-STARTER_DATA_LOAD=/starter-plus-tools_0.31.zip
+STARTER_DATA_LOAD=/dotcms-5.0.1_minimal.zip
 ```
-[Custom Starter: More Information](https://dotcms.com/docs/latest/deploying-a-custom-starter-site)
+More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
 
 ### Give dotCMS more RAM and set PID File
 `nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
 ```
 -Xmx4G
 ```
-[Memory Config: More Information](https://dotcms.com/docs/latest/memory-configuration)
+More Information: [Memory Config](https://dotcms.com/docs/latest/memory-configuration)
 
 ```
 export CATALINA_PID="/var/run/dotcms/dotcms.pid"
@@ -169,7 +194,7 @@ export CATALINA_PID="/var/run/dotcms/dotcms.pid"
 ```
 ASSET_REAL_PATH=/opt/dotcms-assets
 ```
-[More Information](https://dotcms.com/docs/latest/asset-storage)
+More Information: [Asset Directory](https://dotcms.com/docs/latest/asset-storage)
 
 ### Cache tuning
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -184,9 +209,7 @@ cache.tagsbyinodecache.size=4000
 cache.velocitycache.size=5000
 cache.virtuallinkscache.size=3500
 ```
-[More Information: Caching](https://dotcms.com/docs/latest/cache-configuration)
-
-[More Information: Guava Cache](https://dotcms.com/docs/latest/guava-cache-provider)
+More Information: [Caching](https://dotcms.com/docs/latest/cache-configuration), [Guava](https://dotcms.com/docs/latest/guava-cache-provider)
 
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
@@ -208,7 +231,7 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 1. Make changes.
 1. `bin/deploy-plugins.sh`
 
-[More Information](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
+More Information: [Configuration Properties](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
 
 ----
 
@@ -250,7 +273,7 @@ systemctl enable dotcms
 systemctl start dotcms
 ```
 
-[More Information](https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files)
+More Information: [systemd](https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files)
 
 ----
 
@@ -341,7 +364,7 @@ SSL
 or
 `certbot --apache`
 
-[More information](https://certbot.eff.org/docs/using.html)
+More information: [Certbot](https://certbot.eff.org/docs/using.html)
 
 ### Automate Certificate Renewal (Every 5 Days, log to file)
 `crontab -e`
@@ -368,7 +391,7 @@ wget https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/dotcms.con
 wget https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
 ```
 
-[More Configs](https://github.com/x0rsw1tch/monit-presets)
+More Information: [Monit Presets](https://github.com/x0rsw1tch/monit-presets)
 
 ----
 
@@ -376,10 +399,12 @@ wget https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
 
 ## Useful Commands: System
 ```
-systemctl enable iptables                       ## Use iptables. Disable firewalld first!
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT   ## Allow communication on incoming port
-service iptables save                           ## Save iptables config
-systemctl daemon-reload                         ## Reload systemd unit files (When making changes)
+systemctl enable iptables                                  ## Use iptables. Disable firewalld first!
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT              ## Allow communication on incoming port
+firewall-cmd --zone=public --permanent --add-port=80/tcp   ## Using firewalld, port 80
+firewall-cmd --zone=public --permanent --add-port=443/tcp  ## Using firewalld, port 443
+service iptables save                                      ## Save iptables config
+systemctl daemon-reload                                    ## Reload systemd unit files (When making changes)
 ```
 
 ## Useful Commands: SELinux
@@ -403,7 +428,9 @@ seinfo -r                                      ## Show SELinux roles
 
 # <a name="dotworkarounds"></a> Workarounds
 
-## Fix for missing default workflow (until dotCMS fixes this)
+## ~~Fix for missing default workflow (until dotCMS fixes this)~~
+
+### dotCMS has removed their starter zip from github for some reason.
 
 > Only do this after dotCMS is deployed and running. No need to restart dotCMS
 
