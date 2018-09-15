@@ -255,9 +255,10 @@ After=network.target
 [Service]
 Type=forking
 EnvironmentFile=/etc/sysconfig/dotcms
-WorkingDirectory=/opt/dotcms
+PermissionsStartOnly=True
 RuntimeDirectory=dotcms
 RuntimeDirectoryMode=755
+WorkingDirectory=/opt/dotcms
 PIDFile=/var/run/dotcms/dotcms.pid
 User=dotcms
 Group=dotcms
