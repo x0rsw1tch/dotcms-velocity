@@ -1,0 +1,9 @@
+## How to Use: #set ($myVar = $json.generate("#GetData('/path/to/endpoint', $yourparams)").data)
+#macro (GetData $gdSource $gdParams) ##
+#if ($gdSource && $gdSource.getClass().getName() == 'java.lang.String') ##
+	#if ($gdSource && $gdSource.length() > 0) ##
+		#set ($gdImportText = $import.read("$!{RESTFUL_HOST}$!{gdSource}$!{gdParams}",$REST_TIMEOUT)) ##
+	#end ##
+#end ##
+$!{gdImportText.replaceAll(':null',':false')}
+#end

@@ -1,0 +1,7 @@
+#macro(slugify $originalText)
+#set($originalText="$originalText.toLowerCase()")##
+#set($originalText="$originalText.replaceAll('([^a-zA-Z0-9])+','-')")##
+#set($originalText="$originalText.replaceAll('\s','-')")##
+#set($originalText="$originalText.replaceAll('(\-){2,}','-')")##
+${originalText}
+#end

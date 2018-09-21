@@ -1,0 +1,117 @@
+#if ($UtilMethods.isSet($URLMapContent) && $URLMapContent.structure && $URLMapContent.structure.velocityVarName)
+	#set ($seoMeta = $dotcontent.pull("+contentType:Structuredcontentextendedmetadata ${QHOST} +Structuredcontentextendedmetadata.contentType:${URLMapContent.structure.velocityVarName}",1,"modDate desc"))
+	#if ($seoMeta.getClass().getName() == 'com.dotmarketing.util.PaginatedArrayList' && $seoMeta.size() == 1)
+		#set ($seoMeta = $seoMeta.get(0))
+
+		## Title field
+		#if ($UtilMethods.isSet($seoMeta.titleField) && $seoMeta.titleField.length() > 0)
+			<title>$URLMapContent.get("$seoMeta.titleField")</title>
+			<meta name="title" content="$URLMapContent.get("$seoMeta.titleField")">
+			<meta property="og:title" content="$URLMapContent.get("$seoMeta.titleField")">
+		#end
+		
+		## Description Field
+		#if ($UtilMethods.isSet($seoMeta.descriptionField) && $seoMeta.descriptionField.length() > 0)
+			<meta name="description" content="$URLMapContent.get("$seoMeta.descriptionField")">
+			<meta property="og:description" content="$URLMapContent.get("$seoMeta.descriptionField")">
+		#end
+
+		## Image Field
+		#if ($UtilMethods.isSet($seoMeta.imageFieldType) && $seoMeta.imageFieldType.selectValue)
+			#if ($seoMeta.imageFieldType.selectValue == 'image')
+				#if ($UtilMethods.isSet($seoMeta.imageField) && $seoMeta.imageField.length() > 0)
+					#if ($URLMapContent.get("imageField") && $URLMapContent.get("imageField").uri)
+						<meta property="og:image" content="${REQBASEURL}${URLMapContent.get("imageField").uri}">
+					#end
+				#end
+			#elseif ($seoMeta.imageFieldType.selectValue == 'binary')
+				#if ($URLMapContent.get("imageField") && $URLMapContent.get("imageField").rawUri)
+					<meta property="og:image" content="${REQBASEURL}${URLMapContent.get("imageField").rawUri}">
+				#end
+			#end
+		#end
+
+		## Additional Parameters (Global)
+		#if ($UtilMethods.isSet($seoMeta.useGlobalExtendedParameters) && $seoMeta.useGlobalExtendedParameters.selectValue == 1)
+			#if ($seoMeta.additionalParameters && $seoMeta.additionalParameters.size() > 0)
+				#foreach($key in $seoMeta.additionalParameters.map.keySet())
+					<meta property="${key}" content="$seoMeta.additionalParameters.map["${key}"]">
+				#end
+			#end
+		#end
+
+		## Additional Parameters (Structure)
+		#if ($UtilMethods.isSet($seoMeta.additionalParametersFieldName) && $seoMeta.additionalParametersFieldName.length() > 0)
+			#foreach ($field in $URLMapContent.structure.fields)
+				#if ($field.velocityVarName == $seoMeta.additionalParametersFieldName)
+					#if ($field.fieldType == "com.dotcms.contenttype.model.field.KeyValueField")
+						#foreach($key in $URLMapContent.get("$seoMeta.additionalParametersFieldName").map.keySet())
+							<meta property="${key}" content="$seoMeta.additionalParameters.map["${key}"]">
+						#end
+					#elseif ($field.fieldType == "com.dotcms.contenttype.model.field.TextAreaField")
+						$!{URLMapContent.get("$seoMeta.additionalParametersFieldName")}
+					#end
+				#end
+			#end
+		#end
+	#end
+
+#else
+	#set ($seoMetaPreset = "default")
+	#if ($UtilMethods.isSet($dotPageContent.extendedMetaData) && $dotPageContent.extendedMetaData.length() > 0)
+		#set ($seoMetaPreset = "$!{dotPageContent.extendedMetaData}")
+	#end
+
+	#set ($seoMeta = $dotcontent.pull("+contentType:Structuredcontentextendedmetadata ${QHOST} +Structuredcontentextendedmetadata.contentType:$!{seoMetaPreset}",1,"modDate desc"))
+	
+	#if ($seoMeta.getClass().getName() == 'com.dotmarketing.util.PaginatedArrayList' && $seoMeta.size() == 1)
+		#set ($seoMeta = $seoMeta.get(0))
+		#if ($seoMeta.type && $seoMeta.type.length() > 0)
+			<meta property="og:type" content="$!{seoMeta.type}">
+		#end
+		
+		#if ($UtilMethods.isSet($seoMeta.imageFile) && $seoMeta.imageFile.uri)
+			<meta property="og:image" content="${REQBASEURL}${seoMeta.imageFile.uri}">
+			<meta property="og:image:width" content="$!{seoMeta.imageFile.width}">
+			<meta property="og:image:height" content="$!{seoMeta.imageFile.height}">
+		#end
+
+		#if ($seoMeta.additionalParameters && $seoMeta.additionalParameters.size() > 0)
+			#foreach($key in $seoMeta.additionalParameters.map.keySet())
+				<meta property="${key}" content="$seoMeta.additionalParameters.map["${key}"]">
+			#end
+		#end
+	#end
+
+#end
+
+<meta property="og:url" content="$!{REQBASEURL}" />
+
+#if (!$UtilMethods.isSet($URLMapContent))
+	<title>$!{dotPageContent.title}</title>
+	<meta name="title" content="$!{dotPageContent.title}">
+	<meta property="og:title" content="$!{dotPageContent.title}">
+	
+	#if ($UtilMethods.isSet($dotPageContent.seodescription) && $dotPageContent.seodescription.length() > 0)
+	<meta name="description" content="$!{dotPageContent.seodescription}">
+	<meta property="og:description" content="$!{dotPageContent.seodescription}">
+	#elseif ($UtilMethods.isSet($host.map.description) && $host.map.description.length() > 0)
+	<meta property="description" content="$!{host.map.description}" />
+	<meta property="og:description" content="$!{host.map.description}">
+	#end
+
+	#if ($UtilMethods.isSet($dotPageContent.canonicalUrl) && $dotPageContent.canonicalUrl.length() > 0)
+	<link rel="canonical" href="$!{dotPageContent.canonicalUrl}" />
+	#end
+	
+	#if ($UtilMethods.isSet($dotPageContent.seokeywords) && $dotPageContent.seokeywords.length() > 0)
+	<meta name="keywords" content="$!{dotPageContent.seokeywords}">
+	#elseif ($UtilMethods.isSet($host.map.keywords) && $host.map.keywords.length() > 0)
+	<meta property="keywords" content="$!{host.map.keywords}" />
+	#end
+	
+	$!{dotPageContent.seometadata}
+#end
+
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">

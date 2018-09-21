@@ -1,0 +1,6 @@
+#set ($ContainerFileAsset = $dotcontent.find("$ContentIdentifier"))##
+#if ($EDIT_MODE)#{set}($CONTENTLET_DATA=$containerFileAsset)#dotParse("${INC}contentlet-info.vtl")#end ##
+#if ($UtilMethods.isSet(${ContainerFileAsset.fileAsset.uri}))#dotParse("$ContainerFileAsset.fileAsset.uri")#end ##
+## Useful Vars
+## URL Query: ?force_download=1&filename=$ContainerFileAsset.title
+## File URI: $ContainerFileAsset.fileAsset.uri

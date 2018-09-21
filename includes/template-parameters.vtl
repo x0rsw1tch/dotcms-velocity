@@ -1,0 +1,40 @@
+## Base object to house template sections markup
+#set ($Template = { 'row': { 'pre': "", 'post': "" }, 'page': { 'pre': "", 'post': "" }, 'main':{ 'pre': "", 'post': "" }, 'header': { 'pre': "", 'post': "" }, 'footer': { 'pre': "", 'post': "" }, 'col': { 'col100': { 'pre': "", 'post': "" }, 'col75':  { 'pre': "", 'post': "" }, 'col66':  { 'pre': "", 'post': "" }, 'col50':  { 'pre': "", 'post': "" }, 'col33':  { 'pre': "", 'post': "" }, 'col25':  { 'pre': "", 'post': "" }}}) ##
+## Get Template Parameters
+#set ($templateHasLayout = false)
+
+#set ($TplParameters = $dotcontent.find("$!{dotPageContent.layout}"))
+#if ($TplParameters.getClass().getName() == 'com.dotcms.rendering.velocity.viewtools.content.ContentMap')
+	#set ($templateHasLayout = true)
+#else
+	#set ($TplParameters = $dotcontent.find("$!{TEMPLATE_DEFAULT_LAYOUT}"))
+	#if ($TplParameters.getClass().getName() == 'com.dotcms.rendering.velocity.viewtools.content.ContentMap')
+		#set ($templateHasLayout = true)
+	#end
+#end
+<!-- Layout: $TplParameters.description: $!{dotPageContent.layout} -->
+
+#if ($templateHasLayout)
+#if ($UtilMethods.isSet($TplParameters.pagePre))              #set ($Template.page.pre        = "$!{TplParameters.getRaw('pagePre')}") #end
+#if ($UtilMethods.isSet($TplParameters.pagePost))             #set ($Template.page.post       = "$!{TplParameters.getRaw('pagePost')}") #end
+#if ($UtilMethods.isSet($TplParameters.mainPre))              #set ($Template.main.pre        = "$!{TplParameters.getRaw('mainPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.mainPost))             #set ($Template.main.post       = "$!{TplParameters.getRaw('mainPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.headerPre))            #set ($Template.header.pre      = "$!{TplParameters.getRaw('headerPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.headerPost))           #set ($Template.header.post     = "$!{TplParameters.getRaw('headerPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.footerPre))            #set ($Template.footer.pre      = "$!{TplParameters.getRaw('footerPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.footerPost))           #set ($Template.footer.post     = "$!{TplParameters.getRaw('footerPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.rowPre))               #set ($Template.row.pre         = "$!{TplParameters.getRaw('rowPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.rowPost))              #set ($Template.row.post        = "$!{TplParameters.getRaw('rowPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column100PercentPre))  #set ($Template.col.col100.pre  = "$!{TplParameters.getRaw('column100PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column100PercentPost)) #set ($Template.col.col100.post = "$!{TplParameters.getRaw('column100PercentPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column75PercentPre))   #set ($Template.col.col75.pre   = "$!{TplParameters.getRaw('column75PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column75PercentPost))  #set ($Template.col.col75.post  = "$!{TplParameters.getRaw('column75PercentPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column66PercentPre))   #set ($Template.col.col66.pre   = "$!{TplParameters.getRaw('column66PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column66PercentPost))  #set ($Template.col.col66.post  = "$!{TplParameters.getRaw('column66PercentPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column50PercentPre))   #set ($Template.col.col50.pre   = "$!{TplParameters.getRaw('column50PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column50PercentPost))  #set ($Template.col.col50.post  = "$!{TplParameters.getRaw('column50PercentPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column33PercentPre))   #set ($Template.col.col33.pre   = "$!{TplParameters.getRaw('column33PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column33PercentPost))  #set ($Template.col.col33.post  = "$!{TplParameters.getRaw('column33PercentPost')}") #end
+#if ($UtilMethods.isSet($TplParameters.column25PercentPre))   #set ($Template.col.col25.pre   = "$!{TplParameters.getRaw('column25PercentPre')}") #end
+#if ($UtilMethods.isSet($TplParameters.column25PercentPost))  #set ($Template.col.col25.post  = "$!{TplParameters.getRaw('column25PercentPost')}") #end
+#end

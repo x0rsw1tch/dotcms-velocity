@@ -1,0 +1,32 @@
+#macro (GenerateButton $bData)
+#set ($out = '')
+#if ($bData.getClass().getName() == 'java.lang.String')
+#set ($bData = $json.generate($bData))
+#end
+#if ($bData.getClass().getName() == 'com.dotmarketing.util.json.JSONObject' && $bData.tag.getClass().getName() == 'java.lang.String' && $bData.tag.length() > 0)
+#set ($out = "<$!{bData.tag}")
+#if ($bData.class.getClass().getName() == 'java.lang.String' && $bData.class.length() > 0)
+#set ($out = "${out} class=\"$!{bData.class}\"")
+#end
+#if ($bData.tag == 'a')
+#if ($bData.link.getClass().getName() == 'java.lang.String' && $bData.link.length() > 0)
+#set ($out = "${out} href=\"$!{bData.link}\"")
+#end
+#if ($bData.target.getClass().getName() == 'java.lang.String' && $bData.target.length() > 0)
+#set ($out = "${out} target=\"$!{bData.target}\"")
+#end
+#elseif ($bData.tag == 'button')
+#if ($bData.value.getClass().getName() == 'java.lang.String' && $bData.value.length() > 0)
+#set ($out = "${out} value=\"$!{bData.value}\"")
+#end
+#end
+#if ($bData.attributes.getClass().getName() == 'java.lang.String' && $bData.attributes.length() > 0)
+#set ($out = "${out} $!{bData.attributes}")
+#end
+#set ($out = "${out}>")
+#if ($bData.text.getClass().getName() == 'java.lang.String' && $bData.text.length() > 0)
+#set ($out = "${out}$!{bData.text}</$!{bData.tag}>")
+#end
+#end
+$!{out}
+#end

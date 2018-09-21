@@ -1,0 +1,21 @@
+#macro(friendlyTruncateString $string $stringWordLimit $stringCharlimit)
+	#if (!$stringWordLimit) #set ($stringWordLimit = 25) #end
+	#if (!$stringCharLimit) #set ($stringCharLimit = 170) #end
+	#set ($friendlyStringArr = $string.split("\s"))
+	#set ($friendlyWordArr = $contents.getEmptyList())
+	#set ($friendlyOutString = "")
+	#foreach ($word in $friendlyStringArr)
+		#if ($foreach.count < $stringWordLimit)
+			#set ($dummy = $friendlyWordArr.add("$word"))
+		#{end}
+	#{end}
+	#foreach ($word in $friendlyWordArr)
+		#if ($stringCharLimit > $math.add($word.length(), $friendlyOutString.length()))
+			#set ($friendlyOutString = "$friendlyOutString $word")
+		#else
+			#set ($friendlyOutString = "$friendlyOutString...")
+			#break
+		#{end}
+	#{end}
+$friendlyOutString
+#end

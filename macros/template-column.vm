@@ -1,0 +1,17 @@
+#macro(TemplateColumnWidth $ColumnWidth $Pos)
+#if($Pos == "Pre")
+#if($ColumnWidth == 100)#evaluate($!{Template.col.col100.pre})#end
+#if($ColumnWidth == 75)#evaluate($!{Template.col.col75.pre})#end
+#if($ColumnWidth == 66)#evaluate($!{Template.col.col66.pre})#end
+#if($ColumnWidth == 50)#evaluate($!{Template.col.col50.pre})#end
+#if($ColumnWidth == 33)#evaluate($!{Template.col.col33.pre})#end
+#if($ColumnWidth == 25)#evaluate($!{Template.col.col25.pre})#end
+#elseif ($Pos == "Post")
+#if($ColumnWidth == 100)#evaluate($!{Template.col.col100.post})#end
+#if($ColumnWidth == 75)#evaluate($!{Template.col.col75.post})#end
+#if($ColumnWidth == 66)#evaluate($!{Template.col.col66.post})#end
+#if($ColumnWidth == 50)#evaluate($!{Template.col.col50.post})#end
+#if($ColumnWidth == 33)#evaluate($!{Template.col.col33.post})#end
+#if($ColumnWidth == 25)#evaluate($!{Template.col.col25.post})#end
+#end
+#end

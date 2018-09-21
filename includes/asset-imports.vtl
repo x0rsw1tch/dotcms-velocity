@@ -1,0 +1,40 @@
+#set ($assetImports = {})
+#set ($dummy = $assetImports.put("head", ""))
+#set ($dummy = $assetImports.put("bottom", ""))
+#if($UtilMethods.isSet($dotPageContent.assetImports) && $dotPageContent.assetImports.length() > 0)##
+	#set ($assetImports.head = "$!{assetImports.head} <!-- CSS -->$!{newline}")
+	#foreach($assetLine in $dotPageContent.assetImports.split("\u000A"))
+		#set($assetSplit = $assetLine.split(','))
+		#if($assetSplit.getClass().getName() == "[Ljava.lang.String;" && $assetSplit.size() == 2 && $assetSplit.get(0) == "css")
+			#set ($assetImports.head = "$!{assetImports.head}<link rel=${esc.q}stylesheet${esc.q} href=${esc.q}$!{assetSplit.get(1)}${esc.q}>$!{newline}")
+		#end
+	#end
+	
+	#set ($assetImports.head = "$!{assetImports.head} <!-- JS -->$!{newline}")
+	#foreach($assetLine in $dotPageContent.assetImports.split("\u000A"))
+		#set($assetSplit = $assetLine.split(','))
+		#if($assetSplit.getClass().getName() == "[Ljava.lang.String;" && $assetSplit.size() == 2 && $assetSplit.get(0) == "js_head")##
+			#set ($assetImports.head = "$!{assetImports.head}<script src=${esc.q}$!{assetSplit.get(1)}${esc.q}></script>$!{newline}")
+		#end
+	#end
+	
+	#set ($assetImports.head = "$!{assetImports.head} <!-- JSV -->$!{newline}")
+	#foreach($assetLine in $dotPageContent.assetImports.split("\u000A"))
+		#set($assetSplit = $assetLine.split(','))
+		#if($assetSplit.getClass().getName() == "[Ljava.lang.String;" && $assetSplit.size() == 2 && $assetSplit.get(0) == "vtljs_head")##
+			#set ($assetImports.head = "$!{assetImports.head}<script>#{dotParse}($!{assetSplit.get(1)})</script>$!{newline}")
+		#end
+	#end
+
+	#foreach($assetLine in $dotPageContent.assetImports.split("\u000A"))
+		#set($assetSplit = $assetLine.split(','))
+
+		#if ($assetSplit.getClass().getName() == "[Ljava.lang.String;" && $assetSplit.size() == 2 && $assetSplit.get(0) == "js")
+			#set ($assetImports.bottom = "$!{assetImports.bottom}<script src=${esc.q}$!{assetSplit.get(1)}${esc.q}></script>$!{newline}")
+		#end
+		#if ($assetSplit.getClass().getName() == "[Ljava.lang.String;" && $assetSplit.size() == 2 && $assetSplit.get(0) == "vtljs")
+			#set ($assetImports.bottom = "$!{assetImports.bottom}<script>#{dotParse}($!{assetSplit.get(1)})</script>$!{newline}")
+		#end
+	#end
+#end
+

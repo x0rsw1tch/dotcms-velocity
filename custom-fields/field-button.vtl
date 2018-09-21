@@ -1,0 +1,146 @@
+<script type="text/javascript" src="/application/util/assets/js/jquery-3.3.1.min.js"></script>
+<script>jQuery.noConflict();</script>
+
+#set ($inField = "$field.velocityVarName")
+#set ($fieldPrefix = "${field.velocityVarName}${field.sortOrder}")
+
+<div id="$!{fieldPrefix}InputGroup">
+	<p>Button</p>
+	<div style="width:100%; float: none;">
+
+		<span style="margin-bottom:1rem;">Type</span><br>
+		<div class="radio">
+			<label><input type="radio" name="${fieldPrefix}-type" checked value="anchor">Anchor</label> &nbsp; 
+			<label><input type="radio" name="${fieldPrefix}-type" value="button">Button</label><br>
+		</div>
+
+	</div>
+	<div style="width:47%; float:left; margin-right: 1rem;">
+		
+		<span>Classes</span>
+		<div class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
+			<div class="dijitReset dijitInputField dijitInputContainer">
+				<input type="text" class="dijitReset dijitInputInner" placeholder="Class" id="$!{fieldPrefix}-class" name="$!{fieldPrefix}-class" value="button primary" >
+			</div>
+		</div>
+
+		<span>Text</span>
+		<div class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
+			<div class="dijitReset dijitInputField dijitInputContainer">
+				<input type="text" class="
+				dijitReset dijitInputInner" placeholder="Text" id="$!{fieldPrefix}-text" name="$!{fieldPrefix}-text" value="" >
+			</div>
+		</div>
+
+	</div>
+
+	<div style="width:47%; float:left;">
+
+		<span>Link (Button Value)</span>
+		<div class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
+			<div class="dijitReset dijitInputField dijitInputContainer">
+				<input type="text" class="dijitReset dijitInputInner" placeholder="Link" id="$!{fieldPrefix}-link" name="$!{fieldPrefix}-link" value="" >
+			</div>
+		</div>
+
+		<span>Target</span>
+		<div class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
+			<div class="dijitReset dijitInputField dijitInputContainer">
+				<input type="text" class="dijitReset dijitInputInner" placeholder="Target" id="$!{fieldPrefix}-target" name="$!{fieldPrefix}-target" >
+			</div>
+		</div>
+
+
+	</div>
+
+	<div style="width:95.5%; float: none;">
+		<span>Attributes</span>
+		<div class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
+			<div class="dijitReset dijitInputField dijitInputContainer">
+				<input type="text" class="dijitReset dijitInputInner" placeholder="Attributes" id="$!{fieldPrefix}-attributes" name="$!{fieldPrefix}-attributes" >
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+var $!{fieldPrefix}Data = {
+	type: "$!{fieldPrefix}-type",
+	class: "$!{fieldPrefix}-class",
+	text: "$!{fieldPrefix}-text",
+	link: "$!{fieldPrefix}-link",
+	target: "$!{fieldPrefix}-target",
+	attributes: "$!{fieldPrefix}-attributes"
+};
+
+function buttonUpdateInputGroup(inputGroup) {
+	var fieldPrefix = "$!{fieldPrefix}";
+	var inputFields = $!{fieldPrefix}Data;
+	var outputField = "$!{inField}";
+	var out = {
+		tag: null,
+		class: null,
+		value: null,
+		text: null,
+		link: null,
+		target: null,
+		attributes: null
+	};
+	
+	if (jQuery('input[name='+inputFields.type+']:checked').val() == "anchor") {
+		out.tag = 'a';
+	} else if (jQuery('input[name='+inputFields.type+']:checked').val() == "button") {
+		out.tag = 'button';
+	}
+
+	if (jQuery('#'+inputFields.class).val()) {
+		out.class = jQuery('#'+inputFields.class).val();
+	}
+	
+	if (out.tag === 'a' && jQuery('#'+inputFields.link).val()) {
+		out.link = jQuery('#'+inputFields.link).val();
+	} else if (out.tag === 'button' && jQuery('#'+inputFields.link).val()) {
+		out.value = jQuery('#'+inputFields.link).val();
+	}
+
+	if (out.tag === 'a' && jQuery('#'+inputFields.target).val()) {
+		out.target = jQuery('#'+inputFields.target).val();
+	}
+
+	if (jQuery('#'+inputFields.attributes).val()) {
+		out.attributes = jQuery('#'+inputFields.attributes).val();
+	}
+
+	if (jQuery('#'+inputFields.text).val()) {
+		out.text = jQuery('#'+inputFields.text).val();
+	}
+	jQuery("#"+outputField).val(JSON.stringify(out));
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+	var inValues = JSON.parse(jQuery('input#'+'$!{field.velocityVarName}').val());
+	
+	jQuery('input[name=$!{fieldPrefix}-type][value='+inValues.tag+']').prop('checked', true);
+	
+	jQuery('#$!{fieldPrefix}-class').val(inValues.class);
+	jQuery('#$!{fieldPrefix}-text').val(inValues.text);
+	jQuery('#$!{fieldPrefix}-link').val(inValues.link);
+	jQuery('#$!{fieldPrefix}-value').val(inValues.value);
+	jQuery('#$!{fieldPrefix}-attributes').val(inValues.attributes);
+
+	jQuery("#$!{fieldPrefix}InputGroup input").each(function () {
+		jQuery(this).keyup(function (e) {
+			buttonUpdateInputGroup("$!{fieldPrefix}InputGroup");
+		});
+		jQuery(this).focus(function (e) {
+			buttonUpdateInputGroup("$!{fieldPrefix}InputGroup");
+		});
+		jQuery(this).blur(function (e) {
+			buttonUpdateInputGroup("$!{fieldPrefix}InputGroup");
+		});
+	});
+});
+
+
+
+</script>

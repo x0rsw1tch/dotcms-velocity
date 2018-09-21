@@ -1,0 +1,92 @@
+##<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+if (typeof jQuery != 'undefined') {
+
+} else {
+	(function(e,s){e.src=s;e.onload=function(){jQuery.noConflict();console.log('jQuery injected')};document.head.appendChild(e);})(document.createElement('script'),'/application/util/assets/js/jquery-3.3.1.min.js')
+}
+</script>
+<style>
+#markdown-editor_$field.velocityVarName {
+	position:relative;
+	width: 99.90%;
+	min-height:500px;
+}
+
+#markdown-preview_$field.velocityVarName h1,
+#markdown-preview_$field.velocityVarName h2,
+#markdown-preview_$field.velocityVarName h3,
+#markdown-preview_$field.velocityVarName h4,
+#markdown-preview_$field.velocityVarName h5,
+#markdown-preview_$field.velocityVarName h6,
+#markdown-preview_$field.velocityVarName p {
+	margin-bottom: 1rem;
+}
+
+#markdown-preview_$field.velocityVarName table {
+	width: auto;
+}
+
+#markdown-preview_$field.velocityVarName table tr  {
+	border-bottom: 1px solid #dfdfdf;
+}
+
+#markdown-preview_$field.velocityVarName table tr:nth-child(odd) {
+	background-color: white;
+}
+
+#markdown-preview_$field.velocityVarName table tr:nth-child(even) {
+	background-color: #efefef;
+}
+
+#markdown-preview_$field.velocityVarName table th,
+#markdown-preview_$field.velocityVarName table td {
+	padding: 0.5rem;
+	font-size: 16px;
+}
+
+#markdown-preview_$field.velocityVarName table th {
+	font-weight: bold;
+}
+</style>
+<div id="markdown-editor_$field.velocityVarName">$UtilMethods.htmlifyString($value)</div>
+<h4>Markdown Preview</h4>
+<div id="markdown-preview_$field.velocityVarName" style="float:none;clear:both;width:99%;max-height:600px;margin-top:3rem;margin-bottom:3rem;overflow-y:auto;"></div>
+
+ 
+ 
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+		setTimeout(function () {
+			var editor = ace.edit("markdown-editor_$field.velocityVarName");
+			editor.setTheme("ace/theme/textmate");
+			editor.getSession().setMode("ace/mode/markdown");
+			editor.getSession().setUseWrapMode(true);
+			editor.on('change', function(e) {
+				document.getElementById("$!{field.velocityVarName}").value=editor.getValue();
+				markdownPreview('$!{field.velocityVarName}');
+			});
+			document.getElementById('markdown-editor_$field.velocityVarName').style.fontSize='15px';
+		}, 1000);
+	});
+
+	function markdownPreview(ele) {
+		var previewUri = '/tools/vel-parse.jsp';
+
+		jQuery.ajax({
+			url: previewUri,
+			method: 'POST',
+			contentType: 'text/html',
+			data: JSON.stringify({
+				q: "markdown",
+				s: document.getElementById(ele).value,
+			}),
+			success: function (data) {
+				document.getElementById("markdown-preview_$field.velocityVarName").innerHTML = data;
+			}
+		});
+
+
+	}
+</script>

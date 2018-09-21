@@ -1,0 +1,35 @@
+#set ($inField = "$field.velocityVarName")
+#set ($fieldPrefix = "${field.velocityVarName}${field.sortOrder}")
+
+#set ($defaultLayout = "")
+
+<div class="custom-field-select">
+	<select id="$!{fieldPrefix}" style="padding: 0.5rem 2rem 0.5rem 0.5rem">
+		#foreach($con in $dotcontent.pull("+contentType:Templateparameters $!{QHOST}",0,"Templateparameters.description asc"))
+			#if ($con.description == "Default Layout")
+			<option value="$!{con.identifier}" selected="selected">$!{con.description}</option>
+			#set ($defaultLayout = "$!{con.identifier}")
+			#else
+			<option value="$!{con.identifier}">$!{con.description}</option>
+			#end
+		#end
+	</select>
+</div>
+
+<script>
+(function(){
+
+
+	window.addEventListener("DOMContentLoaded", function () {
+		if (!document.getElementById("$!{inField}").value) {	
+			document.getElementById("$!{inField}").value = '$!{defaultLayout}';
+		} else {
+			document.getElementById("$!{fieldPrefix}").value = document.getElementById("$!{inField}").value;
+		}
+	});
+	
+	document.getElementById("$!{fieldPrefix}").addEventListener("click", function() {
+		document.getElementById("$!{inField}").value = document.getElementById("$!{fieldPrefix}").value;
+	});
+})();
+</script>
