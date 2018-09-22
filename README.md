@@ -1,64 +1,24 @@
 # DotCMSVelocity
-DotCMS and Velocity Scripts and Stuff
 
-## Collection of Useful things to be used with DotCMS and Velocity
+DotCMS and Velocity Tools and Utilities
 
-## crumbtrails.vtl
+## Collection of Tools, Utilities, macros, widgets, Content Types, Snippets, and Custom Fields to be used with DotCMS
 
-### Purpose
-Dynamically generate Bradcrumbs regardless of whether the page is within the standard scope or a URL Mapped page.
+Additional documentation can be found in the following directories:
 
-### How to use:
+* [/content-types](/content-types)
+* [/macros](/macros)
 
-#####Step 1: Place crumbtrails.vtl in your /application/vtl or /application/themes/*themeName* folder.
+### More Documents
 
-#####Step 2: Edit your template to include the script in the desired location of your advanced template. Script includes a nav tag.
-```
-#dotParse("${dotTheme.path}crumbtrails.vtl")
-```
+* [dotCMS Installation Guide](dotcms-installation.md)
+* [Velocity Snippets](velocity-snippets.md)
 
-#####Step 3: Customize script/markup to your needs.
+### Scripts
 
+* [Interactive dotCMS Installation Script (Linux)](install-dotcms.sh)
+* [Unattended dotCMS Installation Script (Linux)](install-dotcms-unattended.sh)
 
-## URL Page Asset File Browser for custom fields
+### Archives
 
-## urlFileBrowser.vtl
-
-### Purpose
-For adding a Page Asset file-browser in content. Useful for clients to browse and adding SEO friendly links without having to code.
-
-### How to use: 
-
-#####Step 1: Place *urlFileBrowser.vtl* script in your /application/vtl directory
-
-#####Step 2: Create a Custom Field in your Structure and add this code.
-```
-<script>
-var _dotCMSPageAssetBrowserTargetField = String ('myField'); // <-- Update This String with custom field variable name!
-</script>
-#dotParse('/application/vtl/urlFileBrowser.vtl')
-```
-
-#####Step 3: Edit value of *_dotCMSPageAssetBrowserTargetField* to the Variable/ID of your custom field.
-Example:
-```
-var _dotCMSPageAssetBrowserTargetField = String ('linkPage');
-```
-
-#####Step 4: You should have now have a custom field with a button to browse for a Page Asset.
-
-
-## console.vtl
-
-### Purpose
-Easily Test your velocity
-
-### How to use:
-
-#####Step 1: Place vtl file in your /application/vtl or somewhere.
-
-#####Step 2: Create a page somewhere on your site and add a ~Content (Generic)~ content.
-
-#####Step 3: Place a #dotParse('/path/to/console.vtl')
-
-#####Step 4: Navigate to page and test whatever velocity you want to test.
+* [dotCMS Minimal Files](dotcms-minimal-vd.7z)
