@@ -234,7 +234,7 @@ cd /opt/dotcms
 echo ""
 echo "Download dotCMS..."
 echo ""
-wget http://doc.dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_INSTALL_VERSION}.tar.gz
+wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_INSTALL_VERSION}.tar.gz
 
 if [[ $DOTCMS_USE_MINIMAL = true ]] ; then
 echo ""
