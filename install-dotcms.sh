@@ -370,7 +370,7 @@ if [[ $DOTCMS_USER_CONFIGURED = true ]] ; then
 			echo ""
 			echo "Downloading dotCMS..."
 			echo ""
-			if wget http://dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
+			if wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_${DOTCMS_VERSION_CHOICE}.tar.gz; then
 				DOTCMS_VALID_DOWNLOAD=true
 			else
 				echo "Unable to download dotCMS, aborting..."
