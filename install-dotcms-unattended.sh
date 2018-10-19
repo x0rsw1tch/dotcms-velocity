@@ -207,6 +207,7 @@ echo ""
 echo "Edit connection configuration..."
 echo ""
 sed -i '/host    all             all             127.0.0.1\/32            md5/c host    all             all             127.0.0.1\/32            password' ${POSTGRESQL_HBACONF_PATH}
+sed -i '/host    all             all             127.0.0.1\/32            ident/c host    all             all             127.0.0.1\/32            password' ${POSTGRESQL_HBACONF_PATH}
 
 echo ""
 echo "Restart Server..."
@@ -447,6 +448,8 @@ systemctl enable monit
 systemctl stop monit
 wget -O /etc/monit.d/dotcms.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/dotcms.conf
 wget -O /etc/monit.d/httpd.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/httpd.conf
+wget -O /etc/monit.d/disk.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/disk.conf
+wget -O /etc/monit.d/system.conf https://raw.githubusercontent.com/x0rsw1tch/monit-presets/master/system.conf
 systemctl start monit
 fi
 
