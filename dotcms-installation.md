@@ -25,12 +25,12 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.0.1.tar.gz
+wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.1.0.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
 ```
-wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.0.1_minimal.zip
+wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.1.0_minimal.zip
 ```
 
 ### Create dotCMS User and set password
@@ -83,7 +83,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_5.0.1.tar.gz
+tar -zxvf dotcms_5.1.0.tar.gz
 ```
 
 ### Create PID Directory
@@ -100,7 +100,7 @@ chown dotcms:dotcms /var/run/dotcms
 ```
 mkdir -p plugins/com.dotcms.config/ROOT/bin
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes
 ```
 
@@ -108,22 +108,22 @@ mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB
 <pre style="font-size:11px;">
 mkdir -p plugins/com.dotcms.config/ROOT/bin
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf/
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB-INF/classes
 </pre>
 
 
 ### Copy Vanilla Configs
 ```
-cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
-cp dotserver/tomcat-8.5.32/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
-cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
+cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/
+cp dotserver/tomcat-8.5.32/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
+cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 ```
 ##### Older Versions Config Files: v3, v4
 <pre style="font-size:11px;">
-cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
-cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
-cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
+cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/
+cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
+cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 </pre>
 
 
@@ -160,28 +160,28 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin
 ### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.5.32/webapps/ROOT/starter.zip dotserver/tomcat-8.5.32/webapps/ROOT/starter-vanilla.zip
-mv dotcms-5.0.1_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
+mv dotcms-5.1.0_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
 ```
 
 ##### Older Versions: v3, v4
 <pre style="font-size:11px;">
 mv dotserver/tomcat-8.0.18/webapps/ROOT/starter.zip dotserver/tomcat-8.0.18/webapps/ROOT/starter-vanilla.zip
-mv dotcms-5.0.1_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT
+mv dotcms-4.3.3_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT
 </pre>
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
 ```
-STARTER_DATA_LOAD=/dotcms-5.0.1_minimal.zip
+STARTER_DATA_LOAD=/dotcms-5.1.0_minimal.zip
 ```
-More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
+> More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
 
 ### Give dotCMS more RAM and set PID File
 `nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
 ```
 -Xmx4G
 ```
-More Information: [Memory Config](https://dotcms.com/docs/latest/memory-configuration)
+> More Information: [Memory Config](https://dotcms.com/docs/latest/memory-configuration)
 
 ```
 export CATALINA_PID="/var/run/dotcms/dotcms.pid"
@@ -194,7 +194,8 @@ export CATALINA_PID="/var/run/dotcms/dotcms.pid"
 ```
 ASSET_REAL_PATH=/opt/dotcms-assets
 ```
-More Information: [Asset Directory](https://dotcms.com/docs/latest/asset-storage)
+> More Information: [Asset Directory](https://dotcms.com/docs/latest/asset-storage)
+
 
 ### Cache tuning
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -209,7 +210,7 @@ cache.tagsbyinodecache.size=4000
 cache.velocitycache.size=5000
 cache.virtuallinkscache.size=3500
 ```
-More Information: [Caching](https://dotcms.com/docs/latest/cache-configuration), [Guava](https://dotcms.com/docs/latest/guava-cache-provider)
+> More Information: [Caching](https://dotcms.com/docs/latest/cache-configuration), [Guava](https://dotcms.com/docs/latest/guava-cache-provider)
 
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
@@ -231,7 +232,7 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 1. Make changes.
 1. `bin/deploy-plugins.sh`
 
-More Information: [Configuration Properties](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
+> More Information: [Configuration Properties](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
 
 ----
 
@@ -289,9 +290,9 @@ tail -fn200 /opt/dotcms/dotserver/tomcat-8.5.32/webapps/ROOT/dotsecure/logs/dotc
 ## Configure Apache
 `nano /etc/httpd/conf.d/dotcms.conf`
 ```
-##########################
-## Proxy to dotCMS:8080 ##
-##########################
+#################################
+## Proxy to dotCMS:8080 (HTTP) ##
+#################################
 <IfModule mod_proxy_http.c>
 <VirtualHost *:80>
     ServerName example.com
@@ -323,38 +324,45 @@ tail -fn200 /opt/dotcms/dotserver/tomcat-8.5.32/webapps/ROOT/dotsecure/logs/dotc
 </IfModule>
 ```
 
-SSL 
+#### SSL
 
 ```
-#########################
-## Proxy to dotCMS SSL ##
-#########################
+######################################
+## Proxy to dotCMS SSL (HTTP/HTTPS) ##
+######################################
+<VirtualHost *:80>
+    ServerName DOTCMS_HOST
+            ServerAdmin admin@localhost
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    RewriteEngine on
+    RewriteCond %{SERVER_NAME} =DOTCMS_HOST
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
 <IfModule mod_ssl.c>
 <VirtualHost *:443>
-    ServerName example.com
-    ServerAdmin support@ethode.com
-    
-    ErrorLog /var/log/httpd/error.log
-    CustomLog /var/log/httpd/access.log combined
-    
+    ServerName DOTCMS_HOST
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
     ProxyRequests Off
     ProxyPreserveHost On
     ProxyVia On
     ProxyPass         / http://localhost:8080/ retry=0 acquire=3000 timeout=1200 Keepalive=On
     ProxyPassReverse  / http://localhost:8080/ retry=0
     ### Alternate for AJP
-    #ProxyPass         / ajp://localhost:8009/ retry=0 acquire=3000 timeout=1200 Keepalive=On
-    #ProxyPassReverse  / ajp://localhost:8009/ retry=0
-    
+    # ProxyPass         / ajp://localhost:8009/ retry=0 acquire=3000 timeout=1200 Keepalive=On
+    # ProxyPassReverse  / ajp://localhost:8009/ retry=0
     <Proxy *>
-    	Order deny,allow
-    	Allow from all
+        Order deny,allow
+        Allow from all
     </Proxy>
-    
+
     Include /etc/letsencrypt/options-ssl-apache.conf
-    SSLCertificateFile /etc/letsencrypt/live/example.com/cert.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/example.com/privkey.pem
-    SSLCertificateChainFile /etc/letsencrypt/live/example.com/chain.pem
+    SSLCertificateFile /etc/letsencrypt/live/HOST_DIR/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/HOST_DIR/privkey.pem
 </VirtualHost>
 </IfModule>
 ```
