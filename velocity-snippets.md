@@ -16,6 +16,21 @@ ${largeImageBinaryFileURI}
 
 ---
 
+### Common Classes
+
+```
+com.dotmarketing.beans.Host                             $host
+com.dotmarketing.viewtools.content.ContentTool          $dotcontent
+com.dotcms.rendering.velocity.viewtools.ContentsWebAPI  $contents
+com.dotmarketing.viewtools.WebAPI                       $webapi
+com.dotmarketing.viewtools.VelocityWebUtil              $velutil
+com.dotmarketing.util.InodeUtils                        $InodeUtils
+com.dotcms.rendering.velocity.viewtools.WorkflowTool    $workflowtool
+```
+
+
+---
+
 ###Array of Arrays
 ```
 #set( $tmp = [] )
