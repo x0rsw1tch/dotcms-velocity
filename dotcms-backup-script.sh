@@ -8,9 +8,6 @@
 # 3. Creates a gzipped tarball of the application/DB in one file
 # 4. Moves backup file to designated location
 #
-# @todo: Add exclusions for index, cache, logs
-# @todo: Add ability to SCP file to another host
-#
 
 # Check Free Space
 DISK_REQUIRED=15000000
@@ -44,8 +41,21 @@ DB_OUTFILE="backup.sql"
 APP_INDIR="/usr/local/dotcms"
 APP_OUTDIR="/tmp"
 APP_OUTFILE="${TARBALL_OUTFILE}"
+APP_EXCLUSIONS=""
+#APP_EXCLUSIONS="${APP_EXCLUSIONS} --exclude=${APP_INDIR}/dotserver/tomcat-8.0.18/webapps/ROOT/assets/tmp_*"
+#APP_EXCLUSIONS="${APP_EXCLUSIONS} --exclude=${APP_INDIR}/dotserver/tomcat-8.0.18/webapps/ROOT/dotsecure/esdata"
+#APP_EXCLUSIONS="${APP_EXCLUSIONS} --exclude=${APP_INDIR}/dotserver/tomcat-8.0.18/logs"
 
+# Upload
+UPLOAD_ENABLE=false
+UPLOAD_HOST="example.com"
+UPLOAD_PORT=22
+UPLOAD_USER="lightspeed"
+UPLOAD_PRIVKEY="/home/user/.ssh/my_private_key"
+UPLOAD_OUTDIR="/home/user"
+UPLOAD_OUTFILE="${TARBALL_OUTFILE}"
 
+# Do the things
 echo ""
 echo "*********************************************************"
 echo "*                                                       *"
@@ -67,7 +77,7 @@ echo ""
 echo "Creating Tarball of Application Directory..."
 echo ${DB_OUTDIR}/${DB_OUTFILE} ' && ' ${APP_INDIR} ' > ' ${APP_OUTDIR}/${APP_OUTFILE}
 echo ""
-tar -czf ${APP_OUTDIR}/${APP_OUTFILE} -C ${DB_OUTDIR} ${DB_OUTFILE} -C ${APP_INDIR} .
+tar ${APP_EXCLUSIONS} -czf ${APP_OUTDIR}/${APP_OUTFILE} -C ${DB_OUTDIR} ${DB_OUTFILE} -C ${APP_INDIR} .
 
 echo ""
 rm -f ${DB_OUTDIR}/${DB_OUTFILE}
@@ -79,3 +89,7 @@ chown ${ACCESS_USER}:${ACCESS_GROUP} ${ACCESS_DIR}/${TARBALL_OUTFILE}
 echo ""
 echo "DONE!"
 echo ""
+
+if [[ $UPLOAD_ENABLE = true ]] ; then
+scp -i ${UPLOAD_PRIVKEY} -P ${UPLOAD_PORT} ${ACCESS_DIR}/${TARBALL_OUTFILE} ${UPLOAD_USER}@${UPLOAD_HOST}:${UPLOAD_OUTDIR}/${UPLOAD_OUTFILE}
+fi
