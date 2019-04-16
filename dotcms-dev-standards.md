@@ -1,3 +1,5 @@
+# dotCMS front-end development Guidelines
+
 ## Directory Structure
 
 ```
