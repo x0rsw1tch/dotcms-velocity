@@ -50,8 +50,11 @@ In most cases you will want to start with a fresh site.
 ## File Naming Examples
 
 Velocity Files: `/application/widgets/news-trending.vtl`
+
 Velocity Macros: `/application/macros/truncate-string.vm`
+
 Velocity Includes: `/application/includes/social-meta.vtl`
+
 Custom Fields: `/application/custom-fields/button.vtl`
 
 ---
@@ -89,8 +92,8 @@ If you have it, use the `#ContainerInfo($CONTAINER_INODE)` macro and it will dis
 
 ## Widget Instances
 
-- Avoid using the container's built-in Velocity variable generator
-- DO Use `$ContentIdentifier` in a `$dotcontent.find()` to get full access to the ContentMap Object as well as the underlying abstracted Classes.
+- _Avoid_ using the container's built-in Velocity variable generator
+- _Do_ Use `$ContentIdentifier` in a `$dotcontent.find()` to get full access to the ContentMap Object as well as the underlying abstracted Classes.
 
 ### Example
 ```
