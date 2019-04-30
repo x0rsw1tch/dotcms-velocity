@@ -1,6 +1,6 @@
 # Velocity Snippets
 
-###Output path to content image URL
+### Output path to content image URL
 ```
 ${item.imageVar.uri}
 ${item.imageVar.rawUri}      ## Binary
@@ -31,7 +31,7 @@ com.dotcms.rendering.velocity.viewtools.WorkflowTool    $workflowtool
 
 ---
 
-###Array of Arrays
+### Array of Arrays
 ```
 #set( $tmp = [] )
 ## Using the method to set dummy ensures the line gets parsed and $tmp array is pushed
@@ -40,7 +40,7 @@ com.dotcms.rendering.velocity.viewtools.WorkflowTool    $workflowtool
 
 ---
 
-###Split URL into folder list
+### Split URL into folder list
 ```
 #set($folder = $URLMapContent.URL_MAP_FOR_CONTENT.split("/"))
 ```
@@ -64,7 +64,7 @@ com.dotcms.rendering.velocity.viewtools.WorkflowTool    $workflowtool
 
 ---
 
-###foreach loop and specifics
+### foreach loop and specifics
 ```
 #foreach($item in $var)
 	## Stuff
@@ -84,7 +84,7 @@ com.dotcms.rendering.velocity.viewtools.WorkflowTool    $workflowtool
 ```
 ---
 
-###Get navigation path array (Doesn't work for URLMapped Paths )
+### Get navigation path array (Doesn't work for URLMapped Paths )
 ```
 #set($navi = $navtool.nav)
 ## Structure
@@ -94,14 +94,14 @@ $navi.href
 
 ---
 
-###Get current folder
+### Get current folder
 ```
 #set ($folder = $VTLSERVLET_URI)
 ```
 
 ---
 
-###Find out if a thing contains x
+### Find out if a thing contains x
 ```
 #if ($thing.contains('foo'))
 	## Do the things
@@ -110,7 +110,7 @@ $navi.href
 
 ---
 
-###Replace Occurrences in a string
+### Replace Occurrences in a string
 ```
 $item.replaceAll("occurrence", "newthing")
 $myString.replace('-',' ')
@@ -118,7 +118,7 @@ $myString.replace('-',' ')
 
 ---
 
-###Check length of thing
+### Check length of thing
 ```
 #if($thing.length() > 0)
 	## Do the things
@@ -127,7 +127,7 @@ $myString.replace('-',' ')
 
 ---
 
-###Date/Time Formatting
+### Date/Time Formatting
 ```
 $date.format('yyyy-MM-dd',$sysPublishDate)T$date.format('hh:mm:ss',$sysPublishDate)
 $date.format('MMM dd yyyy', $item.sysPublishDate)
@@ -146,35 +146,35 @@ $date.format('HH:mm z', $item.sysPublishDate)
 
 ---
 
-###dotCMS Theme Path
+### dotCMS Theme Path
 ```
 $dotTheme.path
 ```
 
 ---
 
-###String Concatination
+### String Concatination
 ```
 #set ($myString = "$myString is awesome!")
 ```
 
 ---
 
-###String to Lower Case
+### String to Lower Case
 ```
 $myString.toLowerCase()
 ```
 
 ---
 
-###String Substring-ing
+### String Substring-ing
 ```
 $myString.substring(0,5)
 ```
 
 ---
 
-###Macro as a function returning data to a variable
+### Macro as a function returning data to a variable
 ```
 #macro (CoolThing)
 	<h1>I am a macro</h1>
@@ -184,7 +184,7 @@ $myString.substring(0,5)
 
 ---
 
-###Macro as a function with Parameters
+### Macro as a function with Parameters
 ```
 #macro (CoolThing $myThing)
 	<h1>I am a macro with $myThing</h1>
@@ -197,7 +197,7 @@ $myString.substring(0,5)
 
 ---
 
-###Is something false?
+### Is something false?
 ```
 #if(!$myVar) 
 	\$MyVar is false
@@ -206,7 +206,7 @@ $myString.substring(0,5)
 
 ---
 
-###Get JSON from a URL (Pads "data" due to dotCMS JSON parsing bug - needs named object)
+### Get JSON from a URL (Pads "data" due to dotCMS JSON parsing bug - needs named object)
 ```
 #set ($myHost = "https://webservices-webdev18.worldatwork.org/")
 #set ($myPath = "customers/22222/")
@@ -222,7 +222,7 @@ $myString.substring(0,5)
 
 ---
 
-###Get contentlet related contentlets
+### Get contentlet related contentlets
 ```
 ## false = child relation
 ## true = parent relation
@@ -233,7 +233,7 @@ $myString.substring(0,5)
 
 ---
 
-###Basic Dynamic Navigation List
+### Basic Dynamic Navigation List
 ```
 #set( $list = $navtool.getNav("/") ) 
 #foreach($n in $list)
@@ -255,14 +255,14 @@ $myString.substring(0,5)
 
 ---
 
-###Force dotCMS to clear page cache
+### Force dotCMS to clear page cache
 ```
 $response.sendRedirect('/?dotcache=refresh')
 ```
 
 ---
 
-###dotCMS simulate user logging in via native user API (jQuery)
+### dotCMS simulate user logging in via native user API (jQuery)
 ```
 <script type="text/javascript">
     var formData = {
@@ -290,7 +290,7 @@ $response.sendRedirect('/?dotcache=refresh')
 
 ---
 
-###UNIX Timestamp
+### UNIX Timestamp
 ```
 $date.calendar.getTimeInMillis()
 ```
@@ -412,4 +412,19 @@ $render.eval("#include($webapi.getAssetPath('/virtual/path/to/file'))")
 ### Pull in a file via contentlet attachment and eval
 ```
 #dotParse("$filetool.getFile(${contentlet.fileAssetFieldName.identifier},true).getURI()")
+```
+
+
+---
+
+### Custom Field, pull in jQuery
+```
+<script>
+
+if (typeof jQuery != 'undefined') {
+
+} else {
+	(function(e,s){e.src=s;e.onload=function(){jQuery.noConflict();console.log('jQuery injected')};document.head.appendChild(e);})(document.createElement('script'),'/js/jquery.min.js')
+}
+</script>
 ```
