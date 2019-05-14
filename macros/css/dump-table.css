@@ -1,0 +1,29 @@
+.data-dump-table {
+	width: 99%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.data-dump-table th {
+	font-weight: bold;
+	border: 2px solid #bb30e1;
+	color: #ccc;
+	padding: 0.5rem;
+}
+
+.data-dump-table tr:nth-child(odd) {
+	background-color: #202020;
+}
+
+.data-dump-table tr:nth-child(even) {
+	background-color: #2f2f2f;
+}
+
+.data-dump-table td {
+	padding: 0.5rem;
+	max-width: 50%;
+	word-wrap: break-word;
+	word-break: break-all;
+	color: #aeaeae;
+	border: 2px solid #bb30e1;
+}

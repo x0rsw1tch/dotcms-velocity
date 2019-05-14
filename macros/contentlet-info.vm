@@ -1,0 +1,25 @@
+#macro (ContentletInfo $_contentletObject)
+	#if ($EDIT_MODE)
+		<div class="contentlet-info">
+			<h5>Contentlet: 
+			#if ($UtilMethods.isSet($_contentletObject.get("__DOTNAME__")))
+			$_contentletObject.get("__DOTNAME__")
+			#elseif ($UtilMethods.isSet($_contentletObject.get("widgetTitle")))
+			$_contentletObject.get("widgetTitle")
+			#end
+			<h6>Identifier: ($_contentletObject.identifier)</h6>
+			<h6>Content Type: $_contentletObject.structure.name ($_contentletObject.structure.velocityVarName)</h6>
+			<h6>Fields: 
+				#foreach ($_field in $_contentletObject.structure.fields)
+					#if ($_field.fieldContentlet != 'system_field')
+						#if ($field.required)
+							<span class="required-field">${_field.velocityVarName}</span>
+						#else
+						${_field.velocityVarName}
+						#end #{if}($foreach.hasNext()) | #{end}
+					#end
+				#end
+			</h6>
+		</div>
+	#end
+#end

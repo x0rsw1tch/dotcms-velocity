@@ -1,0 +1,61 @@
+/* Edit Mode Specific CSS */
+
+.container-info {
+	position: relative;
+	width: 100%;
+	border: 2px solid #bb30e1;
+	float: none;
+	clear: both;
+	width: auto;
+	background-color: #222;
+	padding: 0.2rem 1.4rem;
+	z-index: 10000;
+}
+
+.container-info h5 {
+	color: #ccc;
+	font-family: monospace;
+	text-transform: none;
+	margin: 4px;
+	font-size: 15px;
+}
+
+.container-info h6 {
+	color:#ccc;
+	font-family: monospace;
+	text-transform: none;
+	margin: 4px;
+	font-size: 13px;
+}
+
+.contentlet-info {
+	position: relative;
+	width: 100%;
+	border: 2px solid #bb30e1;
+	float: none;
+	clear: both;
+	width: 75%;
+	margin-top: -2.75rem;
+	background-color: #222;
+	padding: 0.2rem 1.4rem;
+}
+
+.contentlet-info h5 {
+	color: #ccc;
+	font-family: monospace;
+	text-transform: none;
+	margin: 4px;
+	font-size: 15px;
+}
+
+.contentlet-info h6 {
+	color: #ccc;
+	font-family: monospace;
+	text-transform: none;
+	margin: 4px;
+	font-size: 13px;
+}
+
+main {
+	margin-top: 6.5rem;
+}

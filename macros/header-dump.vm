@@ -1,0 +1,40 @@
+#macro (HeaderDump)
+	<div style="width:100%;float:none;clear:both;position:relative;">
+		<h1>Header Dump</h1>
+		<table class="data-dump-table" width="99%">
+			<thead>
+				<tr>
+					<th width="50%">Key</th>
+					<th width="50%">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+		#foreach($key in $request.getHeaderNames())
+			<tr>
+				<td>$!{key}</td>
+				<td>$esc.html("${request.getHeader($key)}")</td>
+			</tr>
+		#end
+			</tbody>
+		</table>
+		
+		<h1>Request Attribute Dump</h1>
+		<table class="data-dump-table" width="99%">
+			<thead>
+				<tr>
+					<th width="50%">Key</th>
+					<th width="50%">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+		#foreach($key in $request.getAttributeNames())
+			<tr>
+				<td>$!{key}</td>
+				<td>$esc.html("${request.getAttribute($key)}")</td>
+			</tr>
+		#end
+			</tbody>
+		</table>
+	</div>
+	<link rel="stylesheet" href="//$!{HOST_SHARED_ASSETS}$!{APP_UTIL}/css/dump-table.css">
+#end

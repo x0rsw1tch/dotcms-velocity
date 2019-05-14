@@ -4,6 +4,10 @@
 
 1. [Button Generator](#button-generator)
 1. [Container Info](#container-info)
+1. [Contentlet Info](#contentlet-info)
+1. [Header Dump](#header-dump)
+1. [Session Dump](#session-dump)
+1. [Velocity Context Dump](#context-dump)
 1. [JSON Get](#json-get)
 1. [Slugify](#slugify)
 1. [](#truncate-string)
@@ -55,6 +59,96 @@ Provides extra container information in the dotCMS Page Preview
 ![Container Info](../screenshot-macro-container-info.png)
 
 ---
+
+<a name="contentlet-info"></a>
+
+## Contentlet Info
+
+Provides extra contentlet information in the dotCMS Page Preview
+
+### Installation
+
+1. Upload `/macros/contentlet-info.vm` to `/application/macros`
+1. Upload `/macros/css/edit-mode.css` to `/application/util/css`, or change the CSS reference
+1. `#dotParse()` the macro file in a global container, or in a template/theme file
+1. Add the following Velocity in the theme where this will be used:
+
+```
+#if ($EDIT_MODE)
+<link rel="stylesheet" href="//hostname/application/util/css/edit-mode.css">
+#end
+```
+
+### Usage
+
+1. Invoke the macro with `#ContentletInfo($contentletObject)`
+
+![Contentlet Info](../screenshot-contentlet-info.png)
+
+---
+
+<a name="session-dump"></a>
+
+## Session Dump
+
+Displays a table of session data from dotCMS
+
+### Installation
+
+1. Upload `/macros/session-dump.vm` to `/application/macros`
+1. Upload `/macros/css/dump-table.css` to `/application/util/css`, or change the CSS reference
+1. `#dotParse()` the macro file in a global container, or in a template/theme file
+
+### Usage
+
+1. Invoke the macro with `#SessionDump()`
+
+![Session Dump](../screenshot-session-dump.png)
+
+---
+
+<a name="header-dump"></a>
+
+## Header Dump
+
+Displays a table of HTTP header attributes and HTTP request data from dotCMS
+
+### Installation
+
+1. Upload `/macros/header-dump.vm` to `/application/macros`
+1. Upload `/macros/css/dump-table.css` to `/application/util/css`, or change the CSS reference
+1. `#dotParse()` the macro file in a global container, or in a template/theme file
+
+### Usage
+
+1. Invoke the macro with `#HeaderDump()`
+
+![Header Dump 1](../screenshot-header-dump-1.png)
+
+![Header Dump 2](../screenshot-header-dump-2.png)
+
+---
+
+<a name="velocity-context"></a>
+
+## Velocity Context Dump
+
+Displays a table of the current Velocity Context from dotCMS
+
+### Installation
+
+1. Upload `/macros/velocity-context.vm` to `/application/macros`
+1. Upload `/macros/css/dump-table.css` to `/application/util/css`, or change the CSS reference
+1. `#dotParse()` the macro file in a global container, or in a template/theme file
+
+### Usage
+
+1. Invoke the macro with `#VelocityContext()`
+
+![Velocity Context](../screenshot-velocity-context.png)
+
+---
+
 
 <a name="json-get"></a>
 
