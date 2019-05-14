@@ -12,7 +12,7 @@
 			<h6>Fields: 
 				#foreach ($_field in $_contentletObject.structure.fields)
 					#if ($_field.fieldContentlet != 'system_field')
-						#if ($field.required)
+						#if ($_field.required)
 							<span class="required-field">${_field.velocityVarName}</span>
 						#else
 						${_field.velocityVarName}
