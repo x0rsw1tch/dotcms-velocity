@@ -10,7 +10,7 @@
 1. [Velocity Context Dump](#context-dump)
 1. [JSON Get](#json-get)
 1. [Slugify](#slugify)
-1. [](#truncate-string)
+1. [Truncate String](#truncate-string)
 
 > Note: When installing macro files (.vm), be sure to reference them somewhere. It is recommended to use a standalone Script Initializer container and reference it with `#parseContainer()` in the top of your theme or advanced template.
 
