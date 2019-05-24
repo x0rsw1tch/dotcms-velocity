@@ -13,7 +13,20 @@ This guide will walk through installing dotCMS from scratch using current best p
 
 ## Pre-Reqs
 
+### Linux File Limits
+
+> This is optional, but highly recommended.
+
+Run: `sysctl -w fs.file-max=100000`
+Edit: `/etc/security/limits.conf`
+```
+dotcms      hard    nofile      10000
+dotcms      soft    nofile      10000
+```
+
+
 ### DotCMS With JDK 8 and Utilities (reboot since there will be kernel updates)
+
 ```
 yum -y install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 yum -y install epel-release
@@ -21,6 +34,9 @@ yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptab
 yum -y update
 reboot
 ```
+
+
+
 
 ### Download DotCMS
 ```
@@ -263,6 +279,7 @@ WorkingDirectory=/opt/dotcms
 PIDFile=/var/run/dotcms/dotcms.pid
 User=dotcms
 Group=dotcms
+LimitNOFILE=10000
 KillMode=none
 ExecStart=/opt/dotcms/bin/startup.sh
 ExecStop=/opt/dotcms/bin/shutdown.sh
