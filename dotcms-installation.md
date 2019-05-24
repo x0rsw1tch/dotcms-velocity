@@ -41,12 +41,12 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.1.0.tar.gz
+wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.1.5.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
 ```
-wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.1.0_minimal.zip
+wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.1.5_minimal.zip
 ```
 
 ### Create dotCMS User and set password
@@ -99,7 +99,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_5.1.0.tar.gz
+tar -zxvf dotcms_5.1.5.tar.gz
 ```
 
 ### Create PID Directory
@@ -117,7 +117,7 @@ chown dotcms:dotcms /var/run/dotcms
 mkdir -p plugins/com.dotcms.config/ROOT/bin
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j
 ```
 
 #### Older Verions Base Directories: v3, v4
@@ -125,7 +125,7 @@ mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB
 mkdir -p plugins/com.dotcms.config/ROOT/bin
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf
-mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB-INF/classes
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB-INF
 </pre>
 
 
@@ -176,7 +176,7 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 ### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.5.32/webapps/ROOT/starter.zip dotserver/tomcat-8.5.32/webapps/ROOT/starter-vanilla.zip
-mv dotcms-5.1.0_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
+mv dotcms-5.1.5_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
 ```
 
 ##### Older Versions: v3, v4
@@ -188,7 +188,7 @@ mv dotcms-4.3.3_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
 ```
-STARTER_DATA_LOAD=/dotcms-5.1.0_minimal.zip
+STARTER_DATA_LOAD=/dotcms-5.1.5_minimal.zip
 ```
 > More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
 
@@ -227,6 +227,35 @@ cache.velocitycache.size=5000
 cache.virtuallinkscache.size=3500
 ```
 > More Information: [Caching](https://dotcms.com/docs/latest/cache-configuration), [Guava](https://dotcms.com/docs/latest/guava-cache-provider)
+
+
+### Disable Clustering 
+
+> Recommended  if you're not using clustered hosts and have multiple+separate instances on the same network
+
+`nano plugins/com.dotcms.config/conf/dotcms-config-cluster-ext.properties`
+```
+AUTOWIRE_CLUSTER_TRANSPORT=false
+AUTOWIRE_CLUSTER_ES=false
+DIST_INDEXATION_ENABLED=true
+ES_INDEX_REPLICAS=0
+AUTOWIRE_MANAGE_ES_REPLICAS=false
+```
+
+### Custom Log File Location
+
+`nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
+```
+DOTCMS_LOGGING_HOME=/opt/dotcms/dotserver/tomcat-8.5.32/logs
+TAIL_LOG_LOG_FOLDER=/opt/dotcms/dotserver/tomcat-8.5.32/logs
+```
+
+### Standatd Log File (dotcms >=5)
+
+`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2.xml`
+
+Use the contents of this [file](log4j.xml)
+
 
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
