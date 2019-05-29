@@ -56,7 +56,7 @@ Provides extra container information in the dotCMS Page Preview
 
 1. Place this macro reference in the `Pre Loop` field in your container: `#ContainerInfo()`
 
-![Container Info](../screenshot-macro-container-info.png)
+![Container Info](../screenshots/screenshot-macro-container-info.png)
 
 ---
 
@@ -83,7 +83,7 @@ Provides extra contentlet information in the dotCMS Page Preview
 
 1. Invoke the macro with `#ContentletInfo($contentletObject)`
 
-![Contentlet Info](../screenshot-contentlet-info.png)
+![Contentlet Info](../screenshots/screenshot-contentlet-info.png)
 
 ---
 
@@ -103,7 +103,7 @@ Displays a table of session data from dotCMS
 
 1. Invoke the macro with `#SessionDump()`
 
-![Session Dump](../screenshot-session-dump.png)
+![Session Dump](../screenshots/screenshot-session-dump.png)
 
 ---
 
@@ -123,9 +123,9 @@ Displays a table of HTTP header attributes and HTTP request data from dotCMS
 
 1. Invoke the macro with `#HeaderDump()`
 
-![Header Dump 1](../screenshot-header-dump-1.png)
+![Header Dump 1](../screenshots/screenshot-header-dump-1.png)
 
-![Header Dump 2](../screenshot-header-dump-2.png)
+![Header Dump 2](../screenshots/screenshot-header-dump-2.png)
 
 ---
 
@@ -145,7 +145,7 @@ Displays a table of the current Velocity Context from dotCMS
 
 1. Invoke the macro with `#VelocityContext()`
 
-![Velocity Context](../screenshot-velocity-context.png)
+![Velocity Context](../screenshots/screenshot-velocity-context.png)
 
 ---
 
