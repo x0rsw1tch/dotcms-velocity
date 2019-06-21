@@ -1,0 +1,134 @@
+{
+    // Place your snippets for Velocity here. Each snippet is defined under a snippet name and has a prefix, body and 
+    // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+    // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+    // same ids are connected.
+    // Example:
+
+    "dotcms: $dotcontent pull": {
+        "prefix": "dcquery",
+        "body": [
+            "#set (\\$$1 = {",
+            "\t'query': [",
+                "\t\t\"+contentType:$2\",",
+                "\t\t\"+${2:label}.$3:$0\",",
+                "\t\t\"\\$!{QHOST}\"",
+            "\t],",
+            "\t'limit': 0,",
+            "\t'sort': \"modDate desc\",",
+            "\t'hosts': \"\\$!{QHOST}\",",
+            "\t'results': \\$__null",
+            "})",
+            "#set (\\$${1:label}.results = \\$dotcontent.pull(\\$UtilMethods.join(\\$${1:label}.query, ' '), \\$${1:label}.limit, \\$${1:label}.sort))"
+        ],
+        "description": "Create structured $dotcontent.pull()"
+    },
+
+    "dotcms: $dotcontent.pull() get First Contentlet": {
+        "prefix": "dcfirst",
+        "body": [
+            "#if (\\$UtilMethods.isSet(\\$$1.results) && \\$${1:label}.results.size() == 1)",
+            "\t#set (\\$$2 = \\$${1:label}.results.get(0))",
+            "#end"
+        ],
+        "description": "Get first contentlet from a list of Content Maps"
+    },
+
+    "dotcms: $dotcontent.pull() get All Contentlets": {
+        "prefix": "dcgetall",
+        "body": [
+            "#if (\\$UtilMethods.isSet(\\$${1:label}.results) && \\$${1:label}.results.size() > 0)",
+            "\t#set(\\$${1:label} = \\$${1:label}.results)",
+            "#end"
+        ],
+        "description": "Put results list of dotcontent pull object into separate object"
+    },
+    
+    "dotcms: UtilMethods.isSet": {
+        "prefix": "isset",
+        "body": [
+            "\\$$UtilMethods.isSet($1)"
+        ],
+        "description": "Check if variable is set"
+    },
+
+    "dotcms: UtilMethods.join": {
+        "prefix": "join",
+        "body": [
+            "\\$UtilMethods.join($1, $2)"
+        ],
+        "description": "Join list with delimiter"
+    },
+    "dotcms: Velocity create variable": {
+        "prefix": "set",
+        "body": [
+            "#set (\\$$1 = $2)"
+        ],
+        "description": "Create a Velocity Variable"
+    },
+    "dotcms: Velocity create list": {
+        "prefix": "list",
+        "body": [
+            "#set (\\$$1 = [$2])"
+        ],
+        "description": "Create a Velocity Array List"
+
+    },
+
+    "dotcms: Velocity create map": {
+        "prefix": "list",
+        "body": [
+            "#set (\\$$1 = {$2})"
+        ],
+        "description": "Create a Velocity Object"
+    },
+
+    "dotcms VTLAPI: add JSON property": {
+        "prefix": "vtput",
+        "body": [
+            "$dotJSON.put(\"$1\", \"$2\")"
+        ],
+        "description": "dotcms VTL API: Add JSON response property"
+    },
+
+    "dotcms VTLAPI: get body attribute": {
+        "prefix": "vtbodyget",
+        "body": [
+            "$bodyMap.get(\"$1\")"
+        ],
+        "description": "dotcms VTL API: Get request body property"
+    },
+
+    "dotcms VTLAPI: Get Parameter": {
+        "prefix": "vtget",
+        "body": [
+            "$queryParams.get(\"$1\")"
+        ],
+        "description": "dotcms VTL API: Get Query String Parameter"
+    },
+
+    "dotcms Request Wrapper: Get Parameter": {
+        "prefix": "rqgetrequestparam",
+        "body": "\\$request.getParameter(\"$1\")",
+        "description": "$request.getParameter()"
+    },
+    
+    "dotcms Request Wrapper: Get Header": {
+        "prefix": "rqgetheader",
+        "body": "\\$request.getHeader(\"$1\")",
+        "description": "$request.getHeader()"
+    },
+
+    "dotcms Response Wrapper: Set Status": {
+        "prefix": "rssetstatus",
+        "body": "\\$response.setStatus(\"$1\")",
+        "description": "$response.setstatus()"
+    },
+
+    "dotcms Response Wrapper: Set Header": {
+        "prefix": "rssetheader",
+        "body": "\\$response.setHeader(\"$1\")",
+        "description": "$response.setHeader()"
+    }
+
+}
