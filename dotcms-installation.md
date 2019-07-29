@@ -41,7 +41,7 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget https://doc.dotcms.com/physical_downloads/release_builds/dotcms_5.1.5.tar.gz
+wget http://static.dotcms.com/versions/dotcms_5.1.6.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
