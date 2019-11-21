@@ -41,12 +41,12 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://static.dotcms.com/versions/dotcms_5.1.6.tar.gz
+wget http://static.dotcms.com/versions/dotcms_5.2.1.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
 ```
-wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.1.5_minimal.zip
+wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.2.1_minimal.zip
 ```
 
 ### Create dotCMS User and set password
@@ -99,7 +99,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_5.1.5.tar.gz
+tar -zxvf dotcms_5.2.1.tar.gz
 ```
 
 ### Create PID Directory
@@ -176,7 +176,7 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 ### (Optional) Custom starter
 ```
 mv dotserver/tomcat-8.5.32/webapps/ROOT/starter.zip dotserver/tomcat-8.5.32/webapps/ROOT/starter-vanilla.zip
-mv dotcms-5.1.5_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
+mv dotcms-5.2.1_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT
 ```
 
 ##### Older Versions: v3, v4
@@ -188,7 +188,7 @@ mv dotcms-4.3.3_minimal.zip plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
 ```
-STARTER_DATA_LOAD=/dotcms-5.1.5_minimal.zip
+STARTER_DATA_LOAD=/dotcms-5.2.1_minimal.zip
 ```
 > More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
 
@@ -216,15 +216,21 @@ ASSET_REAL_PATH=/opt/dotcms-assets
 ### Cache tuning
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 ```
+cache.contentletcache.size=20000
 cache.blockdirectivecache.size=3600
 cache.categoryparentscache.size=90000
+cache.csscache.size=10000
+cache.fileassetmetadatacache.size=6000
 cache.foldercache.size=6000
 cache.htmlpagecache.size=24000
-cache.identifier404cache.size=3000
+cache.identifier404cache.size=9000
 cache.rulescache.size=5000
 cache.tagsbyinodecache.size=4000
+cachr.taginodecache.size=4000
 cache.velocitycache.size=5000
 cache.virtuallinkscache.size=3500
+cache.shortyidcache.size=5000
+cache.workflowstepcache.size=4000
 ```
 > More Information: [Caching](https://dotcms.com/docs/latest/cache-configuration), [Guava](https://dotcms.com/docs/latest/guava-cache-provider)
 
