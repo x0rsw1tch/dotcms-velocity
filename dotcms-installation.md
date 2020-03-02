@@ -28,7 +28,7 @@ dotcms      soft    nofile      10000
 ### DotCMS With JDK 8 and Utilities (reboot since there will be kernel updates)
 
 ```
-yum -y install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+yum -y install yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum -y install epel-release
 yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptables-services setroubleshoot setools ant java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql96 postgresql96-server nmap monit 
 yum -y update
@@ -41,7 +41,7 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://static.dotcms.com/versions/dotcms_5.2.1.tar.gz
+wget http://static.dotcms.com/versions/dotcms_5.2.6.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
@@ -68,7 +68,7 @@ psql
 ### PostgreSQL dotCMS User and Database 
 ```
 CREATE USER dotcms WITH PASSWORD '****CHANGEME****';
-CREATE DATABASE "dotcms" WITH OWNER = dotcms ENCODING = 'UTF8' TABLESPACE = pg_default LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8' CONNECTION LIMIT = -1;
+CREATE DATABASE "dotcms" WITH OWNER = dotcms;
 GRANT ALL ON DATABASE "dotcms" TO dotcms;
 ALTER ROLE dotcms WITH SUPERUSER;
 ```
@@ -138,13 +138,28 @@ cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 ##### Older Versions Config Files: v3, v4
 <pre style="font-size:11px;">
 cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/
-cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
+cp dotserver/tomcat-8.0.18/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/conf/
 cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 </pre>
 
+### (Optional) Production Log Config
+```
+cp dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2-example.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2.xml
+```
+
+### (Optional) Query Debug Logging
+`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2.xml`
+```
+<Logger name="com.dotcms.content.elasticsearch" level="debug">
+	<AppenderRef ref="generic"/>
+</Logger>
+```
 
 ### Configure Database Connector
 `nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml`
+
+> NOTE: Be sure to comment out the H2 section, and uncomment the PostgreSQL section
+
 ```
 <Resource name="jdbc/dotCMSPool" auth="Container"
       type="javax.sql.DataSource"
@@ -192,6 +207,7 @@ STARTER_DATA_LOAD=/dotcms-5.2.1_minimal.zip
 ```
 > More Information: [Custom Starter](https://dotcms.com/docs/latest/deploying-a-custom-starter-site), [Minimal Starter](https://github.com/x0rsw1tch/dotcms-starters)
 
+
 ### Give dotCMS more RAM and set PID File
 `nano plugins/com.dotcms.config/ROOT/bin/startup.sh`
 ```
@@ -203,7 +219,7 @@ STARTER_DATA_LOAD=/dotcms-5.2.1_minimal.zip
 export CATALINA_PID="/var/run/dotcms/dotcms.pid"
 ```
 
-### (Optional/Recommended) Change location of assets directory
+### (Optional) Change location of assets directory
 `mkdir /opt/dotcms-assets`
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -238,7 +254,7 @@ cache.workflowstepcache.size=4000
 
 ### Disable Clustering 
 
-> Recommended  if you're not using clustered hosts and have multiple+separate instances on the same network
+> Recommended if the server is not using clustered hosts and have multiple+separate instances on the same network
 
 `nano plugins/com.dotcms.config/conf/dotcms-config-cluster-ext.properties`
 ```
@@ -249,7 +265,7 @@ ES_INDEX_REPLICAS=0
 AUTOWIRE_MANAGE_ES_REPLICAS=false
 ```
 
-### Custom Log File Location
+### Custom Log File Location, and log viewer directory
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 ```
@@ -257,12 +273,49 @@ DOTCMS_LOGGING_HOME=/opt/dotcms/dotserver/tomcat-8.5.32/logs
 TAIL_LOG_LOG_FOLDER=/opt/dotcms/dotserver/tomcat-8.5.32/logs
 ```
 
-### Standatd Log File (dotcms >=5)
+### Standard Log File (dotcms >=5)
 
 `nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2.xml`
 
 Use the contents of this [file](log4j.xml)
 
+### (Optional/Recommended) Tail important log files
+As root
+
+`nano ~/.bashrc`
+
+```
+alias dottail='tail -fn100 /opt/dotcms/dotserver/tomcat-8.5.32/logs/catalina.out -fn100 /opt/dotcms/dotserver/tomcat-8.5.32/logs/dotcms.log -fn100 /opt/dotcms/dotserver/tomcat-8.5.32/logs/dotcms-velocity.log'
+```
+
+### (Optional/Recommended) Allow additional file types for #dotInclude()
+
+`nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
+
+```
+VELOCITY_INCLUDE_ALLOWED_EXTENSIONS=css,htm,html,js,json,txt,svg,md
+```
+
+### (Optional) > 5.2.3 Allow front-end submitting to content
+
+> Only needed when users submit forms that go to a Content Type
+
+`nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
+
+```
+CONTENT_APIS_ALLOW_ANONYMOUS=WRITE
+```
+
+### (Optional/Recommended) Set site variables for default hosts
+`nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
+
+> `CMS_SHARED_HOST` and `CMS_DEFAULT_HOST` should match to sites setup within dotcms. `CMS_SHARED_ASSETS` should map to the shared hosts with an alias that matches to remote front-end requests, useful for hosts that don't yet have a proper DNS record.
+
+```
+CMS_SHARED_HOST=shared.example.com
+CMS_DEFAULT_HOST=www.example.com
+CMS_SHARED_ASSETS=dev.example.com
+```
 
 ### Make dotcms owner
 `chown -R dotcms:dotcms /opt/dotcms`
@@ -277,7 +330,7 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 (Logout and back in)
 
 ### Commit Changes, deploy plugin
-`/opt/dotcms/bin/deploy-plugins.sh`
+`bin/deploy-plugins.sh`
 
 ### To Make further changes
 1. `cd /opt/dotcms`
@@ -492,7 +545,7 @@ seinfo -r                                      ## Show SELinux roles
 
 # <a name="dotworkarounds"></a> Workarounds
 
-## ~~Fix for missing default workflow (until dotCMS fixes this)~~
+## ~~Fix for missing default workflow (until dotCMS fixes this). Not needed for >= v5.1.0~~
 
 ### dotCMS has removed their starter zip from github for some reason.
 
