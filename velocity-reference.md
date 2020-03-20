@@ -17,6 +17,11 @@
 $content.structure
 ```
 
+### Getting Content Type field information
+```
+$content.structure.fields  ## Array List
+```
+
 ---
 
 
@@ -465,43 +470,75 @@ TODO
 - **class**: `java.util.ArrayList`
 - **Reference Document**: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
 
+
+## &nbsp;
 #### Define Array List
 ```
 #set ($myArr = [])
 
-## or
+or
 
 #set ($myArr = $contents.getEmptyList())
 
 Result: []
 ```
 
+
+## &nbsp;
 #### Define Array List with Values
 ```
 #set ($myArr = [false, true, "one", 'two', 3 ])
 ```
 
+## &nbsp;
 #### Check if Array contains a value
+`contains(Object o)`
 ```
 $myArr.contains("one")  ## True/False
 ```
 
+
+## &nbsp;
 #### Check if Array contains a value or get index of value
 ```
-$myArr.indexOf("one")  ## returns index integer, or -1 if value doesn't exist in Array
+#set ($myArr = ["zero", "first", "second", "third", "fourth"])
+
+$myArr.indexOf("second")
+
+Result: 2
+
+$myArr.indexOf("nope")
+
+Result: -1
 ```
 
+
+## &nbsp;
 #### Get value of specific position
 ```
 #set ($myArr = ["zero", "first", "second", "third, "fourth"])
 
 $myArr[2]
-## Result: second
+Result: second
 
 $myArr.get(0)
-## Result: zero
+Result: zero
 ```
 
+
+## &nbsp;
+#### Get length of Array
+- `size()`
+```
+#set ($myArr = ["zero", "first", "second", "third, "fourth"])
+
+$myArr.size()
+
+Result: 5
+```
+
+
+## &nbsp;
 ### Append/remove items to/from Array
 > NOTE: While a two-handed approach isn't always necessary, it will ensure the code is always executed
 ```
@@ -511,226 +548,730 @@ $myArr.get(0)
 
 $myArr[5]
 
-## Result: fifth
+Result: fifth
 
 #set ($dummy = $myArr.remove("fifth"))
 
 $myArr
 
-## Result: [zero, first, second, third, fourth]
+Result: [zero, first, second, third, fourth]
 
 #set ($dummy = $myArr.remove(2))
 
 $myArr
 
-## Result: [zero, first, third, fourth]
-
+Result: [zero, first, third, fourth]
 ```
 ---
-## &nbsp;
-## &nbsp;
 
 
+## &nbsp;
+## &nbsp;
 # Array Hash Maps
+**Classes**:
+- Using `{}`: `java.util.LinkedHashMap`
+- Using `$contents.getEmptyMap()`: `java.util.HashMap`
+**Reference Documentation**:
+- `java.util.LinkedHashMap`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html)
+- `java.util.HashMap`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html)
 
-TODO
 
+## &nbsp;
+### Create new empty map
+```
+#set ($myMap = {})
+
+or 
+
+#set ($myMap = $contents.getEmptyMap())
+```
+
+
+## &nbsp;
+### Create new map with contents
+```
+#set ($myMap = {
+	'Name': "Frank Lloyd Wright",
+	'Occupation': "Architect",
+	'birthplace': 'Richland Center, WI'
+})
+```
+
+
+## &nbsp;
+### Add or remove items to map
+```
+#set ($dummy = $myMap.put("prop", "value"))
+
+#set ($dummy = $myMap.remove("prop"))
+```
 ---
 
 
 ## &nbsp;
 ## &nbsp;
-
-
 # Strings
+- **Class**: `java.lang.String`
+- **Reference Document**: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)
 
-TODO
 
+## &nbsp;
+### New String
+```
+#set ($myString = "This $anotherString.")  ## Contents will be parsed by Velocity
+
+or
+
+#set ($myString = 'This $anotherString.')  ## Contents will not be parsed by Velocity
+```
+
+
+## &nbsp;
+### Concatenate String
+`concat(String str)`
+```
+## Starting with...
+#set ($myString = "This is")
+
+#set ($myString = "${myString} a complete sentence.")
+
+or
+
+#set ($myString = $myString + " a complete sentence.")
+
+or
+
+#set ($dummy = $myString.concat(" a complete sentence."))
+```
+
+
+## &nbsp;
+### Get index position of string occurrence
+`indexOf(String str, int fromIndex)`
+```
+#set ($myString = "This is a complete sentence.")
+
+$myString.indexOf('complete')
+
+Result: 10
+
+$myString.indexOf('arse')
+
+Result: -1
+```
+
+## &nbsp;
+### Get length of string
+```
+#set ($myString = "This is a complete sentence.")
+
+$myString.length()
+
+Result: 28
+```
+
+
+## &nbsp;
+### Find if string contains occurrence of string
+```
+#set ($myString = "This is a complete sentence.")
+
+$myString.contains('complete')
+
+Result: true
+
+$myString.contains('arse')
+
+Result: false
+```
+
+
+## &nbsp;
+### Return a portion of string
+`substring(int beginIndex)`
+```
+#set ($myString = "This is a complete sentence.")
+
+$myString.substring(0, 15)
+
+Result: This is a compl
+```
+
+
+## &nbsp;
+### Replace something in a string
+`replace(CharSequence target, CharSequence replacement)`
+`replaceAll(String regex, String replacement)`
+```
+#set ($myString = "abcdefghijklmnop")
+$myString.replace("cde", '')
+
+Result: abfghijklmnop
+
+#set ($myString = "/this crappy url.html")
+
+$myString.replaceAll("\s", "-")
+
+Result: /this-crappy-url.html
+```
+
+
+## &nbsp;
+### Split String into `ArrayList`
+```
+#set ($myString = "abcdefg hijklmn op")
+
+$myString.split(" ")
+
+Result [abcdefg, hijklmn, op]
+```
 ---
 
 
-
-## &nbsp;
-## &nbsp;
-
-
-# Integers and Math
-
-TODO
-
----
-
 ## &nbsp;
 ## &nbsp;
 ## &nbsp;
-# Other ViewTools
+# ViewTools
 
 
 ## &nbsp;
 ## VelocityRequestWrapper ($request)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.VelocityRequestWrapper`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/VelocityRequestWrapper.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/VelocityRequestWrapper.html)
 
-TODO
+### Get/Set HTTP Header
+```
+$request.getHeader("Content-Type")
 
+$request.setHeader("Location", "/404.html")
+```
+
+### Get Request Parameter (Works with GET, POST, and PUT. Not sure about others)
+```
+$request.getParameter("query")
+```
+
+### Get all HTTP Header names
+```
+#foreach ($header in $request.getHeaderNames())
+     Name: $header
+    Value: $request.getHeader($header)
+#end
+```
+
+### Get Request Locale
+```
+$request.getLocale()
+
+Result: en_US
+```
+
+### Get Request Method (GET, PUT, POST, PATCH, DELETE, OPTIONS)
+```
+$request.getMethod()
+```
+
+### Get Request URI or URL
+```
+$request.getRequestURI()
+$request.getRequestURL()
+```
+
+### Get Request Scheme (http/https)
+```
+$request.getScheme()
+
+Result: https
+```
+
+### Get Request Port
+```
+$request.getServerPort()
+
+Result: 443
+```
+
+### Get/Set Attributes
+```
+$request.getAttribute('javax.servlet.forward.request_uri')
+
+$request.setAttribute('javax.servlet.error.status_code', 404)
+
+```
+
+## &nbsp;
+### dotCMS specific Attributes
+```
+javax.servlet.forward.request_uri
+javax.servlet.forward.context_path
+javax.servlet.forward.servlet_path
+javax.servlet.forward.mapping
+com.dotmarketing.LOCALE
+com.dotmarketing.frontend.locale
+com.dotcms.repackage.org.apache.struts.action.MODULE
+com.dotcms.directive.renderparams
+CLICKSTREAM_RECORDED
+com.dotmarketing.htmlpage.language.current
+DOT_RULES_FIRED_ALREADY
+idInode
+com.dotmarketing.session_host
+CMS_FILTER_URLMAP_OVERRIDE
+```
 ---
 
 
 ## &nbsp;
-## UrlRewriteWrappedResponse ($response)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+## HttpServletResponse ($response)
+- **Class**: `javax.servlet.http.HttpServletResponseWrapper`
+- **Reference Documents**: [GitHub](), [JavaDoc](https://javaee.github.io/javaee-spec/javadocs/javax/servlet/http/HttpServletResponseWrapper.html)
 
-TODO
+### Set HTTP Status
+```
+$response.setStatus(404)
 
+or 
+
+$response.sendError(500, "whoops!")
+```
+
+### Send Redirect (302)
+```
+$response.sendRedirect("/login/")
+```
+
+### Get, Set, Add Headers
+```
+$response.getHeader("Location")
+
+$response.setHeader("Location", "/login/")
+
+$response.addHeader("X-Forwarded-Proto", "https")
+```
 ---
-
 
 ## &nbsp;
 ## VelocitySessionWrapper ($session)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.VelocitySessionWrapper`
+- **Reference Documents**: [GitHub](https://github.com/paultuckey/urlrewritefilter/blob/master/src/main/java/org/tuckey/web/filters/urlrewrite/UrlRewriteWrappedResponse.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/VelocitySessionWrapper.html)
 
-TODO
+## &nbsp;
+### Get Session ID
+```
+$session.getId()
+```
 
+## &nbsp;
+### Get/Set/Remove Session attribute
+```
+$session.getAttribute("com.dotmarketing.htmlpage.language")
+
+$session.setAttribute("something", "neat")
+
+$session.removeAttribute("something")
+```
+
+## &nbsp;
+### Set front-end user
+```
+$session.setAttribute("cms.user", $cmsuser.getUserByUserId("userID"))
+```
+
+### End Session (logout)
+```
+$session.invalidate()
+```
+
+## &nbsp;
+### dotCMS Session Attributes
+```
+com.dotmarketing.frontend.locale
+com.dotmarketing.LOCALE
+com.dotcms.visitor
+browserSniffer
+clickstream
+com.dotmarketing.htmlpage.language
+com.dotmarketing.session_host
+```
 ---
 
 
 ## &nbsp;
 ## CMSUsersWebAPI ($cmsuser)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.CMSUsersWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/CMSUsersWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/CMSUsersWebAPI.html)
 
-TODO
+### **User Object**: `com.liferay.portal.model.User`
+- **Reference Documents**:  [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/liferay/portal/model/AccountModel.html)
 
+## &nbsp;
+### Get users with parameters
+```
+## By ID
+#set ($user = $cmsuser.getUserById("userID"))
+
+## By Email
+#set ($user = $cmsuser.getUserByEmail("userID"))
+
+## By Session
+#set ($user = $cmsuser.getLoggedInUser($request))
+
+## Get user map
+#set ($userData = $user.getUserProxy())
+```
+
+## &nbsp;
+### Is user "admin"?
+```
+#set ($userIsAdmin = $user.isCMSAdmin()) ## True | False
+```
+
+## &nbsp;
+### Does user have specific role
+```
+#set ($userHasRole = $user.isUserRole($user, "Role Name")) ## True | False
+```
 ---
 
 
 ## &nbsp;
 ## CookieTool ($cookietool)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.view.tools.CookieTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/view/tools/CookieTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/view/tools/CookieTool.html)
 
-TODO
+## Add cookie
+> NOTE: This will only set a cookie in the current URI path context. If you need a cookie on "/", then do it in HTTP headers
+```
+$cookietool.add("name", "value", "age") ## age is optional
+```
 
+## Get cookie by name
+```
+$cookietool.get("JSESSIONID")
+```
 ---
 
 
 ## &nbsp;
 ## ConfigTool ($config)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.ConfigTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/ConfigTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/ConfigTool.html)
 
-TODO
+## &nbsp;
+### Get configuration properties by Type
+```
+$config.getStringProperty("propertyname", "defaultvalue")
+$config.getBooleanProperty("propertyname", false|true)
+$config.getIntProperty("propertyname", 6)
 
+Other gets: getFloatProperty, getLongProperty, getStringArrayProperty
+```
 ---
 
 
 ## &nbsp;
 ## EscapeTool ($esc)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.generic.EscapeTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/generic/EscapeTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/EscapeTool.html)
 
-TODO
+## &nbsp;
+### Escape Characters
+| Character | Invoke             |
+|-----------|--------------------|
+| $         | $esc.d             |
+| $         | $esc.dollar        |
+| #         | $esc.h             |
+| #         | $esc.hash          |
+| "         | $esc.q             |
+| "         | $esc.quote         |
+| '         | $esc.s             |
+| '         | $esc.singleQuote   |
+| \         | $esc.backslash     |
+| !         | $esc.e             |
+| !         | $esc.exclamation   |
 
+## &nbsp;
+### Escape Functions
+- $esc.java()
+- $esc.javascript()
+- $esc.html()
+- $esc.sql()
 ---
 
 
 ## &nbsp;
 ## UtilMethods ($UtilMethods)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotmarketing.util.UtilMethods`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotmarketing/util/UtilMethods.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/util/UtilMethods.html)
 
-TODO
 
+## &nbsp;
+### Pad String
+`padToLength(String baseString, int finalLength, String padString)`
+```
+#set ($str = "abcdefghij")
+$UtilMethods.padToLength($str, 40, "-")
+Result: abcdefghij------------------------------
+```
+
+
+## &nbsp;
+### isSet: Checks not null and is not empty for
+```
+#set ($emptyString = "")
+$UtilMethods.isSet($emptyString)
+Result: false
+
+#set ($notEmptyString = "abc")
+$UtilMethods.isSet($emptyString)
+Result: true
+
+#set ($emptyArray = [])
+$UtilMethods.isSet($emptyArray)
+Result: false
+
+#set ($notEmptyArray = ["one", "two"])
+$UtilMethods.isSet($notEmptyArray)
+Result: true
+```
+
+
+## &nbsp;
+### Title Case String
+```
+#set ($str = "Lorem ipsum dolor sit amet")
+$UtilMethods.capitalize($str)
+
+Result: Lorem Ipsum Dolor Sit Amet
+```
+
+## &nbsp;
+### Pluralize String
+`pluralize(long num, String word)`
+```
+#set ($str = "result")
+$UtilMethods.pluralize(2, $str)
+
+Result: results
+```
+
+## &nbsp;
+### Friendly string truncate
+`shortstring(String text, int maxNumberOfChars, boolean includeEllipsis)`
+```
+$UtilMethods.shortstring($str, 50, true)
+```
+
+## &nbsp;
+### encode/decode URL
+```
+#set ($str = "http://www.google.com/")
+$UtilMethods.encodeURL($str)
+Result: http%3A%2F%2Fwww.google.com%2F
+
+#set ($str = "http%3A%2F%2Fwww.google.com%2F")
+$UtilMethods.decodeURL($str)
+Result: http://www.google.com/
+```
+
+## &nbsp;
+### Join Array
+`join(String[] strArray, String separator, boolean empty)`
+```
+#set ($myArray = ["one", "two", "three", "four"])
+$UtilMethods.join($myArray, " ") ## Will append seperator at end
+Result: one two three four 
+```
 ---
 
 
 ## &nbsp;
 ## JSONTool ($json)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.JSONTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/JSONTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/JSONTool.html)
 
-TODO
 
+## &nbsp;
+### Fetch JSON using remote URL (uses GET)
+```
+#set ($myJson = $json.fetch("https://postman-echo.com/get?foo1=bar1&foo2=bar2", timeout, headers))
+
+$myJson.args
+Result: 
+    {
+        "foo1": "bar1",
+        "foo2": "bar2"
+    }
+```
+
+## &nbsp;
+### Fetch JSON using remote URL (uses POST or PUT)
+```
+#set ($myMap = {
+	'one': "one",
+	'two': "two"
+})
+
+#set ($myJson = $json.post("https://postman-echo.com/post", 10, headers, $myMap)) ## Can use put() instead of post()
+
+Result: {"args":{"one":"one","two":"two"},"headers":{"content-length":"0","x-forwarded-proto":"https","host":"postman-echo.com","x-forwarded-port":"443","accept-encoding":"gzip,deflate","user-agent":"Apache-HttpClient/4.5.2 (Java/1.8.0_222)"},"data":{},"form":{},"files":{},"json":null,"url":"https://postman-echo.com/post?one=one&two=two"}
+```
 ---
 
 
 ## &nbsp;
 ## ImportTool ($import)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.view.tools.ImportTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/view/tools/ImportTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/view/tools/ImportTool.html)
 
-TODO
+## &nbsp;
+### Get raw text from remote URL (GET only)
+```
+$import.read("https://www.google.com")
+```
 
 ---
 
 
 ## &nbsp;
 ## CategoriesWebAPI ($categories)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.CategoriesWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/CategoriesWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/CategoriesWebAPI.html)
 
-TODO
+**Category Object**: `com.dotmarketing.portlets.categories.model.Category`
+- **Reference**: [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/categories/model/Category.html)
 
+## &nbsp;
+### Get a category by key name
+```
+#set ($myCategory = $categories.getCategoryByKey("CategoryKeyName"))
+```
+
+## &nbsp;
+### Get Child Categories via Parent Category Object
+```
+#set ($myCategory = $categories.getCategoryByKey("CategoryKeyName"))
+
+#set ($childCategories = $categories.getActiveChildrenCategories($myCategory))
+```
 ---
 
 
 ## &nbsp;
 ## ContentTool ($dotcontent)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.content.ContentTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/content/ContentTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentTool.html)
 
-TODO
+## &nbsp;
+### Do a content pull, returns array of contentMap objects
+`pull(String query, String limit, String sort)`
+```
+#set ($content = $dotcontent.pull("+contentType:webPageContent", 0, "webPageContent.title asc"))
+```
 
+## &nbsp;
+### Find contentlet by id
+`find(String inodeOrIdentifier)`
+```
+#set ($specificContentlet = $dotcontent.find("identifier"))
+```
+
+## &nbsp;
+### find related contentlets (legacy/deprecated)
+`pullRelated(String relationshipName, String contentletIdentifier, boolean pullParents, int limit, String sort)`
+> NOTE: Legacy relationships will be removed from dotCMS at some point, use relationship fields instead. More information can be found in the Relationships field section.
+```
+## boolean pullParents set to true will pull parent contentlets from child side of relationship
+#set $relatedContentlets = $dotcontent.pullRelated("ParentCT-ChildCT", "identifier", false, 0, "ChildCT.name asc")
+```
 ---
 
 ## &nbsp;
 ## WorkflowTool ($workflowtool)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.WorkflowTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/WorkflowTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/WorkflowTool.html)
 
-TODO
+#### System workflow IDs
+| Action     | ID         |
+---------------------------
+| publish    | b9d89c803d |
+| unpublish  | 38efc763d7 |
+| archive    | 4da13a425d |
+| delete     | 777f1c6bc8 |
 
+## &nbsp;
+### Publish Contentlet
+> NOTE: Adding identifier and stName/stInode will publish against an exiting contentlet
+> NOTE: Invoking fire() inside a conditional does work. Exceptions will results in a falsy result.
+```
+#set ($myContentletMap = {
+    'title': "Hello world",
+    'description': "lorem ipsum",
+    'body": "<p>content!</p>"
+})
+$workflowtool.fire($myContentletMap, "b9d89c803d")
+```
 ---
 
 
 ## &nbsp;
 ## ContentsWebAPI ($contents)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
-
-TODO
-
+- **Class**: `com.dotcms.rendering.velocity.viewtools.ContentsWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/ContentsWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/ContentsWebAPI.html)
 ---
 
 
 ## &nbsp;
 ## FolderWebAPI ($folderAPI)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.FolderWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/FolderWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/FolderWebAPI.html)
 
-TODO
+### **Folder Object Class**: `com.dotmarketing.portlets.folders.model.Folder`
+- **Reference**: [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/folders/model/Folder.html)
+
+## &nbsp;
+### Get current folder
+```
+#set ($folderOjbect = $folderAPI.findCurrentFolder($VTLSERVLET_URI, $host))
+```
 
 ---
 
 
 ## &nbsp;
 ## SortTool ($sorter)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.generic.SortTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/generic/SortTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/SortTool.html)
 
-TODO
+## &nbsp;
+### Sort Array
+```
+$sorter.sort([5, 3, 7])
+Result: [3, 5, 7]
+```
 
+### Sort List of Maps
+```
+$sorter.sort([ {"name": "zxy"}, {"name": "abc"} ], "name")
+Result: [{name=abc}, {name=zxy}]
+
+$sorter.sort([ {"name": "zxy"}, {"name": "abc"} ], "name:desc")
+[{name=zxy}, {name=abc}]
+```
 ---
 
 
 ## &nbsp;
 ## DotLoggerTool ($dotlogger)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.DotLoggerTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/DotLoggerTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/DotLoggerTool.html)
 
-TODO
+## &nbsp;
+### Send something to log file
+```
+$dotlogger.info("Something happened!")
+
+Other Logging methods: warn(), error(), debug()
+```
 
 ---
 
@@ -747,120 +1288,207 @@ TODO
 
 ## &nbsp;
 ## CalendarWebAPI ($calendar)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotmarketing.portlets.calendar.viewtools.CalendarWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotmarketing/portlets/calendar/viewtools/CalendarWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/calendar/viewtools/CalendarWebAPI.html)
+- dotCMS Calendar Documentation: https://dotcms.com/docs/latest/pull-calendar-events-nbsp-nbsp-i-calendar-find-i
 
-TODO
+```
+findEvents(String hostId, Date fromDate, Date toDate, String tag, String keyword, String categoryInode, String sortBy, int offset, int limit)
+```
 
 ---
 
 
 ## &nbsp;
 ## LanguageViewtool ($text)
-- **Class**: `CLAZZ`
+- **Class**: `com.dotcms.rendering.velocity.viewtools.LanguageViewtool`
 - **Reference Documents**: [GitHub](), [JavaDoc]()
 
-TODO
+## &nbsp;
+### Get glossary key based on session language
+```
+$text.get("buttons.confirm")
+```
 
+## &nbsp;
+### Set front-end language ID
+
+```
+$text.setLanguage(2)
+```
 ---
 
 
 ## &nbsp;
 ## MathTool ($math)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.generic.MathTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/generic/MathTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/MathTool.html)
+- **dotCMS Documentation**: https://dotcms.com/docs/latest/mathtool
 
-TODO
+## &nbsp;
+### Basic artihmetic
+```
+$math.add(x, y)
+$math.sub(x, y)
+$math.mul(x, y)
+$math.div(x, y)
+$math.mod(x, y)
+$math.pow(x, y)
+$math.abs(x)
+$math.max(x, y)
+$math.min(x, y)
+$math.ceil(x)
+$math.floor(x)
+$math.round(x)
+$math.roundTo(x, y)
+$math.getAverage(l)
+$math.getTotal(l)
+$math.getRandom()
+$math.random(x, y)
+$math.toDouble(x)
+$math.toInteger(x)
+```
 
 ---
 
 
 ## &nbsp;
 ## NumberTool ($number)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `org.apache.velocity.tools.generic.NumberTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/generic/NumberTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/NumberTool.html)
 
-TODO
+## &nbsp;
+### Format numbers
+```
+#set ($num = 12.34)
 
+$number.format ('currency', $num)
+Result: $12.34
+
+$number.format('integer', $num)
+Result: 12
+```
+
+## &nbsp;
+### Convert to Number
+```
+$number.toNumber("12")
+Result: 12
+```
 ---
 
 
 ## &nbsp;
 ## WebAPI ($webapi)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
-
-TODO
-
+- **Class**: `com.dotcms.rendering.velocity.viewtools.WebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/WebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/WebAPI.html)
 ---
 
 
 ## &nbsp;
 ## NavTool ($navtool)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.navigation.NavTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/navigation/NavTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/index.html?com/dotcms/rendering/velocity/viewtools/navigation/NavTool.html)
+- **Navtool Documentation**: https://dotcms.com/docs/latest/navtool-viewtool
+- **Nav item Result Class**: `com.dotmarketing.viewtools.navigation.NavResult` or `com.dotcms.rendering.velocity.viewtools.navigation.NavResultHydrated`
+  - **Reference**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/navigation/NavResult.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/navigation/NavResult.html)
 
-TODO
+Returns a list of pages and file assets (based on parameters) that have "show on menu" enabled
 
+> NOTE: Does not respect asset permissions unless set in configuration
+
+- `$navtool.getNav()`
+  - Gets current level navigation
+- Get specific navigation
+  - `getNav(Host host, String path)`
+  - `getNav(int level)`
+  - `getNav(String path)`
+  - `getNav(String path, long languageId)`
 ---
 
 
 ## &nbsp;
 ## ChainedContext ($context)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
-
-TODO
-
+- **Class**: `org.apache.velocity.tools.view.context.ChainedContext`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/org/apache/velocity/tools/view/context/ChainedContext.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/view/context/ChainedContext.html)
 ---
 
 
 ## &nbsp;
 ## FileTool ($filetool)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.FileTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/FileTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/FileTool.html)
 
-TODO
+## &nbsp;
+### Get File Asset Object by identifier
+`getFile(String identifier, boolean live, [long languageId])`
+```
+#set ($file = $filetool.getFile("identifier", true))
+```
 
+## &nbsp;
+### Get File Asset URI
+```
+#set ($file = $filetool.getFile("identifier", true))
+
+$filetool.getURI($file)
+```
 ---
 
 
 ## &nbsp;
 ## CryptWebAPI ($crypt)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.CryptWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/CryptWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/CryptWebAPI.html)
 
-TODO
+## &nbsp;
+### Encrypt or decrypt a string
+```
+$crypt.crypt("abc123")
+Result: Z/FssgdeJ+YlY=
+
+$crypt.decrypt("Z/FssgdeJ+YlY=")
+Result: abc123
+```
 
 ---
 
 
 ## &nbsp;
 ## DotRenderTool ($render)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
-
-TODO
-
+- **Class**: `com.dotcms.rendering.velocity.viewtools.DotRenderTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/tree/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/DotRenderTool.html)
+- **dotCMS Documentation**: https://dotcms.com/docs/latest/rendertool
 ---
 
 
 ## &nbsp;
 ## VelocityWebUtil ($velutil)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
-
-TODO
-
+- **Class**: `com.dotcms.rendering.velocity.viewtools.VelocityWebUtil`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/VelocityWebUtil.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/VelocityWebUtil.html)
 ---
 
 
 ## &nbsp;
 ## WebsiteWebAPI ($website)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.WebsiteWebAPI`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/WebsiteWebAPI.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/WebsiteWebAPI.html)
+- **Folder object**: `com.dotmarketing.portlets.folders.model.Folder`
+  - **Reference**: [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/folders/model/Folder.html)
 
-TODO
+## &nbsp;
+### Get Current Folder
+Returns folder object
+```
+$website.getFolder("/path/to/folder", "hostID")
+```
+
+## &nbsp;
+### Get Sub-folders
+Returns list of subdirectory folder objects
+```
+$website.getSubFolders("/path/to/folder", "hostID")
+```
 
 ---
 
@@ -869,15 +1497,31 @@ TODO
 ## &nbsp;
 # Velocity Directives
 
+
+### Set Variable
+```
+#set ($myVar = "abc123")
+```
+
+
+### Set variable with define, allows for Velocity parsing and multiple lines
+```
+#define ($myVar)
+put whatever in here
+#end
+```
+
+
 ### Parse VTL/VM script
 ```
-#dotParse('/application/vtl/myfile.vtl')
+#dotParse ('/application/vtl/myfile.vtl')
 ```
+
 
 ### Generic Server Side Include (file type must be allowed)
 ```
-#dotInclude('/application/vtl/myfile.vtl')
-#include('/application/vtl/myfile.vtl')    ## I think this is deprecated
+#dotInclude ('/application/vtl/myfile.vtl')
+#include ('/application/vtl/myfile.vtl')    ## I think this is deprecated
 ```
 
 ### Evaluate String
@@ -885,16 +1529,52 @@ TODO
 #evaluate('#set ($str = "my string")')
 ```
 
-### foreach
+## Conditionals
 ```
-#foreach($item in $arr)
+#if ($something == "abc")
+  something is abc
+#else ($something == "def")
+  something is def
+#else
+  something is not abc or def
+#end
+```
+
+## Macros
+> NOTE: Macros are not functions, but you can fake it to some degree. See examples below
+### Define Macro
+```
+#macro (myMacro $param)
+I am outputting $param
+#end
+```
+
+### Invoke Macro
+```
+#myMacro ("some text")
+Result: I am outputting some text
+```
+
+### foreach()
+```
+#foreach ($item in $arr)
     $foreach.index     ## Index of iteration
     $foreach.count     ## Foreach iteration count (from 1)
     $foreach.hasNext   ## true / false
 #end
 ```
----
 
+
+### Stop execution of current script
+```
+#stop
+```
+
+
+### Break out of a loop
+```
+#break
+```
 
 ## &nbsp;
 ## &nbsp;
@@ -964,16 +1644,40 @@ $request.getRequestURI()  ## Returns URI as requested by HTTP header
 	<h1>I am macro outputting $string</h1>
 #end 
 #set ($output = "#CoolThing(\"my string\")" ) ## Wrapping in single quotes will not parse
+
+or
+
+#set ($output = $render.recurse($context, "#CoolThing(\"my string\")"))
 ```
+
+## &nbsp;
+## Determine is page is being viewed in back-end
+Ueeful if page break back-end previews
+```
+#set ($IS_BACKEND = false)
+#if ($UtilMethods.isSet($session.getAttribute('com.dotmarketing.PAGE_MODE_SESSION')))
+	#set ($IS_BACKEND = true)
+#end
+
+or check for the following
+
+$EDIT_MODE
+$PREVIEW_MODE
+$ADMIN_MODE
+$LIVE_MODE
+```
+
 ---
 
 ## &nbsp;
-## Pad JSON with named object so it can be prased properly, as a HashMap
-TODO
-
+## Wrap JSON with named object so it can be parsed properly. Unnamed objects will not parse with `JsonTool`
+```
+#set ($rawText = $import.read("https://example.com/api/json"))
+#set ($jsonObject = $json.generate("{ \"data\": { $rawText }"))
+```
 ---
 
-# Old stuff (need to rework)
+# Snippets and Old stuff (need to rework)
 
 
 ## &nbsp;
@@ -1005,51 +1709,24 @@ Append `?dotcache=refresh` in query string of URL
 ---
 
 
-## &nbsp;
-## Get Content Type's Field information
-Reference(s):
-https://dotcms.com/docs/com/dotmarketing/portlets/structure/model/Structure.html
-https://dotcms.com/docs/com/dotmarketing/viewtools/ContentsWebAPI.html
-https://dotcms.com/docs/4.0.0/javadocs/com/dotmarketing/viewtools/content/ContentMap.html
-```
-## From Content Type directly 
-## $contents is reserved object from: com.dotmarketing.viewtools.ContentsWebAPI
-#foreach ($field in $contents.getStructureByInode("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").fields)
-    $field.fieldName
-#end
-
-## From a content pull
-#set($content = $dotcontent.pull("+contentType:ContentTypeName",10,"modDate desc"))
-#foreach ($field in $content.get(0).getStructure().fields)
-	$field.fieldName
-#end
-```
-
----
-
 ### Get all page context information
 ```
 #foreach($key in $context.getKeys())
-        Key: $key | Value: $context.get($key)
+    Key: $key | Value: $context.get($key)
 #end
 ```
-
 ---
 
 
----
-
-### Pull in a file and eval velocity (does work with non VTL files)
+### Pull in a file and eval velocity
 ```
-$render.eval("#include($webapi.getAssetPath('/virtual/path/to/file'))")
+$render.eval("#dotInclude($webapi.getAssetPath('/path/to/file'))")
 ```
-
 ---
+
 
 ### Pull in a file via contentlet attachment and eval
 ```
 #dotParse("$filetool.getFile(${contentlet.fileAssetFieldName.identifier},true).getURI()")
 ```
-
-
 ---
