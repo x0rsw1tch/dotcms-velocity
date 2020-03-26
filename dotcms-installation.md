@@ -545,19 +545,15 @@ seinfo -r                                      ## Show SELinux roles
 
 # <a name="dotworkarounds"></a> Workarounds
 
-## ~~Fix for missing default workflow (until dotCMS fixes this). Not needed for >= v5.1.0~~
+## Fix for missing default workflow for versions 5.2.7 and higher: when using empty starter
 
 ### dotCMS has removed their starter zip from github for some reason.
 
+> NOTE: As of version 5.3.0 (not released at time of writing), dotCMS will ship with an empty site
+
 > Only do this after dotCMS is deployed and running. No need to restart dotCMS
 
-As Root: `su postgres`
+1. As Root: `su postgres`
+1. Download SQL file `empty_starter_workflows_fix.sql`
+  - `psql -d DATABASENAME -f /path/to/empty_starter_workflows_fix.sql`
 
-`psql`
-
-```
-INSERT INTO workflow_scheme (id, name, description, archived, mandatory, default_scheme, entry_action_id, mod_date) VALUES ('85c1515c-c4f3-463c-bac2-860b8fcacc34','Default Scheme','This is the default workflow scheme that will be applied to all content',null,null,'t',null,null);
-INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('f7dc56cd-aa81-4ca8-8174-1bb30756df82','Initial State','85c1515c-c4f3-463c-bac2-860b8fcacc34','0','t','f',null,'0');
-INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('43e16aac-5799-46d0-945c-83753af39426','Content Entry','85c1515c-c4f3-463c-bac2-860b8fcacc34','1','f','f',null,'0');
-INSERT INTO workflow_step (id, name, scheme_id, my_order, resolved, escalation_enable, escalation_action, escalation_time) VALUES ('b1246a0f-6d15-47aa-81bb-67919a6946e0','Closed','85c1515c-c4f3-463c-bac2-860b8fcacc34','2','t','f',null,'0');
-```
