@@ -3,7 +3,7 @@
 		"clazz": "com.dotcms.contenttype.model.type.ImmutableWidgetContentType",
 		"defaultType": false,
 		"name": "Content Widget",
-		"description": "General Content Widgets",
+		"description": "General purpose Velocity Widgets",
 		"host": "SYSTEM_HOST",
 		"variable": "ContentWidget",
 		"fixed": false,
