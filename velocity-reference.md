@@ -852,7 +852,7 @@ $response.addHeader("X-Forwarded-Proto", "https")
 ## &nbsp;
 ## VelocitySessionWrapper ($session)
 - **Class**: `com.dotcms.rendering.velocity.viewtools.VelocitySessionWrapper`
-- **Reference Documents**: [GitHub](https://github.com/paultuckey/urlrewritefilter/blob/master/src/main/java/org/tuckey/web/filters/urlrewrite/UrlRewriteWrappedResponse.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/VelocitySessionWrapper.html)
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/730f8880e1aaea871ce8612fbdf3ab2e04fcd74e/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/VelocitySessionWrapper.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/VelocitySessionWrapper.html)
 
 ## &nbsp;
 ### Get Session ID
