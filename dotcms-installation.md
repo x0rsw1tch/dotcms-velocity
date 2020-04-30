@@ -28,9 +28,9 @@ dotcms      soft    nofile      10000
 ### DotCMS With JDK 8 and Utilities (reboot since there will be kernel updates)
 
 ```
-yum -y install yum install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+yum -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum -y install epel-release
-yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptables-services setroubleshoot setools ant java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql96 postgresql96-server nmap monit 
+yum -y install certbot httpd mod_proxy_html mod_ssl wget curl nano htop mc iptables-services setroubleshoot setools ant java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-headless.x86_64 postgresql10 postgresql10-server nmap monit
 yum -y update
 reboot
 ```
@@ -41,7 +41,7 @@ reboot
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://static.dotcms.com/versions/dotcms_5.2.6.tar.gz
+wget http://static.dotcms.com/versions/dotcms_5.2.8.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
@@ -58,9 +58,9 @@ passwd dotcms
 
 ### PostgreSQL Config
 ```
-/usr/pgsql-9.6/bin/postgresql96-setup initdb
-systemctl enable postgresql-9.6
-systemctl start postgresql-9.6
+/usr/pgsql-10/bin/postgresql10-setup initdb
+systemctl enable postgresql-10
+systemctl start postgresql-10
 su postgres
 psql
 ```
@@ -99,7 +99,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_5.2.1.tar.gz
+tar -zxvf dotcms_5.2.8.tar.gz
 ```
 
 ### Create PID Directory
@@ -306,10 +306,31 @@ VELOCITY_INCLUDE_ALLOWED_EXTENSIONS=css,htm,html,js,json,txt,svg,md
 CONTENT_APIS_ALLOW_ANONYMOUS=WRITE
 ```
 
+> Allow via `$workflowtool` (undocumented, but in code)
+
+```
+WORKFLOW_TOOL_ALLOW_FRONT_END_SAVING=true
+```
+
+### (Optional) > 5.2.5 Allow setting user session in Velocity (undocumented, but in code)
+
+This should only be done in the following scenarios:
+
+- You require a front-end user login and:
+  - Not using native dotCMS users, instead using a Content Type
+  - Don't want to use an OSGI plugin to handle logins
+  - Want to be able to set users in Velocity
+
+```
+VELOCITY_PREVENT_SETTING_USER_ID=false
+```
+
+
+
 ### (Optional/Recommended) Set site variables for default hosts
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
-> `CMS_SHARED_HOST` and `CMS_DEFAULT_HOST` should match to sites setup within dotcms. `CMS_SHARED_ASSETS` should map to the shared hosts with an alias that matches to remote front-end requests, useful for hosts that don't yet have a proper DNS record.
+> `CMS_SHARED_HOST` and `CMS_DEFAULT_HOST` should match to sites setup within dotcms. `CMS_SHARED_ASSETS` should map to the shared hosts with an alias that matches to remote front-end requests, useful for hosts that don't yet have a public DNS records.
 
 ```
 CMS_SHARED_HOST=shared.example.com
@@ -516,31 +537,31 @@ More Information: [Monit Presets](https://github.com/x0rsw1tch/monit-presets)
 
 ## Useful Commands: System
 ```
-systemctl enable iptables                                  ## Use iptables. Disable firewalld first!
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT              ## Allow communication on incoming port
-firewall-cmd --zone=public --permanent --add-port=80/tcp   ## Using firewalld, port 80
-firewall-cmd --zone=public --permanent --add-port=443/tcp  ## Using firewalld, port 443
-service iptables save                                      ## Save iptables config
-systemctl daemon-reload                                    ## Reload systemd unit files (When making changes)
+systemctl enable iptables                                  # Use iptables. Disable firewalld first!
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT              # Allow communication on incoming port
+firewall-cmd --zone=public --permanent --add-port=80/tcp   # Using firewalld, port 80
+firewall-cmd --zone=public --permanent --add-port=443/tcp  # Using firewalld, port 443
+service iptables save                                      # Save iptables config
+systemctl daemon-reload                                    # Reload systemd unit files (When making changes)
 ```
 
 ## Useful Commands: SELinux
 ```
-setenforce Permissive                          ## Put SELinux in Permissive mode (Throw warnings instead of denial)
-setsebool -P httpd_can_network_connect 1       ## Allow Apache to connect to local host (reverse proxy)
-setsebool -P httpd_can_network_connect_db 1    ## Allow Apache to connect to DB over TCP
-setsebool -P httpd_use_cifs 1                  ## Allow Apache to host in samba context
-setsebool -P ssh_chroot_rw_homedirs 1          ## Allow chrooted ssh to read write to home
-semanage boolean -l                            ## List Booleans
-getsebool -a                                   ## List Booleans with explanation
-semanage fcontext -a -t context_name /path     ## Change security context, accepts wildcards
-restorecon -v /path                            ## Commits change from fcontext, Use -r for recursive
-ls -aZ                                         ## View dir with context column
-semanage login -l                              ## Show user contexts
-ps -eZ                                         ## Show processes with contexts
-tail -f -n100 /var/log/audit/audit.log         ## SELinux Log
-aureport -a                                    ## Show SELinux audit summary
-seinfo -r                                      ## Show SELinux roles
+setenforce Permissive                          # Put SELinux in Permissive mode (Throw warnings instead of denial)
+setsebool -P httpd_can_network_connect 1       # Allow Apache to connect to local host (reverse proxy)
+setsebool -P httpd_can_network_connect_db 1    # Allow Apache to connect to DB over TCP
+setsebool -P httpd_use_cifs 1                  # Allow Apache to host in samba context
+setsebool -P ssh_chroot_rw_homedirs 1          # Allow chrooted ssh to read write to home
+semanage boolean -l                            # List Booleans
+getsebool -a                                   # List Booleans with explanation
+semanage fcontext -a -t context_name /path     # Change security context, accepts wildcards
+restorecon -v /path                            # Commits change from fcontext, Use -r for recursive
+ls -aZ                                         # View dir with context column
+semanage login -l                              # Show user contexts
+ps -eZ                                         # Show processes with contexts
+tail -f -n100 /var/log/audit/audit.log         # SELinux Log
+aureport -a                                    # Show SELinux audit summary
+seinfo -r                                      # Show SELinux roles
 ```
 
 # <a name="dotworkarounds"></a> Workarounds
@@ -549,7 +570,7 @@ seinfo -r                                      ## Show SELinux roles
 
 ### dotCMS has removed their starter zip from github for some reason.
 
-> NOTE: As of version 5.3.0 (not released at time of writing), dotCMS will ship with an empty site
+> NOTE: As of version 5.3.0 (not released at time of writing), dotCMS will ship with an empty site, so this won't be necessary after it's release
 
 > Only do this after dotCMS is deployed and running. No need to restart dotCMS
 
