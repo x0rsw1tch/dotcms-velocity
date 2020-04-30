@@ -1200,10 +1200,11 @@ $import.read("https://www.google.com")
 
 ## &nbsp;
 ### Publish Contentlet
-> NOTE: Adding identifier and stName/stInode will publish against an exiting contentlet
+> NOTE: Adding identifier will publish against an exiting contentlet
 > NOTE: Invoking fire() inside a conditional does work. Exceptions will results in a falsy result.
 ```
 #set ($myContentletMap = {
+	'stName': "MyContentType",
     'title': "Hello world",
     'description': "lorem ipsum",
     'body": "<p>content!</p>"
@@ -1278,10 +1279,46 @@ Other Logging methods: warn(), error(), debug()
 
 ## &nbsp;
 ## MailerTool ($mailer)
-- **Class**: `CLAZZ`
-- **Reference Documents**: [GitHub](), [JavaDoc]()
+- **Class**: `com.dotcms.rendering.velocity.viewtools.MailerTool`
+- **Reference Documents**: [GitHub](https://github.com/dotCMS/core/blob/master/dotCMS/src/main/java/com/dotcms/rendering/velocity/viewtools/MailerTool.java), [JavaDoc](http://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/MailerTool.html)
 
-TODO
+> NOTE: dotCMS is preconfigured to transmit to a localhost mailserver. If you have postfix installed with default configuration (allowing messages from localhost), no additional configuration is requires
+
+`$mailer.sendEmail(String to, String from, String subject, String message, Boolean html)`
+
+
+## &nbsp;
+### Send plain text email
+
+```
+$mailer.sendEmail("johnny5@gmail.com", "admin@example.com", "This is a test", "Testing 1-2-3", false)
+```
+
+## &nbsp;
+### Send HTML email
+
+```
+#set ($emailHTML = "<h1>HELLO WORLD!</h1>")
+
+$mailer.sendEmail("johnny5@gmail.com", "admin@example.com", "This is a test", $emailHTML, true)
+
+```
+
+
+> Pro-tip: An easy programmer friendly is to compose your body markup is to use `#define`, then `.toString()` your object when invoking `$mailer.sendEmail()`
+
+```
+#define ($emailHTML)
+
+<h1>Hello World</h1>
+<p>This is a <strong>test</strong> message. Pretty neat, eh?</p>
+
+#end
+
+$mailer.sendEmail("johnny5@gmail.com", "admin@example.com", "This is a test", $emailHTML.toString(), true)
+
+```
+
 
 ---
 
