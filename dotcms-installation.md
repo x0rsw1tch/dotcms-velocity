@@ -335,7 +335,7 @@ VELOCITY_INCLUDE_ALLOWED_EXTENSIONS=css,htm,html,js,json,txt,svg,md
 
 ### (Optional) > 5.2.3 Allow front-end submitting to content
 
-> Only needed when users submit forms that go to a Content Type
+> Only needed when unauthenticated users submit data to the back-end that go to a Content Type
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
 
@@ -413,6 +413,15 @@ Since we're only using ElasticSearch locally, we won't be configuring https.
 
 Set the following configuration items. Keep your cluster and node names unique if you need to keep separate instances on the same network from seeing each other.
 
+Memory Configuration. Adjust as needed
+
+`nano /etc/elasticsearch/jvm.options`
+
+```
+-Xms2g
+-Xmx2g
+```
+
 ```
 cluster.name: SITENAME-dotcms
 node.name: SITENAME-dotcms-node1
@@ -422,6 +431,8 @@ xpack.security.enabled: false
 xpack.security.http.ssl.enabled: false
 xpack.security.transport.ssl.enabled: false
 ```
+
+Restart ElasticSearch
 
 `systemctl restart elasticsearch`
 
