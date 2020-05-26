@@ -5,6 +5,7 @@ This guide will walk through installing dotCMS from scratch using current best p
 * Installing dotCMS
 * PostgreSQL Configuration
 * dotCMS Configuration
+* (>5.3.0) ElasticSearch Configuration
 * Apache Reverse-Proxy Configuration
 * SSL Using Certbot
 * Monit Monitoring
@@ -35,13 +36,17 @@ yum -y update
 reboot
 ```
 
+#### If running dotcms 5.3.0 or higher, ElasticSearch will need to be installed separately:
+
+https://www.elastic.co/guide/en/elasticsearch/reference/7.7/rpm.html#rpm-repo
+
 
 
 
 ### Download DotCMS
 ```
 mkdir -p /opt/dotcms && cd /opt/dotcms
-wget http://static.dotcms.com/versions/dotcms_5.2.8.tar.gz
+wget http://static.dotcms.com/versions/dotcms_5.3.0.tar.gz
 ```
 
 ### (Optional) dotCMS Minimal Starter 
@@ -83,13 +88,15 @@ GRANT ALL PRIVILEGES ON `dotcms`.`*` TO 'dotcms'@'localhost';
 
 ### Edit PostgreSQL Connection Properties
 
-`nano /var/lib/pgsql/9.6/data/pg_hba.conf`
+`nano /var/lib/pgsql/10/data/pg_hba.conf`
 ```
 host    all             all              127.0.0.1/32            password
 ```
 
 ### Restart PostgreSQL
 `systemctl restart postgresql`
+
+
 
 ----
 
@@ -99,7 +106,7 @@ host    all             all              127.0.0.1/32            password
 
 ```
 cd /opt/dotcms
-tar -zxvf dotcms_5.2.8.tar.gz
+tar -zxvf dotcms_5.3.0.tar.gz
 ```
 
 ### Create PID Directory
@@ -118,6 +125,7 @@ mkdir -p plugins/com.dotcms.config/ROOT/bin
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf
 mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j
+mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes
 ```
 
 #### Older Verions Base Directories: v3, v4
@@ -131,10 +139,17 @@ mkdir -p plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/WEB
 
 ### Copy Vanilla Configs
 ```
-cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/
+cp dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes/db.properties plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes/
 cp dotserver/tomcat-8.5.32/conf/server.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/conf/
 cp bin/startup.sh plugins/com.dotcms.config/ROOT/bin/
 ```
+
+> NOTE: Versions older than 5.3.0 don't use `db.properties` instead copy `context.xml` to the config plugin:
+
+```
+cp dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/
+```
+
 ##### Older Versions Config Files: v3, v4
 <pre style="font-size:11px;">
 cp dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/context.xml plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.0.18/webapps/ROOT/META-INF/
@@ -156,6 +171,18 @@ cp dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2-example.xml plugins
 ```
 
 ### Configure Database Connector
+
+`nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes/db.properties`
+
+##Postgres default configuration
+driverClassName=org.postgresql.Driver
+jdbcUrl=jdbc:postgresql://localhost/DB_NAME
+username=DB_USERNAME
+password=DB_PASSWORD
+connectionTestQuery=SELECT 1
+
+#### For versions older than 5.3.0
+
 `nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/META-INF/context.xml`
 
 > NOTE: Be sure to comment out the H2 section, and uncomment the PostgreSQL section
@@ -265,6 +292,16 @@ ES_INDEX_REPLICAS=0
 AUTOWIRE_MANAGE_ES_REPLICAS=false
 ```
 
+For dotcms 5.3.0 and higher (adjust based on your ES instance configuration)
+
+```
+ES_HOSTNAME=127.0.0.1
+ES_PORT=9200
+ES_TLS_ENABLED=false
+ES_PROTOCOL=http
+```
+
+
 ### Custom Log File Location, and log viewer directory
 
 `nano plugins/com.dotcms.config/conf/dotmarketing-config-ext.properties`
@@ -359,6 +396,35 @@ export JAVA_HOME=/usr/lib/jvm/jre-openjdk
 1. `bin/deploy-plugins.sh`
 
 > More Information: [Configuration Properties](https://dotcms.com/docs/latest/changing-dotcms-configuration-properties)
+
+----
+
+
+### ElasticSearch Configuration
+
+As of dotCMS 5.3.0 ElasticSearch is no longer part of the binary releases. ElasticSearch must be installed separately. This portion of the guide assumes you will be running a single dotCMS instance with a single ElasticSearch instance.
+
+- CentOS: https://www.elastic.co/guide/en/elasticsearch/reference/7.7/rpm.html#rpm-repo
+- Debian: https://www.elastic.co/guide/en/elasticsearch/reference/7.7/deb.html#deb-repo
+
+Since we're only using ElasticSearch locally, we won't be configuring https.
+
+`nano /etc/elasticsearch/elasticsearch.yml`
+
+Set the following configuration items. Keep your cluster and node names unique if you need to keep separate instances on the same network from seeing each other.
+
+```
+cluster.name: SITENAME-dotcms
+node.name: SITENAME-dotcms-node1
+network.host: 127.0.0.1
+
+xpack.security.enabled: false
+xpack.security.http.ssl.enabled: false
+xpack.security.transport.ssl.enabled: false
+```
+
+`systemctl restart elasticsearch`
+
 
 ----
 
