@@ -54,6 +54,12 @@ wget http://static.dotcms.com/versions/dotcms_5.3.0.tar.gz
 wget https://github.com/x0rsw1tch/dotcms-starters/raw/master/dotcms-5.2.1_minimal.zip
 ```
 
+> Note: dotCMS provides blank starter archives for versions 5.2.8 and higher
+
+I don't know whick ones are for which version 😒
+
+https://repo.dotcms.com/artifactory/webapp/#/artifacts/browse/tree/General/libs-release-local/com/dotcms/starter
+
 ### Create dotCMS User and set password
 ```
 groupadd dotcms
@@ -407,20 +413,12 @@ As of dotCMS 5.3.0 ElasticSearch is no longer part of the binary releases. Elast
 - CentOS: https://www.elastic.co/guide/en/elasticsearch/reference/7.7/rpm.html#rpm-repo
 - Debian: https://www.elastic.co/guide/en/elasticsearch/reference/7.7/deb.html#deb-repo
 
-Since we're only using ElasticSearch locally, we won't be configuring https.
-
-`nano /etc/elasticsearch/elasticsearch.yml`
 
 Set the following configuration items. Keep your cluster and node names unique if you need to keep separate instances on the same network from seeing each other.
 
-Memory Configuration. Adjust as needed
+Since we're only using ElasticSearch locally, we won't be configuring https.
 
-`nano /etc/elasticsearch/jvm.options`
-
-```
--Xms2g
--Xmx2g
-```
+`nano /etc/elasticsearch/elasticsearch.yml`
 
 ```
 cluster.name: SITENAME-dotcms
@@ -431,6 +429,18 @@ xpack.security.enabled: false
 xpack.security.http.ssl.enabled: false
 xpack.security.transport.ssl.enabled: false
 ```
+
+Memory Configuration. Adjust as needed
+
+`nano /etc/elasticsearch/jvm.options`
+
+```
+-Xms2g
+-Xmx2g
+```
+
+
+
 
 Restart ElasticSearch
 
