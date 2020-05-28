@@ -181,11 +181,14 @@ cp dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/log4j/log4j2-example.xml plugins
 `nano plugins/com.dotcms.config/ROOT/dotserver/tomcat-8.5.32/webapps/ROOT/WEB-INF/classes/db.properties`
 
 ##Postgres default configuration
+
+```
 driverClassName=org.postgresql.Driver
 jdbcUrl=jdbc:postgresql://localhost/DB_NAME
 username=DB_USERNAME
 password=DB_PASSWORD
 connectionTestQuery=SELECT 1
+```
 
 #### For versions older than 5.3.0
 
