@@ -77,8 +77,14 @@ psql
 ```
 
 ### PostgreSQL dotCMS User and Database 
+
+Create dotcms user
+CLI: `createuser -P dotcms` 
+
+> You will be prompted for password
+
+
 ```
-CREATE USER dotcms WITH PASSWORD '****CHANGEME****';
 CREATE DATABASE "dotcms" WITH OWNER = dotcms;
 GRANT ALL ON DATABASE "dotcms" TO dotcms;
 ALTER ROLE dotcms WITH SUPERUSER;
@@ -215,6 +221,15 @@ connectionTestQuery=SELECT 1
     redirectPort="8443" URIEncoding="UTF-8"
     secure="true" proxyPort="443" scheme="https" />
 ```
+
+#### Pass through client IP to tomcat
+
+> Add to bottom of `<Host>` with the rest of the Valves
+
+```
+<Valve className="org.apache.catalina.valves.RemoteIpValve" internalProxies="0:0:0:0:0:0:0:1" remoteIpHeader="x-forwarded-for" proxiesHeader="x-forwarded-by" protocolHeader="X-Forwarded-Proto" />
+```
+
 
 #### If using HTTP behind proxy:
 `proxyPort="80"`
