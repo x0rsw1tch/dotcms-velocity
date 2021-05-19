@@ -1,0 +1,86 @@
+<script>
+var $!{field.velocityVarName}URLSelectorInputField, $!{field.velocityVarName}URLSelectorOutputField;
+var $!{field.velocityVarName}CurrentValue = '$!{value}';
+dojo.require('dotcms.dijit.FileBrowserDialog');
+function openBrowserDialog() {
+    fileSelector.show();
+}
+
+function setURLLink(assetData) {
+
+    var link = {
+        type: null,
+        languageId: 1,
+        hostName: null,
+        identifier: null,
+        assetURI: null,
+        path: null
+    }
+
+    if (assetData.type !== "custom") {
+        link.type = assetData.type;
+        link.languageId = assetData.languageId;
+        link.identifier = assetData.identifier;
+        link.hostName = assetData.hostName;
+        if (assetData.assetURI) {
+            link.assetURI = assetData.assetURI;
+        } else {
+            if (assetData.type === "htmlpage") {
+                link.assetURI = "//" + assetData.hostName + assetData.pageURI;
+                link.path = "//" + assetData.hostName + assetData.pageURI;
+            } else if (assetData.type === "file_asset") {
+                link.assetURI = "//" + assetData.hostName + assetData.path;
+                link.path = "//" + assetData.hostName + assetData.path;
+            }
+        }
+    } else if (assetData.type === "custom") {
+        link.type = assetData.type;
+        link.path = assetData.path;
+    }
+
+    if (assetData.type === "custom") {
+        if (assetData.path.length) {
+            $!{field.velocityVarName}URLSelectorOutputField.value = JSON.stringify(link);
+        }
+    } else if (assetData.type === "htmlpage" || assetData.type === "file_asset") {
+        if (assetData.identifier) {
+            $!{field.velocityVarName}URLSelectorInputField.value = link.assetURI;
+            $!{field.velocityVarName}URLSelectorOutputField.value = JSON.stringify(link);
+        }
+    }
+}
+
+function clearURLLink () {
+    $!{field.velocityVarName}URLSelectorInputField.value = "";
+    $!{field.velocityVarName}URLSelectorOutputField.value = "";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    $!{field.velocityVarName}URLSelectorInputField = document.getElementById("$!{field.velocityVarName}__url-input");
+    $!{field.velocityVarName}URLSelectorOutputField = document.getElementById("$!{field.velocityVarName}");
+
+    if ($!{field.velocityVarName}CurrentValue.length) {
+        $!{field.velocityVarName}CurrentValue = JSON.parse($!{field.velocityVarName}CurrentValue);
+        setURLLink($!{field.velocityVarName}CurrentValue);
+        if ($!{field.velocityVarName}CurrentValue.type === "custom") {
+            $!{field.velocityVarName}URLSelectorInputField.value = $!{field.velocityVarName}CurrentValue.path;
+        }
+    }
+
+    $!{field.velocityVarName}URLSelectorInputField.addEventListener("keyup", function () {
+        setURLLink({
+            type: "custom",
+            path: $!{field.velocityVarName}URLSelectorInputField.value
+        });
+    })
+});
+
+</script>
+<div>
+    <div>
+        <input id="$!{field.velocityVarName}__url-input" data-dojo-type="dijit/form/TextBox" style="width:calc(100% - 18rem) !important;">
+        <button dojoType="dijit.form.Button" onclick="clearURLLink()" type="button" style="float:right;margin-left:2rem;">Clear</button>
+        <button dojoType="dijit.form.Button" onclick="openBrowserDialog();return false;" type="button" style="float:right;">Browse...</button>
+    </div>
+    <div dojoAttachPoint="fileBrowser" jsId="fileSelector" onFileSelected="setURLLink" dojoType="dotcms.dijit.FileBrowserDialog"></div>
+</div>
