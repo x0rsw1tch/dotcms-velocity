@@ -16,7 +16,6 @@
             "\t],",
             "\t'limit': 0,",
             "\t'sort': \"modDate desc\",",
-            "\t'hosts': \"\\$!{QHOST}\",",
             "\t'results': \\$__null",
             "})",
             "#set (\\$${1:label}.results = \\$dotcontent.pull(\\$UtilMethods.join(\\$${1:label}.query, ' '), \\$${1:label}.limit, \\$${1:label}.sort))"
@@ -37,12 +36,29 @@
     "dotcms: $dotcontent.pull() get All Contentlets": {
         "prefix": "dcgetall",
         "body": [
-            "#if (\\$UtilMethods.isSet(\\$${1:label}.results) && \\$${1:label}.results.size() > 0)",
+            "#if (\\$UtilMethods.isSet(\\$${1:label}.results))",
             "\t#set(\\$${1:label} = \\$${1:label}.results)",
             "#end"
         ],
         "description": "Put results list of dotcontent pull object into separate object"
-    },
+	},
+	
+	"dotcms: $dotcontent.pullRelatedField()": {
+		"prefix": "dcrelated",
+		"body": [
+			"#set (\\$_relQuery = {",
+			"\t'id': \\$$identifier,",
+			"\t'field': \"ContentType.field\",",
+			"\t'cond': [",
+			"\t\t\"\"",
+			"\t],",
+			"\t'limit': 0,",
+			"\t'sort': \"modDate desc\"",
+			"})",
+			"#set (\\$$1 = \\$dotcontent.pullRelatedField(\\$_relQuery.id, \\$_relQuery.field, \\$UtilMethods.join(\\$_relQuery.cond, ' '), \\$_relQuery.limit, \\$_relQuery.sort))"
+		],
+		"description": "Pulls related contentlets with the same functionality as $dotcontent.pull()"
+	},
     
     "dotcms: UtilMethods.isSet": {
         "prefix": "isset",
@@ -66,23 +82,6 @@
         ],
         "description": "Create a Velocity Variable"
     },
-    "dotcms: Velocity create list": {
-        "prefix": "list",
-        "body": [
-            "#set (\\$$1 = [$2])"
-        ],
-        "description": "Create a Velocity Array List"
-
-    },
-
-    "dotcms: Velocity create map": {
-        "prefix": "list",
-        "body": [
-            "#set (\\$$1 = {$2})"
-        ],
-        "description": "Create a Velocity Object"
-    },
-
     "dotcms VTLAPI: add JSON property": {
         "prefix": "vtput",
         "body": [
@@ -106,7 +105,6 @@
         ],
         "description": "dotcms VTL API: Get Query String Parameter"
     },
-
     "dotcms Request Wrapper: Get Parameter": {
         "prefix": "rqgetrequestparam",
         "body": "\\$request.getParameter(\"$1\")",
