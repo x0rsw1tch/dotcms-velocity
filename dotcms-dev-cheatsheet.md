@@ -1,81 +1,47 @@
 ## Primitives
 
-`java.lang.Object`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html)
-
-`java.util.LinkedHashMap`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html)
-
-`java.util.HashMap`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html)
-
-`java.util.ArrayList`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
-
-`java.lang.String`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)
-
-`java.lang.Integer`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html)
-
-`java.lang.Long`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html)
-
-`java.lang.Double`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html)
-
-`Map (Interface)`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html)
-
-`java.util.Date`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Date.html)
-
-`java.sql.Timestamp`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html)
-
-`sun.util.calendar.ZoneInfo`: [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html)
+| Class       | JavaDoc     |
+|-------------|-------------|
+|`java.lang.Object` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html) |
+|`java.util.LinkedHashMap` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html) |
+|`java.util.HashMap` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html) |
+|`java.util.ArrayList` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) |
+|`java.lang.String` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
+|`java.lang.Integer` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html) |
+|`java.lang.Long` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html) |
+|`java.lang.Double` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html) |
+|`Map (Interface)` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html) |
+|`java.util.Date` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Date.html) |
+|`java.sql.Timestamp` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/sql/Timestamp.html) |
+|`sun.util.calendar.ZoneInfo` | [JavaDoc](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html) |
 
 ---
 
 ## Common Objects
 
-Contentlet: `com.dotcms.rendering.velocity.viewtools.content.ContentMap`
-
-[JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentMap.html)
-
-File Asset: `com.dotcms.rendering.velocity.viewtools.content.FileAssetMap`
-
-[JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html)
-
-Content Type Model: `com.dotmarketing.portlets.structure.model.Structure`
-
-[Structure JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/Structure.html)
-
-[StructuresWebAPI JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/StructuresWebAPI.html)
-
-Content Type Model Field: `com.dotmarketing.portlets.structure.model.Field`
-
-[Field JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/contenttype/model/field/Field.html)
-
-NavTool Item: `NavResultHydrated`
-
-
-[JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/navigation/NavResultHydrated.html)
-
-Category: `com.dotmarketing.portlets.categories.model.Category`
-
-[JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/categories/model/Category.html)
-
-TagList: `com.dotcms.rendering.velocity.viewtools.content.TagList`
-
-[JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/TagList.html)
+| Class       | Type        | JavaDoc     |
+|-------------|-------------|-------------|
+| Contentlet | `com.dotcms.rendering.velocity.viewtools.content.ContentMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentMap.html) |
+| File Asset | `com.dotcms.rendering.velocity.viewtools.content.FileAssetMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html) |
+| Content Type Model | `com.dotmarketing.portlets.structure.model.Structure` | [Structure JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/Structure.html) [StructuresWebAPI JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/StructuresWebAPI.html) |
+| Content Type Model Field | `com.dotmarketing.portlets.structure.model.Field` | [Field JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/contenttype/model/field/Field.html) |
+| NavTool Item | `NavResultHydrated` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/navigation/NavResultHydrated.html) |
+| Category | `com.dotmarketing.portlets.categories.model.Category` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/categories/model/Category.html) |
+| TagList | `com.dotcms.rendering.velocity.viewtools.content.TagList` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/TagList.html) |
 
 ---
 
 ## Field Objects
 
-CheckboxMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/CheckboxMap.html)
-
-RadioMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/RadioMap.html)
-
-SelectMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/SelectMap.html)
-
-MultiSelectMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/MultiSelectMap.html)
-
-FileAssetMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html)
-
-KeyValue: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/keyvalue/model/KeyValue.html)
-
-BinaryMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/BinaryMap.html)
+| Type        | JavaDoc     |
+|-------------|-------------|
+| CheckboxMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/CheckboxMap.html) |
+| RadioMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/RadioMap.html) |
+| SelectMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/SelectMap.html) |
+| MultiSelectMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/MultiSelectMap.html) |
+| FileAssetMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html) |
+| KeyValue | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/keyvalue/model/KeyValue.html) |
+| BinaryMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/BinaryMap.html) |
 
 ---
 
