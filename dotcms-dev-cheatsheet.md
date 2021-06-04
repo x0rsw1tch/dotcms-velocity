@@ -326,7 +326,11 @@ BinaryMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/re
 
 ## Velocity Directives
 
-`#foreach($item in $list)`
+`#define ($var) ... #end`
+
+`#foreach($item in $list) ... #end`
+
+`#if ... #elseif ... #else ... #end`
 
 `#dotParse(String path)`
 
@@ -335,6 +339,8 @@ BinaryMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/re
 `#evaluate(String string)`
 
 `#parseContainer(String containerInode, String timestemp)`
+
+`#macro (MacroName $param(s)...) ... #end`
 
 --- 
 
