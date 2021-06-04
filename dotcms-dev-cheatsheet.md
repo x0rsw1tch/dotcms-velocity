@@ -23,7 +23,7 @@
 |-------------|-------------|-------------|
 | Contentlet | `com.dotcms.rendering.velocity.viewtools.content.ContentMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentMap.html) |
 | File Asset | `com.dotcms.rendering.velocity.viewtools.content.FileAssetMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html) |
-| Content Type Model | `com.dotmarketing.portlets.structure.model.Structure` | [Structure JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/Structure.html) [StructuresWebAPI JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/StructuresWebAPI.html) |
+| Content Type Model | `com.dotmarketing.portlets.structure.model.Structure` | [Structure JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/Structure.html) / [StructuresWebAPI JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/StructuresWebAPI.html) |
 | Content Type Model Field | `com.dotmarketing.portlets.structure.model.Field` | [Field JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/contenttype/model/field/Field.html) |
 | NavTool Item | `NavResultHydrated` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/navigation/NavResultHydrated.html) |
 | Category | `com.dotmarketing.portlets.categories.model.Category` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/categories/model/Category.html) |
