@@ -19,7 +19,7 @@
 
 ## Common Objects
 
-| Class       | Type        | JavaDoc     |
+| Type        | Class       | JavaDoc     |
 |-------------|-------------|-------------|
 | Contentlet | `com.dotcms.rendering.velocity.viewtools.content.ContentMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentMap.html) |
 | File Asset | `com.dotcms.rendering.velocity.viewtools.content.FileAssetMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html) |
