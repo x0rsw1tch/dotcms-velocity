@@ -151,17 +151,17 @@ BinaryMap: [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/re
 
 `#define ($var) ... #end`
 
-`#foreach($item in $list) ... #end`
+`#foreach ($item in $list) ... #end`
 
 `#if ... #elseif ... #else ... #end`
 
-`#dotParse(String path)`
+`#dotParse (String path)`
 
-`#dotInclude(String path)`
+`#dotInclude (String path)`
 
-`#evaluate(String string)`
+`#evaluate (String string)`
 
-`#parseContainer(String containerInode, String timestemp)`
+`#parseContainer (String containerInode, String timestemp)`
 
 `#macro (MacroName $param(s)...) ... #end`
 
