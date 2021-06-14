@@ -1,4 +1,4 @@
-## Primitives
+## Primitives and Objects
 
 | Class       | JavaDoc     |
 |-------------|-------------|
@@ -21,6 +21,7 @@
 
 | Type        | Class       | JavaDoc     |
 |-------------|-------------|-------------|
+| | |
 | Contentlet | `com.dotcms.rendering.velocity.viewtools.content.ContentMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/ContentMap.html) |
 | File Asset | `com.dotcms.rendering.velocity.viewtools.content.FileAssetMap` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/FileAssetMap.html) |
 | Content Type Model | `com.dotmarketing.portlets.structure.model.Structure` | [Structure JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/Structure.html) / [StructuresWebAPI JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/StructuresWebAPI.html) |
@@ -33,8 +34,8 @@
 
 ## Field Objects
 
-| Type        | JavaDoc     |
-|-------------|-------------|
+| Type        | JavaDoc     | gitHub     |
+|-------------|-------------|-------------|
 | CheckboxMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/CheckboxMap.html) |
 | RadioMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/RadioMap.html) |
 | SelectMap | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/SelectMap.html) |
@@ -45,11 +46,20 @@
 
 ---
 
+## Common Class Packages
+
+| Class       | JavaDoc     | GitHub      |
+| ----------- | ----------- | ----------- |
+| `com.dotcms.rendering.velocity.viewtools.content` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/content/package-summary.html) |
+| `org.apache.velocity.tools.generic` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/package-summary.html) |
+| `com.dotcms.rendering.velocity.viewtools` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/package-summary.html) |
+| `com.dotmarketing.portlets.structure.model` (Old) | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/structure/model/package-summary.html) |
+| `com.dotcms.contenttype.model.type` | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/index.html?com/dotmarketing/portlets/structure/model/Structure.html) |
+
 ## dotCMS Velocity ViewTools
 
-
-| Var         | Class       | JavaDoc     |
-| ----------- | ----------- | ----------- |
+| Var         | Class       | JavaDoc     | GitHub      |
+| ----------- | ----------- | ----------- | ----------- |
 | `$alternator` | org.apache.velocity.tools.generic.AlternatorTool | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/org/apache/velocity/tools/generic/AlternatorTool.html) |
 | `$calendar` | com.dotmarketing.portlets.calendar.viewtools.CalendarWebAPI | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotmarketing/portlets/calendar/viewtools/CalendarWebAPI.html) |
 | `$CASTool` | com.dotcms.rendering.velocity.viewtools.CASTool | [JavaDoc](https://static.dotcms.com/docs/5.1.6/javadocs/com/dotcms/rendering/velocity/viewtools/CASTool.html) |
