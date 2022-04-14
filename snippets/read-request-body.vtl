@@ -1,0 +1,3 @@
+## Reads raw HTTP POST request body
+#set ($reader = $request.getReader())
+#set ($linesArr = $reader.lines().toArray())
