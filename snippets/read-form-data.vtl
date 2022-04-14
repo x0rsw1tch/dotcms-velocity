@@ -1,0 +1,55 @@
+#define ($lineBreak)
+
+#end
+$request.getMethod() data:
+
+#set ($fieldDelimiter = "--" + $request.getHeader("Content-Type").split(";")[1].split('=')[1])
+
+Delimiter: $fieldDelimiter
+
+#set ($rawData = [])
+#set ($delimitedData = [])
+#set ($form = {})
+#set ($reader = $request.getReader())
+
+#set ($lines = $reader.lines())
+#set ($lineCount = $math.sub($lines.count(), 1))
+#set ($lineArr = [0..$lineCount])
+$reader.close()
+
+#set ($reader = $request.getReader())
+
+
+#foreach ($i in $lineArr)
+    #set ($_ = $rawData.add($reader.readLine()))
+#end
+
+#foreach ($i in $rawData)
+    #if ($i.contains($fieldDelimiter) == false)
+        #set ($_ = $delimitedData.add($i))
+    #end
+#end
+
+#foreach ($i in $delimitedData)
+    #set ($isName = false)
+    #set ($isValue = false)
+    #if ($i.startsWith("Content-Disposition"))
+        #set ($isName = true)
+        #set ($name = $i.split("name=")[1].replaceAll('\"', "").trim())
+    #else
+        #if ($i.contains($fieldDelimiter) == false)
+        #set ($isValue = true)
+        #set ($val = $i.trim())
+        #end
+    #end
+
+    #if ($isName)
+        #set ($_ = $form.put($name, ""))
+    #elseif ($isValue)
+        #set ($form[$name] = $val)
+    #end
+#end
+
+
+AS JSON
+$json.generate($form)
