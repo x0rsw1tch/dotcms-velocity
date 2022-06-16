@@ -457,14 +457,20 @@ Memory Configuration. Adjust as needed
 -Xmx2g
 ```
 
-Setup startup timeout. Add this to give ES extra time to start
+Setup startup timeout. Add this to give ES extra time to start, and automatic restart.
 
 `systemctl edit elasticsearch.service`
 
 Add
 
 ```
+[Unit]
+StartLimitIntervalSec=240
+StartLimitBurst=5
+
 [Service]
+Restart=on-failure
+RestartSec=10s
 TimeoutSec=300
 ```
 
@@ -479,24 +485,23 @@ Restart ElasticSearch
 
 ## Setup dotCMS as a service
 
-### Create systemd config
-`nano /etc/sysconfig/dotcms`
-```
-JAVA_HOME=/usr/lib/jvm/jre-openjdk
-CATALINA_PID=/var/run/dotcms/dotcms.pid
-DOTCMS_HOME=/opt/dotcms
-```
-
 ### Create Unit File
 `nano /usr/lib/systemd/system/dotcms.service`
 ```
 [Unit]
 Description=dotCMS Service
-After=network.target
+After=network.target [NAME_OF_ES_SERVICE] [NAME_OF_DB_SERVICE]
+Requires=[NAME_OF_ES_SERVICE] [NAME_OF_DB_SERVICE]
 
 [Service]
 Type=forking
-EnvironmentFile=/etc/sysconfig/dotcms
+Restart=always
+RestartSec=10s
+TimeoutSec=120
+Environment="CATALINA_PID=/var/run/dotcms/dotcms.pid"
+Environment="DOTCMS_HOME=/opt/dotcms"
+Environment="ES_TLS_ENABLED=false"
+Environment="ES_PROTOCOL=http"
 PermissionsStartOnly=True
 RuntimeDirectory=dotcms
 RuntimeDirectoryMode=755
