@@ -457,6 +457,16 @@ Memory Configuration. Adjust as needed
 -Xmx2g
 ```
 
+Setup startup timeout. Add this to give ES extra time to start
+
+`systemctl edit elasticsearch.service`
+
+Add
+
+```
+[Service]
+TimeoutSec=300
+```
 
 
 
