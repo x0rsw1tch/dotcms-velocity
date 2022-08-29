@@ -1,0 +1,117 @@
+#* ETHODE
+ * Custom Field: Content Type Selector
+ * @author: Tom Kisha
+*#
+#dotParse("//shared/application/includes/cf-styles.vtl")
+#set ($structuresAndFields = [])
+#foreach($s in $sorter.sort($structures.findStructures(false), "name:asc"))
+    #set ($sData = {
+        'name': $s.name,
+        'velocityVarName': $s.velocityVarName,
+        'fields': []
+    })
+
+    #foreach ($f in $s.fields)
+        #set ($usableField = true)
+        #if ($f.fieldType == "constant")
+            #set ($usableField = false)
+        #end
+        #if ($f.fieldType == "row")
+            #set ($usableField = false)
+        #end
+        #if ($f.fieldType == "column")
+            #set ($usableField = false)
+        #end
+        #if ($f.fieldType == "line_divider")
+            #set ($usableField = false)
+        #end
+        #if ($usableField)
+            #set ($fData = {
+                'fieldName': $f.fieldName,
+                'velocityVarName': $f.velocityVarName,
+                'fieldType': $f.fieldType,
+                'identifier': $f.identifier
+            })
+            #set ($_ = $sData.fields.add($fData))
+        #end
+    #end
+
+    #set ($_ = $structuresAndFields.add($sData))
+#end
+
+<div>
+    <select id="cfStructureList" class="cf-select mb-2">
+        <option value="" #if ($value == "") selected #end>Content Type</option>
+        #foreach($s in $sorter.sort($structures.findStructures(false), "name:asc"))
+            <option value="$s.velocityVarName" #if ($value == $s.velocityVarName) selected #end>$s.name</option>
+        #end
+    </select>
+</div>
+<div id="fieldList" class="">
+</div>
+
+
+<script>
+const cfStructuresAndFields = $json.generate($structuresAndFields);
+</script>
+<script>
+
+(() => {
+
+    let inputField = null;
+    let outputField = null;
+    let fieldDisplay = null;
+    let currentValue = "$!{value}";
+
+    function cfFieldSet () {
+        outputField.value = inputField.value;
+        makeFieldList(findStructure(inputField.value));
+    }
+
+    function findStructure (name) {
+        for (let i = 0; i < cfStructuresAndFields.length; i++) {
+            if (cfStructuresAndFields[i].velocityVarName === name) {
+                return cfStructuresAndFields[i];
+            }
+        }
+        return [];
+    }
+
+    function makeFieldList (ct)  {
+        let out = '<ul class="cf-list ml-1 list-2col">';
+        if (ct !== null) {
+            for (let i = 0; i < ct.fields.length; i++) {
+                out += '<li class="mr-1 mb-1"><span class="cf-chicklet">' + ct.fields[i].velocityVarName + '</span></li>';
+            }
+        }
+        out += '</ul>';
+        fieldDisplay.innerHTML = out;
+        document.querySelectorAll('${esc.h}fieldList li > span').forEach((element) => {
+            element.addEventListener("click", setField)
+        });
+    }
+
+    function setField () {
+        console.log(event);
+        let fieldField = document.getElementById("fieldTabVarname");
+        if (fieldField) {
+            fieldField.value = event.target.innerText;
+        }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        outputField = document.querySelector('${esc.h}ct');
+        inputField = document.querySelector('${esc.h}cfStructureList');
+        fieldDisplay = document.querySelector('${esc.h}fieldList');
+        if (inputField) {
+            inputField.addEventListener("change", cfFieldSet);
+            if (inputField.value.length) {
+                makeFieldList(findStructure(inputField.value));
+            }
+        }
+        console.log(cfStructuresAndFields);
+    });
+})();
+
+</script>

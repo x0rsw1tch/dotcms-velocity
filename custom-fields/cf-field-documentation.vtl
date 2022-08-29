@@ -1,0 +1,126 @@
+#set ($docEntries = $dotcontent.pull("+contentType:StructureDocumentation +StructureDocumentation.ct_dotraw:${esc.q}$!{structure.velocityVarName}${esc.q}", 0, "modDate desc"))
+#dotParse("//shared/application/includes/cf-styles.vtl")
+<h1>$docEntries.size()</h1>
+#set ($cfStructureDocEntries = [])
+<ul>
+    <li>Structure Documentation: Debug Data</li>
+#foreach ($i in $docEntries)
+    #set ($data = {
+        'ct': $i.ct,
+        'placement': $i.placement.selectValue,
+        'field': $i.fieldTabVarname,
+        'body': $i.documentation
+    })
+    <li>$data.ct &gt; ${data.placement}: $data.field</li>
+    #set ($_ = $cfStructureDocEntries.add($data))
+#end
+</ul>
+
+<script type="text/javascript">
+const cfStructureDocEntries = $json.generate($cfStructureDocEntries) || [];
+</script>
+<script type="text/javascript">
+(() => {
+
+    let fieldWrappers = null;
+    let fields = [];
+
+    function setTop (doc, tab) {
+        let tabContent = null;
+        if (tab === "properties") {
+            tabContent = document.querySelector('${esc.h}' + tab + ' .content-edit__form');
+        } else if (tab === "other") {
+            tabContent = document.querySelector('${esc.h}tab_' + doc.field + ' .content-edit__advaced-form');
+        }
+        if (tabContent) {
+            let docBlock = document.createElement("DIV");
+            docBlock.classList.add("cf-doc-block", "cf-doc-block-top");
+            docBlock.innerHTML = doc.body;
+
+            tabContent.insertBefore(docBlock, tabContent.children[0]);
+        } else {
+            console.log('setTop: Unable to find approptriate tab element');
+        }
+    }
+
+    function getFieldType (field) {
+        const isTabTop = document.querySelector('[role="tablist"] [id*="_tab_ ' + field + '"]');
+        const isField = document.querySelector('.fieldWrapper ${esc.h}' + field + "_tag");
+        const isRelationship = document.querySelector('.fieldValue [id^=rel_][id*=' + field + "]");
+
+        if (isTabTop !== null) return "tab";
+        if (isField !== null) return "field";
+        if (isRelationship !== null) return "field__relationship";
+        return null;
+    }
+
+    function setField (doc) {
+        const fieldType = getFieldType(doc.field);
+        if (fieldType === "tab") {
+            setTop(doc, "other");
+        } else {
+
+            let outField = null;
+            let standardFieldWrapper = true;
+
+            let docBlock = document.createElement("DIV");
+            docBlock.classList.add("cf-doc-block");
+            docBlock.classList.add("cf-doc-block-inline");
+            docBlock.innerHTML = doc.body;
+
+            if (fieldType === "field") {
+                outField = document.querySelector("${esc.h}" + doc.field + "_tag");
+            } else if (fieldType === "field__relationship") {
+                standardFieldWrapper = false;
+            }
+
+            if (standardFieldWrapper) {
+                if (outField) {
+                    let fieldWrapper = outField.parentElement;
+                    if (doc.placement === "field-inline") {
+                        fieldWrapper.insertBefore(docBlock, fieldWrapper.children[1]);
+                    } else if (doc.placement === "field-above") {
+                        outField.insertBefore(docBlock, outField.children[0]);
+                    }
+                } else {
+                    debugger;
+                }
+            } else {
+                if (fieldType === "field__relationship") {
+                    const relFieldInner = document.querySelector('.fieldValue input[id^=rel_][id*=' + doc.field + "]");
+                    if (relFieldInner) {
+                        outField = relFieldInner.parentElement.previousElementSibling;
+                        if (doc.placement === "field-inline") {
+                            outField.append(docBlock);
+                        } else if (doc.placement === "field-above") {
+                            outField.insertBefore(docBlock, outField.children[0]);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    function init () {
+        cfStructureDocEntries.forEach((element) => {
+            console.log ("Doc entry: ", element);
+            // Hide this field in editor
+            let cfField = document.querySelector('.fieldWrapper ${esc.h}${field.velocityVarName}_tag');
+            if (cfField) {
+                cfField.parentElement.style.display = "none";
+            }
+
+            if (element.placement === "top-tab-main") {
+                setTop(element, "properties");
+            } else if (element.placement === "top-tab-other") {
+                setTop(element, "other");
+            } else if (element.placement.indexOf("field") === 0) {
+                setField(element);
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
