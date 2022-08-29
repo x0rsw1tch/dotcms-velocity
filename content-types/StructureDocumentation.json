@@ -1,0 +1,75 @@
+{
+  "clazz": "com.dotcms.contenttype.model.type.ImmutableSimpleContentType",
+  "defaultType": false,
+  "name": "Structure Documentation",
+  "description": "Provides supplemental documentation for the contentlet editor",
+  "host": "SYSTEM_HOST",
+  "variable": "StructureDocumentation",
+  "fixed": false,
+  "system": false,
+  "folder": "SYSTEM_FOLDER",
+  "fields": [
+    {
+      "clazz": "com.dotcms.contenttype.model.field.ImmutableCustomField",
+      "dataType": "LONG_TEXT",
+      "variable": "ct",
+      "name": "Content Type",
+      "sortOrder": 2,
+      "readOnly": false,
+      "fixed": false,
+      "required": true,
+      "searchable": true,
+      "indexed": true,
+      "listed": true,
+      "unique": false,
+      "values": "#dotParse(\"//shared/application/custom-fields/cf-content-type-selector.vtl\")"
+    },
+    {
+      "clazz": "com.dotcms.contenttype.model.field.ImmutableRadioField",
+      "dataType": "TEXT",
+      "variable": "placement",
+      "name": "Placement",
+      "sortOrder": 4,
+      "readOnly": false,
+      "fixed": false,
+      "required": true,
+      "searchable": true,
+      "indexed": true,
+      "listed": true,
+      "unique": false,
+      "defaultValue": "field-inline",
+      "values": "Field: Inline|field-inline\r\nField: Above|field-above\r\nMain Tab|top-tab-main\r\nTab: Other|top-tab-other"
+    },
+    {
+      "clazz": "com.dotcms.contenttype.model.field.ImmutableTextField",
+      "dataType": "TEXT",
+      "variable": "fieldTabVarname",
+      "name": "Field or Tab Variable Name",
+      "sortOrder": 5,
+      "readOnly": false,
+      "fixed": false,
+      "required": false,
+      "searchable": true,
+      "indexed": true,
+      "listed": true,
+      "unique": false
+    },
+    {
+      "clazz": "com.dotcms.contenttype.model.field.ImmutableWysiwygField",
+      "dataType": "LONG_TEXT",
+      "variable": "documentation",
+      "name": "Documentation",
+      "sortOrder": 8,
+      "readOnly": false,
+      "fixed": false,
+      "required": true,
+      "searchable": true,
+      "indexed": true,
+      "listed": false,
+      "unique": false
+    }
+  ],
+  "workflow": [
+    "d61a59e1-a49c-46f2-a929-db2b4bfa88b2"
+  ]
+}

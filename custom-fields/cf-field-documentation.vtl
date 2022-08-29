@@ -1,3 +1,7 @@
+## 
+## To enable this for a CT, add a custom field at the end of CT, and place a dotParse to this file.
+## Be sure to import the StructureDocumentation.json Content Type before using this.
+##
 #set ($docEntries = $dotcontent.pull("+contentType:StructureDocumentation +StructureDocumentation.ct_dotraw:${esc.q}$!{structure.velocityVarName}${esc.q}", 0, "modDate desc"))
 #dotParse("//shared/application/includes/cf-styles.vtl")
 <h1>$docEntries.size()</h1>
