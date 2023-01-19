@@ -922,7 +922,7 @@ com.dotmarketing.session_host
 ## &nbsp;
 ### Is user "admin"?
 ```
-#set ($userIsAdmin = $user.isCMSAdmin()) ## True | False
+#set ($userIsAdmin = $cmsuser.isCMSAdmin($user)) ## True | False
 ```
 
 ## &nbsp;
