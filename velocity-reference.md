@@ -1767,3 +1767,19 @@ $render.eval("#dotInclude($webapi.getAssetPath('/path/to/file'))")
 #dotParse("$filetool.getFile(${contentlet.fileAssetFieldName.identifier},true).getURI()")
 ```
 ---
+
+
+### Dynamically named variables
+```
+$webapi.setVelocityVar("abc", 123)
+$abc ## Output: 123
+```
+
+Or:
+
+```
+## Make sure to wrap this in a #set()
+#set ($_ = $context.getVelocityContext().put("abc", 123))
+$abc ## Output: 123
+```
+---
